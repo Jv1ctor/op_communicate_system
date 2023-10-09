@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Analisys {
+  analisys_id String   @id(map: "analisys_pk") @default(uuid()) @db.VarChar
+  adjustment  String
+  fk_product  String   @db.VarChar
+  fk_user_cq  String   @db.VarChar
+  products    Products @relation(fields: [fk_product], references: [product_id], onDelete: NoAction, onUpdate: NoAction, map: "analisys_fk")
+  user_cq     userCq  @relation(fields: [fk_user_cq], references: [fk_id_user_cq], onDelete: NoAction, onUpdate: NoAction, map: "analisys_user_fk")
+
+  @@map("analisys")
+}
+
+model Products {
+  product_id        String     @id(map: "products_pk") @default(uuid()) @db.VarChar
+  name_product      String     @db.VarChar
+  quant_produce     Float
+  reactor           String     @db.VarChar
+  operator          String     @db.VarChar
+  installation_unit String     @db.VarChar
+  num_op            Int
+  num_batch         Int
+  num_roadmap       Int
+  turn_supervisor   String     @db.VarChar
+  turn              String     @db.Char(1)
+  fk_reactor        String     @db.VarChar
+  fk_user_prod      String     @db.VarChar
+  analisys          Analisys[]
+  reactors          Reactors   @relation(fields: [fk_reactor], references: [id_reactor], onDelete: NoAction, onUpdate: NoAction, map: "products_fk")
+  user_prod         userProd  @relation(fields: [fk_user_prod], references: [fk_id_user_prod], onDelete: NoAction, onUpdate: NoAction, map: "products_user_fk")
+
+  @@map("products")
+}
+
+model Reactors {
+  id_reactor   String     @id(map: "reactors_pk") @default(uuid()) @db.VarChar
+  name_reactor String     @db.VarChar
+  fk_user_adm  String     @db.VarChar
+  products     Products[]
+  user_adm     userAdm   @relation(fields: [fk_user_adm], references: [fk_id_user_adm], onDelete: NoAction, onUpdate: NoAction, map: "reactors_fk")
+
+  @@map("reactors")
+}
+
+model RefreshToken {
+  id         String @id(map: "refresh_token_pk") @default(uuid()) @db.VarChar
+  expires_in Int
+  fk_user_id String @unique(map: "refresh_token_un") @db.VarChar
+  users       Users @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "refresh_token_fk")
+
+  @@map("refresh_token")
+}
+
+model userAdm {
+  fk_id_user_adm String        @id(map: "user_adm_pk") @db.VarChar
+  reactors       Reactors[]
+  users          Users      @relation(fields: [fk_id_user_adm], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_adm_fk")
+
+  @@map("user_adm")
+}
+
+model userCq {
+  fk_id_user_cq String       @id(map: "user_cq_pk") @db.VarChar
+  analisys      Analisys[]
+  users         Users      @relation(fields: [fk_id_user_cq], references: [id], onDelete: Cascade, map: "user_cq_fk")
+
+  @@map("user_cq")
+}
+
+model userProd {
+  fk_id_user_prod String       @id(map: "user_prod_pk") @db.VarChar
+  products        Products[]
+  users           Users      @relation(fields: [fk_id_user_prod], references: [id], onDelete: Cascade, map: "user_prod_fk")
+
+  @@map("user_prod")
+}
+
+model Users {
+  id         String     @id(map: "users_pk") @default(uuid()) @db.VarChar
+  first_name String     @db.VarChar
+  last_name  String     @db.VarChar
+  password   String     @db.VarChar
+  user_adm   userAdm?
+  user_cq    userCq?
+  user_prod  userProd?
+  refresh_token RefreshToken?
+
+  @@map("users")
+}
