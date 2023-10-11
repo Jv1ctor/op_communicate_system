@@ -1,13 +1,13 @@
 {
   "name": "op_communicate_system",
-  "description": "",
+  "description": "projeto de comunicação de OP da AVCO",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "João Victor",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@prisma/client": "^5.4.2",
+    "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.18",
     "@types/helmet": "^4.0.0",
     "@types/jsonwebtoken": "^9.0.3",

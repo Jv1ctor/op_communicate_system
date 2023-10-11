@@ -85,7 +85,7 @@ model userProd {
 model Users {
   id         String     @id(map: "users_pk") @default(uuid()) @db.VarChar
   first_name String     @db.VarChar
-  last_name  String     @db.VarChar
+  last_name  String     @unique(map:"users_last_name_un") @db.VarChar
   password   String     @db.VarChar
   user_adm   userAdm?
   user_cq    userCq?
