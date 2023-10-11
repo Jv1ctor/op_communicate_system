@@ -8,6 +8,10 @@ interface UserRegistration extends Users {
   type_user: "production" | "quality_control"
 }
 
+interface UserLogin extends Users {
+  name: string
+}
+
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const {
@@ -68,4 +72,32 @@ export const registerUser = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({ error: "internal server error" })
   }
+}
+
+export const login = async (req: Request, res: Response) => {
+  try {
+    const { name, password }: UserLogin = req.body
+    const [firstName, lastName] = name.split(".")
+    if (firstName && lastName && password) {
+      const user = await prisma.users.findFirst({
+        where: { first_name: firstName, last_name: lastName },
+      })
+
+      const correctPassword =
+        user && (await bcrypt.compare(password, user.password))
+
+      if (correctPassword) {
+        const existRefreshToken = await prisma.refreshToken.findUnique({
+          where: { fk_user_id: user.id },
+        })
+
+        const newRefreshToken =
+          !existRefreshToken && (await RefreshToken.create(user.id))
+        return res.status(200).json({
+          action: { login: true },
+          refresh_token: existRefreshToken ?? newRefreshToken,
+        })
+      }
+    }
+  } catch (err) {}
 }
