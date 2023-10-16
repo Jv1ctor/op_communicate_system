@@ -4,9 +4,9 @@ const router = Router()
 
 router.get("/profile")
 router.post("/admin/register-user", UserController.registerUser)
-router.post("/login")
+router.post("/login", UserController.login)
+router.post("/refresh-token", UserController.refreshToken)
 router.post("/logout")
-router.post("/refresh-token")
 router.delete("/admin/delete-use/:id")
 
 export default router

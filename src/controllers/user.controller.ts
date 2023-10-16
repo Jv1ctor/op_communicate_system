@@ -93,11 +93,52 @@ export const login = async (req: Request, res: Response) => {
 
         const newRefreshToken =
           !existRefreshToken && (await RefreshToken.create(user.id))
+
         return res.status(200).json({
           action: { login: true },
           refresh_token: existRefreshToken ?? newRefreshToken,
         })
       }
+      return res.status(400).json({
+        action: { login: false },
+        error: "invalid credentials or not exist",
+      })
     }
-  } catch (err) {}
+    res.status(400).json({
+      action: { login: false },
+      error: "values not found",
+    })
+  } catch (err) {
+    res.status(500).json({ error: "internal server error" })
+  }
+}
+
+export const refreshToken = async (req: Request, res: Response) => {
+  try {
+    const { id: refreshTokenId } = req.body
+    if (refreshTokenId) {
+      const existRefreshToken = await prisma.refreshToken.findUnique({
+        where: { id: refreshTokenId },
+      })
+      if (existRefreshToken) {
+        const token = RefreshToken.generateToken(
+          refreshTokenId,
+          existRefreshToken.fk_user_id,
+        )
+        return res
+          .status(200)
+          .json({ action: { refresh_token: true }, token: token })
+      }
+      return res.status(400).json({
+        action: { refresh_token: false },
+        error: "refresh token invalid",
+      })
+    }
+    res.status(400).json({
+      action: { refresh_token: false },
+      error: "values not found",
+    })
+  } catch (err) {
+    res.status(500).json({ error: "internal server error" })
+  }
 }
