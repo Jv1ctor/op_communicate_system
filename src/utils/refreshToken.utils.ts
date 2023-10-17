@@ -2,7 +2,6 @@ import JWT from "jsonwebtoken"
 import dayjs from "dayjs"
 import prisma from "../database/prisma"
 import dotenv from "dotenv"
-
 dotenv.config()
 
 const RefreshToken = {
@@ -25,14 +24,17 @@ const RefreshToken = {
     }
   },
 
-  generateToken(refreshTokenId: string, userId: string) {
-    const token = JWT.sign({}, process.env.JWT_KEY as string, {
-      expiresIn: "24h",
-      subject: userId,
-      issuer: refreshTokenId,
-    })
+  async generateToken(refreshTokenId: string) {
+    const refreshToken = await prisma.refreshToken.findUnique({ where: { id: refreshTokenId}})
 
-    return token
+    if(refreshToken){
+      const token = JWT.sign({}, process.env.JWT_KEY as string, {
+        expiresIn: "24h",
+        subject: refreshTokenId,
+      })
+
+      return token
+    }
   },
 }
 

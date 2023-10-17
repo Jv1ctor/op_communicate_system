@@ -121,10 +121,7 @@ export const refreshToken = async (req: Request, res: Response) => {
         where: { id: refreshTokenId },
       })
       if (existRefreshToken) {
-        const token = RefreshToken.generateToken(
-          refreshTokenId,
-          existRefreshToken.fk_user_id,
-        )
+        const token = await RefreshToken.generateToken(refreshTokenId)
         return res
           .status(200)
           .json({ action: { refresh_token: true }, token: token })

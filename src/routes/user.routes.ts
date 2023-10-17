@@ -2,7 +2,7 @@ import { Router } from "express"
 import * as UserController from "../controllers/user.controller"
 const router = Router()
 
-router.get("/profile")
+router.get("/profile-user")
 router.post("/admin/register-user", UserController.registerUser)
 router.post("/login", UserController.login)
 router.post("/refresh-token", UserController.refreshToken)
