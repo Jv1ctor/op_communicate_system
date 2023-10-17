@@ -13,7 +13,7 @@ model Analisys {
   fk_product  String   @db.VarChar
   fk_user_cq  String   @db.VarChar
   products    Products @relation(fields: [fk_product], references: [product_id], onDelete: NoAction, onUpdate: NoAction, map: "analisys_fk")
-  user_cq     userCq  @relation(fields: [fk_user_cq], references: [fk_id_user_cq], onDelete: NoAction, onUpdate: NoAction, map: "analisys_user_fk")
+  user_cq     userCq   @relation(fields: [fk_user_cq], references: [fk_id_user_cq], onDelete: NoAction, onUpdate: NoAction, map: "analisys_user_fk")
 
   @@map("analisys")
 }
@@ -34,7 +34,7 @@ model Products {
   fk_user_prod      String     @db.VarChar
   analisys          Analisys[]
   reactors          Reactors   @relation(fields: [fk_reactor], references: [id_reactor], onDelete: NoAction, onUpdate: NoAction, map: "products_fk")
-  user_prod         userProd  @relation(fields: [fk_user_prod], references: [fk_id_user_prod], onDelete: NoAction, onUpdate: NoAction, map: "products_user_fk")
+  user_prod         userProd   @relation(fields: [fk_user_prod], references: [fk_id_user_prod], onDelete: NoAction, onUpdate: NoAction, map: "products_user_fk")
 
   @@map("products")
 }
@@ -44,7 +44,7 @@ model Reactors {
   name_reactor String     @db.VarChar
   fk_user_adm  String     @db.VarChar
   products     Products[]
-  user_adm     userAdm   @relation(fields: [fk_user_adm], references: [fk_id_user_adm], onDelete: NoAction, onUpdate: NoAction, map: "reactors_fk")
+  user_adm     userAdm    @relation(fields: [fk_user_adm], references: [fk_id_user_adm], onDelete: NoAction, onUpdate: NoAction, map: "reactors_fk")
 
   @@map("reactors")
 }
@@ -53,13 +53,22 @@ model RefreshToken {
   id         String @id(map: "refresh_token_pk") @default(uuid()) @db.VarChar
   expires_in Int
   fk_user_id String @unique(map: "refresh_token_un") @db.VarChar
-  users       Users @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "refresh_token_fk")
-
+  users      Users  @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, map: "refresh_token_fk")
+  acess_token AcessToken?
   @@map("refresh_token")
 }
 
+model AcessToken {
+  id         String @id(map: "acess_token_pk") @db.VarChar
+  expires_in Int
+  refresh_token_id String @unique(map: "acess_token_un") @db.VarChar
+  refresh_token     RefreshToken  @relation(fields: [refresh_token_id], references: [id], onDelete: Cascade, map: "acess_token_fk")
+
+  @@map("acess_token")
+}
+
 model userAdm {
-  fk_id_user_adm String        @id(map: "user_adm_pk") @db.VarChar
+  fk_id_user_adm String     @id(map: "user_adm_pk") @db.VarChar
   reactors       Reactors[]
   users          Users      @relation(fields: [fk_id_user_adm], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_adm_fk")
 
@@ -67,7 +76,7 @@ model userAdm {
 }
 
 model userCq {
-  fk_id_user_cq String       @id(map: "user_cq_pk") @db.VarChar
+  fk_id_user_cq String     @id(map: "user_cq_pk") @db.VarChar
   analisys      Analisys[]
   users         Users      @relation(fields: [fk_id_user_cq], references: [id], onDelete: Cascade, map: "user_cq_fk")
 
@@ -75,7 +84,7 @@ model userCq {
 }
 
 model userProd {
-  fk_id_user_prod String       @id(map: "user_prod_pk") @db.VarChar
+  fk_id_user_prod String     @id(map: "user_prod_pk") @db.VarChar
   products        Products[]
   users           Users      @relation(fields: [fk_id_user_prod], references: [id], onDelete: Cascade, map: "user_prod_fk")
 
@@ -83,14 +92,14 @@ model userProd {
 }
 
 model Users {
-  id         String     @id(map: "users_pk") @default(uuid()) @db.VarChar
-  first_name String     @db.VarChar
-  last_name  String     @unique(map:"users_last_name_un") @db.VarChar
-  password   String     @db.VarChar
-  user_adm   userAdm?
-  user_cq    userCq?
-  user_prod  userProd?
+  id            String        @id(map: "users_pk") @default(uuid()) @db.VarChar
+  first_name    String        @db.VarChar
+  last_name     String        @unique(map: "users_last_name_un") @db.VarChar
+  password      String        @db.VarChar
   refresh_token RefreshToken?
+  user_adm      userAdm?
+  user_cq       userCq?
+  user_prod     userProd?
 
   @@map("users")
 }

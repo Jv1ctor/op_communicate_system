@@ -138,6 +138,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     })
   } catch (err) {
     res.status(500).json({ error: "internal server error" })
+    console.log(err)
   }
 }
 
