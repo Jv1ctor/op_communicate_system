@@ -32,39 +32,45 @@ export const registerUser = async (req: Request, res: Response) => {
         const hashPassword = await bcrypt.hash(password, salt)
         let userTypeCreate = null
 
-        const user = await prisma.users.create({
-          data: {
-            first_name: firstName,
-            last_name: lastName,
-            password: hashPassword,
-          },
-        })
-
-        if (typeUser === "production") {
-          userTypeCreate = await prisma.userProd.create({
-            data: { fk_id_user_prod: user.id },
+        if (typeUser === "production" || typeUser === "quality_control") {
+          const user = await prisma.users.create({
+            data: {
+              first_name: firstName,
+              last_name: lastName,
+              password: hashPassword,
+            },
           })
-        }
 
-        if (typeUser === "quality_control") {
-          userTypeCreate = await prisma.userCq.create({
-            data: { fk_id_user_cq: user.id },
-          })
-        }
-
-        if (user && userTypeCreate) {
-          const refreshToken = await RefreshToken.create(user.id)
-          return (
-            refreshToken &&
-            res.status(201).json({
-              action: { created_user: true, user_type: typeUser },
-              refresh_token: {
-                id: refreshToken.id,
-                expires_in: refreshToken.expires_in,
-              },
+          if (typeUser === "production") {
+            userTypeCreate = await prisma.userProd.create({
+              data: { fk_id_user_prod: user.id },
             })
-          )
+          }
+
+          if (typeUser === "quality_control") {
+            userTypeCreate = await prisma.userCq.create({
+              data: { fk_id_user_cq: user.id },
+            })
+          }
+
+          if (user && userTypeCreate) {
+            const refreshToken = await RefreshToken.create(user.id)
+            return (
+              refreshToken &&
+              res.status(201).json({
+                action: { created_user: true, user_type: typeUser },
+                refresh_token: {
+                  id: refreshToken.id,
+                  expires_in: refreshToken.expires_in,
+                },
+              })
+            )
+          }
         }
+        return res.status(400).json({
+          action: { created_user: false },
+          error: "invalid credentials",
+        })
       }
       return res.status(400).json({
         action: { created_user: false },
@@ -154,13 +160,21 @@ export const profile = async (_req: Request, res: Response) => {
 
     const profileUser = await prisma.users.findUnique({
       where: { id: userId },
-      select: { first_name: true, last_name: true },
+      include: { user_adm: true, user_cq: true, user_prod: true },
     })
-
+    console.log(profileUser)
     if (profileUser) {
+      const typeUser =
+        (profileUser.user_adm && "admin") ??
+        (profileUser.user_cq && "quality") ??
+        (profileUser.user_prod && "production")
       return res.status(200).json({
         action: { profile: true },
-        profileUser,
+        profile_user: {
+          first_name: profileUser.first_name,
+          last_name: profileUser.last_name,
+          type_user: typeUser,
+        },
       })
     }
     res

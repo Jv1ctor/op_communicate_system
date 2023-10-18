@@ -47,6 +47,38 @@ const Auth = {
       })
     }
   },
+
+  authorization(permiss: "admin" | "quality" | "production") {
+    return async (_req: Request, res: Response, next: NextFunction) => {
+      const userId = res.locals.userId
+      let success = false
+      if (userId) {
+        try {
+          const user = await prisma.users.findUnique({
+            where: { id: userId },
+            include: { user_adm: true, user_cq: true, user_prod: true },
+          })
+          if (permiss === "admin" && user && user.user_adm) {
+            success = true
+          }
+          if (permiss === "production" && user && user.user_prod) {
+            success = true
+          }
+          if (permiss === "quality" && user && user.user_cq) {
+            success = true
+          }
+        } catch (err) {}
+      }
+
+      if (success) {
+        next()
+      } else {
+        res.status(401).json({
+          error: "You are not authorization",
+        })
+      }
+    }
+  },
 }
 
 export default Auth
