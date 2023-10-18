@@ -16,6 +16,7 @@ const RefreshToken = {
             expires_in: expiresIn,
             fk_user_id: userId,
           },
+          select: { id: true, expires_in: true },
         })
 
         return refreshToken
