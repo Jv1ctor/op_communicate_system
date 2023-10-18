@@ -54,17 +54,17 @@ model RefreshToken {
   expires_in Int
   fk_user_id String @unique(map: "refresh_token_un") @db.VarChar
   users      Users  @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, map: "refresh_token_fk")
-  acess_token AcessToken?
+  acess_token AccessToken?
   @@map("refresh_token")
 }
 
-model AcessToken {
-  id         String @id(map: "acess_token_pk") @db.VarChar
+model AccessToken {
+  id         String @id(map: "access_token_pk") @db.VarChar
   expires_in Int
-  refresh_token_id String @unique(map: "acess_token_un") @db.VarChar
-  refresh_token     RefreshToken  @relation(fields: [refresh_token_id], references: [id], onDelete: Cascade, map: "acess_token_fk")
+  refresh_token_id String @unique(map: "access_token_un") @db.VarChar
+  refresh_token     RefreshToken  @relation(fields: [refresh_token_id], references: [id], onDelete: Cascade, map: "access_token_fk")
 
-  @@map("acess_token")
+  @@map("access_token")
 }
 
 model userAdm {

@@ -54,10 +54,16 @@ export const registerUser = async (req: Request, res: Response) => {
 
         if (user && userTypeCreate) {
           const refreshToken = await RefreshToken.create(user.id)
-          return refreshToken && res.status(201).json({
-            action: { created_user: true, user_type: typeUser },
-            refresh_token: { id: refreshToken.id, expires_in: refreshToken.expires_in},
-          })
+          return (
+            refreshToken &&
+            res.status(201).json({
+              action: { created_user: true, user_type: typeUser },
+              refresh_token: {
+                id: refreshToken.id,
+                expires_in: refreshToken.expires_in,
+              },
+            })
+          )
         }
       }
       return res.status(400).json({
@@ -89,7 +95,7 @@ export const login = async (req: Request, res: Response) => {
       if (correctPassword) {
         const existRefreshToken = await prisma.refreshToken.findUnique({
           where: { fk_user_id: user.id },
-          select: { id: true, expires_in: true}
+          select: { id: true, expires_in: true },
         })
 
         const newRefreshToken =
@@ -142,30 +148,26 @@ export const refreshToken = async (req: Request, res: Response) => {
   }
 }
 
-export const profile = async (req: Request, res: Response) => {
+export const profile = async (_req: Request, res: Response) => {
   try {
     const userId = res.locals.userId
 
-    if (userId) {
-      const profileUser = await prisma.users.findUnique({
-        where: { id: userId },
-      })
-
-      if (profileUser) {
-        return res.status(200).json({
-            action: { profile: true },
-            user: {
-              first_name: profileUser.first_name,
-              last_name: profileUser.last_name,
-            },
-          })
-      }
-      return res.status(400).json({ action: { profile: false }, error: "user not found"})
-    }
-    res.status(400).json({
-      action: { profile: false },
-      error: "values not found",
+    const profileUser = await prisma.users.findUnique({
+      where: { id: userId },
     })
+
+    if (profileUser) {
+      return res.status(200).json({
+        action: { profile: true },
+        user: {
+          first_name: profileUser.first_name,
+          last_name: profileUser.last_name,
+        },
+      })
+    }
+    res
+      .status(400)
+      .json({ action: { profile: false }, error: "user not found" })
   } catch (err) {
     res.status(500).json({ error: "internal server error" })
   }

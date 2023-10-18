@@ -7,7 +7,7 @@ router.get("/profile-user", Auth.authenticate, UserController.profile)
 router.post("/admin/register-user", UserController.registerUser)
 router.post("/login", UserController.login)
 router.post("/refresh-token", UserController.refreshToken)
-router.post("/logout",)
+router.post("/logout")
 router.delete("/admin/delete-use/:id")
 
 export default router
