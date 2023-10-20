@@ -1,22 +1,13 @@
-import express, { Request, Response } from "express"
-import helmet from "helmet"
-import userRoutes from "./routes/user.routes"
-import dotenv from "dotenv"
+import httpServer from "./httpServer"
+import { Server } from "socket.io"
 
-dotenv.config()
-
-const server = express()
 const port = process.env.PORT || 3000
+const io = new Server(httpServer)
 
-server.use(helmet())
-server.use(express.json())
-
-server.use("/api/user", userRoutes)
-
-server.use((_req: Request, res: Response) => {
-  res.status(404).json({ error: "endpoint not found" })
+io.on("connection", (socket) => {
+  console.log("Ok")
 })
 
-server.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`servidor rodando em http://localhost:${port}`)
 })
