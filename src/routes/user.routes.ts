@@ -7,16 +7,11 @@ router.get("/profile-user", Auth.authenticate, UserController.profile)
 router.post(
   "/admin/register-user",
   Auth.authenticate,
-  Auth.authorization("production"),
+  Auth.authorization("admin"),
   UserController.registerUser,
 )
 router.post("/login", UserController.login)
 router.post("/refresh-token", UserController.refreshToken)
 router.post("/logout-user", Auth.authenticate, UserController.logout)
-router.delete(
-  "/admin/delete-use/:id",
-  Auth.authenticate,
-  Auth.authorization("admin"),
-)
 
 export default router

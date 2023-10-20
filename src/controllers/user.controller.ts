@@ -162,7 +162,6 @@ export const profile = async (_req: Request, res: Response) => {
       where: { id: userId },
       include: { user_adm: true, user_cq: true, user_prod: true },
     })
-    console.log(profileUser)
     if (profileUser) {
       const typeUser =
         (profileUser.user_adm && "admin") ??
