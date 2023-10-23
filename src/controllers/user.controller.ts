@@ -107,10 +107,18 @@ export const login = async (req: Request, res: Response) => {
         const newRefreshToken =
           !existRefreshToken && (await RefreshToken.create(user.id))
 
-        return res.status(200).json({
-          action: { login: true },
-          refresh_token: existRefreshToken ?? newRefreshToken,
-        })
+        return res
+          .status(200)
+          .cookie("refresh-token", existRefreshToken ?? newRefreshToken, {
+            httpOnly: true,
+            maxAge: 30 * 60 * 10000,
+            sameSite: "none",
+            secure: true,
+          })
+          .json({
+            action: { login: true },
+            refresh_token: existRefreshToken ?? newRefreshToken,
+          })
       }
       return res.status(400).json({
         action: { login: false },
