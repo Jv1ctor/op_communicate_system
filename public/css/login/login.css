@@ -1,18 +1,17 @@
-.header-container {
+.header {
   border-bottom: 3px solid var(--primary-color);
   padding: 1rem;
   text-align: center;
 }
 
 .header-container-logo {
-  width: 10rem;
+  width: 15rem;
 }
 
 .main-container {
-  height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
+  margin-top: 8rem;
 }
 
 .card-login-container {

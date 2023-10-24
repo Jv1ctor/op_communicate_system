@@ -1,10 +1,8 @@
-import { fetchLogin } from "./fetchLogin.js"
+import { fetchLogin } from "./fetch.js"
 
 const form = document.querySelector('[data-js="login-form"]')
 const message = document.querySelector('[data-js="message-js"]')
 message.textContent = ""
-
-console.log(document.cookie["refresh-token"])
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault()
@@ -18,9 +16,10 @@ form.addEventListener("submit", async (event) => {
     const response = await fetchLogin(nameUser, passUser)
 
     if (response.action.login) {
-      const refreshTokenId = response.refresh_token.id
-      document.cookie = "teste"
-      // window.location.replace("./reatores.html")
+      const { first_name, last_name } = response.user_profile
+      localStorage.setItem("name-user", `${first_name} ${last_name}`)
+      window.location.replace("./reatores.html")
+      return
     }
     message.textContent = "Usuário não existe ou senha errada"
     return

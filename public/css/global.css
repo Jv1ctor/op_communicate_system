@@ -25,3 +25,17 @@ img {
 body {
   background-color: var(--main-bg);
 }
+
+a,
+span {
+  display: block;
+  text-decoration: none;
+  color: black;
+}
+
+footer {
+  font-size: 1.1rem;
+  text-align: center;
+  padding-top: 10rem;
+  padding-bottom: 1rem;
+}
