@@ -3,7 +3,6 @@ import * as UserController from "../controllers/user.controller"
 import Auth from "../middleware/auth"
 const router = Router()
 
-router.get("/profile-user", Auth.authenticate, UserController.profile)
 router.post(
   "/admin/register-user",
   Auth.authenticate,

@@ -3,6 +3,7 @@ import { Users } from "@prisma/client"
 import bcrypt from "bcrypt"
 import prisma from "../database/prisma"
 import RefreshToken from "../utils/refreshToken.utils"
+import dayjs from "dayjs"
 
 interface UserRegistration extends Users {
   type_user: "production" | "quality_control"
@@ -59,9 +60,10 @@ export const registerUser = async (req: Request, res: Response) => {
               refreshToken &&
               res.status(201).json({
                 action: { created_user: true, user_type: typeUser },
-                refresh_token: {
-                  id: refreshToken.id,
-                  expires_in: refreshToken.expires_in,
+                message: "register success",
+                user_profile: {
+                  first_name: user.first_name,
+                  last_name: user.last_name,
                 },
               })
             )
@@ -104,21 +106,30 @@ export const login = async (req: Request, res: Response) => {
           select: { id: true, expires_in: true },
         })
 
-        const newRefreshToken =
-          !existRefreshToken && (await RefreshToken.create(user.id))
+        const refreshToken = !existRefreshToken
+          ? await RefreshToken.create(user.id)
+          : existRefreshToken
 
-        return res
-          .status(200)
-          .cookie("refresh-token", existRefreshToken ?? newRefreshToken, {
-            httpOnly: true,
-            maxAge: 30 * 60 * 10000,
-            sameSite: "none",
-            secure: true,
-          })
-          .json({
-            action: { login: true },
-            refresh_token: existRefreshToken ?? newRefreshToken,
-          })
+        if (refreshToken) {
+          const timestamp = dayjs.unix(refreshToken.expires_in).diff()
+
+          return res
+            .status(200)
+            .cookie("refreshToken", refreshToken, {
+              httpOnly: true,
+              maxAge: timestamp,
+              sameSite: "strict",
+              secure: true,
+            })
+            .json({
+              action: { login: true },
+              message: "logging success",
+              user_profile: {
+                first_name: user.first_name,
+                last_name: user.last_name,
+              },
+            })
+        }
       }
       return res.status(400).json({
         action: { login: false },
@@ -136,7 +147,8 @@ export const login = async (req: Request, res: Response) => {
 
 export const refreshToken = async (req: Request, res: Response) => {
   try {
-    const { id: refreshTokenId } = req.body
+    const { id: refreshTokenId } = req.cookies.refreshToken
+
     if (refreshTokenId) {
       const existRefreshToken = await prisma.refreshToken.findUnique({
         where: { id: refreshTokenId },
@@ -159,36 +171,6 @@ export const refreshToken = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({ error: "internal server error" })
     console.log(err)
-  }
-}
-
-export const profile = async (_req: Request, res: Response) => {
-  try {
-    const userId = res.locals.userId
-
-    const profileUser = await prisma.users.findUnique({
-      where: { id: userId },
-      include: { user_adm: true, user_cq: true, user_prod: true },
-    })
-    if (profileUser) {
-      const typeUser =
-        (profileUser.user_adm && "admin") ??
-        (profileUser.user_cq && "quality") ??
-        (profileUser.user_prod && "production")
-      return res.status(200).json({
-        action: { profile: true },
-        profile_user: {
-          first_name: profileUser.first_name,
-          last_name: profileUser.last_name,
-          type_user: typeUser,
-        },
-      })
-    }
-    res
-      .status(400)
-      .json({ action: { profile: false }, error: "user not found" })
-  } catch (err) {
-    res.status(500).json({ error: "internal server error" })
   }
 }
 

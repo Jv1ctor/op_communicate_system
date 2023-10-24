@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express"
+import cookieParser from "cookie-parser"
 import helmet from "helmet"
 import userRoutes from "./routes/user.routes"
 import dotenv from "dotenv"
@@ -8,6 +9,7 @@ dotenv.config()
 
 const app = express()
 
+app.use(cookieParser())
 app.use(express.static(path.join(__dirname, "../public")))
 app.use(helmet())
 app.use(express.json())
