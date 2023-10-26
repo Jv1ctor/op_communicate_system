@@ -18,12 +18,45 @@ const main = async () => {
   })
 
   if (admin) {
-    const adminRole = await prisma.userAdm.create({
-      data: {
+    const adminRole = await prisma.userAdm.upsert({
+      where: { fk_id_user_adm: admin.id },
+      update: {},
+      create: {
         fk_id_user_adm: admin.id,
       },
     })
-    console.log(admin, adminRole)
+    console.log(
+      "---------USER ADMIN---------\n",
+      "USUARIO CRIADO:\n",
+      admin,
+      "\nPERMISSÕES:\n",
+      adminRole,
+    )
+  }
+
+  const reactors = await prisma.$transaction([
+    prisma.reactors.deleteMany({ where: { fk_user_adm: admin.id } }),
+    prisma.reactors.createMany({
+      data: [
+        { name_reactor: "R10", fk_user_adm: admin.id },
+        { name_reactor: "R11", fk_user_adm: admin.id },
+        { name_reactor: "R12", fk_user_adm: admin.id },
+        { name_reactor: "R13", fk_user_adm: admin.id },
+        { name_reactor: "R15", fk_user_adm: admin.id },
+        { name_reactor: "R20", fk_user_adm: admin.id },
+        { name_reactor: "R21", fk_user_adm: admin.id },
+      ],
+    }),
+  ])
+
+  if (reactors) {
+    console.log(
+      "\n---------REACTORS---------\n",
+      "DELETADOS:",
+      reactors[0],
+      "CRIADOS:",
+      reactors[1],
+    )
   }
 }
 

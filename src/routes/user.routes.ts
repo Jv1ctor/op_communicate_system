@@ -3,8 +3,20 @@ import * as UserController from "../controllers/user.controller"
 import Auth from "../middleware/auth"
 const router = Router()
 
+router.get(
+  "/list-reactors",
+  Auth.authenticate,
+  Auth.authorization("admin"),
+  UserController.listReactors,
+)
 router.post(
-  "/admin/register-user",
+  "/create-reactors",
+  Auth.authenticate,
+  Auth.authorization("admin"),
+  UserController.createReactors,
+)
+router.post(
+  "/register-user",
   Auth.authenticate,
   Auth.authorization("admin"),
   UserController.registerUser,

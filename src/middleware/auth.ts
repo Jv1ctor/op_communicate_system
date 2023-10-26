@@ -88,7 +88,7 @@ const Auth = {
     const cookie = req.cookies.refreshToken
 
     if (cookie) {
-      res.status(401).json({ error: "you are not loggin" })
+      res.status(401).json({ error: "you are already logged in" })
     } else {
       next()
     }

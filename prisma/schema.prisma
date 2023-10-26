@@ -41,7 +41,7 @@ model Products {
 
 model Reactors {
   id_reactor   String     @id(map: "reactors_pk") @default(uuid()) @db.VarChar
-  name_reactor String     @db.VarChar
+  name_reactor String     @unique(map: "reactors_un") @db.VarChar
   fk_user_adm  String     @db.VarChar
   products     Products[]
   user_adm     userAdm    @relation(fields: [fk_user_adm], references: [fk_id_user_adm], onDelete: NoAction, onUpdate: NoAction, map: "reactors_fk")

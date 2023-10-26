@@ -98,8 +98,7 @@ export const login = async (req: Request, res: Response) => {
         include: { user_adm: true, user_cq: true, user_prod: true },
       })
 
-      const correctPassword =
-        user && (await bcrypt.compare(password, user.password))
+      const correctPassword = user && (await bcrypt.compare(password, user.password))
 
       if (correctPassword) {
         const existRefreshToken = await prisma.refreshToken.findUnique({
@@ -159,9 +158,7 @@ export const refreshToken = async (req: Request, res: Response) => {
       })
       if (existRefreshToken) {
         const token = await RefreshToken.generateToken(refreshTokenId)
-        return res
-          .status(200)
-          .json({ action: { refresh_token: true }, token: token })
+        return res.status(200).json({ action: { refresh_token: true }, token: token })
       }
       return res.status(400).json({
         action: { refresh_token: false },
@@ -189,10 +186,49 @@ export const logout = async (_req: Request, res: Response) => {
       await prisma.refreshToken.delete({ where: { id: refreshToken.id } })
       return res.status(200).json({ action: { logout: true } })
     }
-    res
-      .status(200)
-      .json({ action: { logout: false }, error: "refresh token not exist" })
+    res.status(200).json({ action: { logout: false }, error: "refresh token not exist" })
   } catch (err) {
     res.status(500).json({ error: "internal server error" })
   }
 }
+
+export const createReactors = async (req: Request, res: Response) => {
+  try {
+    const reactorName = req.body.name_reactor
+    const userId = res.locals.userId
+    if (reactorName) {
+      const existReactor = await prisma.reactors.findUnique({
+        where: { name_reactor: reactorName },
+      })
+
+      const reactor =
+        !existReactor &&
+        (await prisma.reactors.create({
+          data: {
+            name_reactor: reactorName,
+            fk_user_adm: userId,
+          },
+        }))
+
+      if (reactor) {
+        return res.status(200).json({
+          action: { reactors_created: true },
+          message: "created reactor success",
+          reactor: reactor.name_reactor,
+        })
+      }
+      return res.status(400).json({
+        action: { reactors_created: false },
+        error: "reactor already exists",
+      })
+    }
+    res.status(400).json({
+      action: { reactors_created: false },
+      error: "values not found",
+    })
+  } catch (err) {
+    res.status(500).json({ error: "internal server error" })
+  }
+}
+
+export const listReactors = () => {}
