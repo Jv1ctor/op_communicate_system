@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>AVCO - Login</title>
+  </head>
+  <body id="login">
+    <header class="header">
+      <div class="header-container">
+        <img
+          class="header-container-logo"
+          src="./img/LOGO AVCO.png"
+          alt="logo AVCO"
+          width="140"
+          height="140" />
+      </div>
+    </header>
+
+    <main>
+      <div class="main-container">
+        <div class="card-login-container">
+          <form class="card-login" data-js="login-form" action="./">
+            <h1>Login</h1>
+
+            <div>
+              <label for="user-name"
+                ><img src="./img/user 1.png" alt="" width="28" height="28"
+              /></label>
+              <input
+                type="text"
+                name="user-name"
+                id="user-name"
+                placeholder="Usuário" />
+            </div>
+
+            <div>
+              <label for="user-pass"
+                ><img src="./img/padlock 1.png" alt="" width="32" height="32"
+              /></label>
+              <input
+                type="password"
+                name="user-pass"
+                id="user-pass"
+                placeholder="Senha" />
+            </div>
+
+            <span class="message-error" data-js="message-js"
+              >Digite o nome do usuario nesse formato: "teste.teste"</span
+            >
+
+            <button class="button button-login">Entrar</button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="./js/login.js"></script>
+  </body>
+</html>

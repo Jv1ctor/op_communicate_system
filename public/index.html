@@ -9,9 +9,9 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
       rel="stylesheet" />
     <link rel="stylesheet" href="./css/style.css" />
-    <title>AVCO - Login</title>
+    <title>AVCO - Reatores</title>
   </head>
-  <body id="login">
+  <body>
     <header class="header">
       <div class="header-container">
         <img
@@ -20,47 +20,38 @@
           alt="logo AVCO"
           width="140"
           height="140" />
+        <h1 class="header-container-title">Reatores</h1>
+
+        <div class="header-container-perfil">
+          <img
+            src="./img/user_perfil 1.png"
+            alt="perfil"
+            width="56"
+            height="56" />
+
+          <div class="menu-dropdown-user">
+            <span data-js="user-name">User Name</span>
+            <span data-js="user-setor" class="setor-user"
+              ><strong>Setor:</strong> Produção</span
+            >
+            <span class="button-logout" data-js="btn-logout">Sair</span>
+          </div>
+        </div>
       </div>
     </header>
 
     <main>
-      <div class="main-container">
-        <div class="card-login-container">
-          <form class="card-login" data-js="login-form" action="./">
-            <h1>Login</h1>
-
-            <div>
-              <label for="user-name"
-                ><img src="./img/user 1.png" alt="" width="28" height="28"
-              /></label>
-              <input
-                type="text"
-                name="user-name"
-                id="user-name"
-                placeholder="Usuário" />
-            </div>
-
-            <div>
-              <label for="user-pass"
-                ><img src="./img/padlock 1.png" alt="" width="32" height="32"
-              /></label>
-              <input
-                type="password"
-                name="user-pass"
-                id="user-pass"
-                placeholder="Senha" />
-            </div>
-
-            <span class="message-error" data-js="message-js"
-              >Digite o nome do usuario nesse formato: "teste.teste"</span
-            >
-
-            <button class="button button-login">Entrar</button>
-          </form>
-        </div>
+      <div class="main-container-reatores">
+        <ul class="main-container-reatores-card" data-js="reactors-list">
+          <li><a href="">Reator 11</a></li>
+          <li><a href="">Reator 12</a></li>
+          <li><a href="">Reator 13</a></li>
+          <li><a href="">Reator 14</a></li>
+        </ul>
       </div>
     </main>
+    <footer>Todos direitos reservados para AVCO</footer>
 
-    <script type="module" src="./js/login.js"></script>
+    <script type="module" src="./js/reatores.js"></script>
   </body>
 </html>

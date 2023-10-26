@@ -19,7 +19,7 @@ form.addEventListener("submit", async (event) => {
       const { first_name, last_name, type_user } = response.user_profile
       localStorage.setItem("name-user", `${first_name} ${last_name}`)
       localStorage.setItem("type-user", type_user)
-      window.location.replace("./reatores.html")
+      window.location.replace("./index.html")
       return
     }
     message.textContent = "Usuário não existe ou senha errada"

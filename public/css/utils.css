@@ -33,6 +33,11 @@
   font-size: 1.3rem;
   color: white;
 }
+.setor-user {
+  display: flex;
+  flex-direction: column;
+}
+
 .button-logout {
   cursor: pointer;
   margin-top: 0.2rem;

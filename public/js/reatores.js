@@ -6,15 +6,17 @@ const userSetorSpan = document.querySelector('[data-js="user-setor"]')
 const btnLogout = document.querySelector('[data-js="btn-logout"]')
 
 const userNameFormat = (name) => {
-  const arraysLetters = name.split(" ")
-  const firstName = arraysLetters[0]
-  const lastName = arraysLetters[arraysLetters.length - 1]
-  const firstNameLetter = firstName[0].toUpperCase()
-  const lastNameLetter = lastName[0].toUpperCase()
+  if (name) {
+    const arraysLetters = name.split(" ")
+    const firstName = arraysLetters[0]
+    const lastName = arraysLetters[arraysLetters.length - 1]
+    const firstNameLetter = firstName[0].toUpperCase()
+    const lastNameLetter = lastName[0].toUpperCase()
 
-  return `${firstNameLetter}${firstName.slice(
-    1,
-  )} ${lastNameLetter}${lastName.slice(1)}`
+    return `${firstNameLetter}${firstName.slice(
+      1,
+    )} ${lastNameLetter}${lastName.slice(1)}`
+  }
 }
 
 const userInfoRender = () => {
@@ -22,10 +24,22 @@ const userInfoRender = () => {
   const userType = localStorage.getItem("type-user")
   const formatedName = userNameFormat(userName)
 
-  userNameSpan.textContent = formatedName
-  userSetorSpan.innerHTML = `<strong>Setor:</strong>${userType}`
+  userNameSpan.textContent = userName ? formatedName : "Sem Nome"
+  userSetorSpan.innerHTML = userType
+    ? `<strong>Setor:</strong>${userType}`
+    : "Sem Nome"
 }
 
+const reactorsRender = async () => {
+  const responseToken = await fetchToken()
+  if (responseToken) {
+    console.log("listar reatores")
+    return
+  }
+  window.location.replace("./login.html")
+}
+
+reactorsRender()
 userInfoRender()
 btnLogout.addEventListener("click", async (event) => {
   const responseToken = await fetchToken()
@@ -34,6 +48,6 @@ btnLogout.addEventListener("click", async (event) => {
     await fetchLogout(token)
     localStorage.removeItem("name-user")
     localStorage.removeItem("type-user")
-    window.location.replace("./index.html")
+    window.location.replace("./login.html")
   }
 })

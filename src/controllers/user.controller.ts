@@ -151,9 +151,9 @@ export const login = async (req: Request, res: Response) => {
 
 export const refreshToken = async (req: Request, res: Response) => {
   try {
-    const { id: refreshTokenId } = req.cookies.refreshToken
-
-    if (refreshTokenId) {
+    const cookieRefreshToken = req.cookies.refreshToken
+    if (cookieRefreshToken) {
+      const refreshTokenId = cookieRefreshToken.id
       const existRefreshToken = await prisma.refreshToken.findUnique({
         where: { id: refreshTokenId },
       })
@@ -173,6 +173,7 @@ export const refreshToken = async (req: Request, res: Response) => {
       error: "values not found",
     })
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: "internal server error" })
   }
 }
