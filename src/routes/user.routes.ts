@@ -9,7 +9,7 @@ router.post(
   Auth.authorization("admin"),
   UserController.registerUser,
 )
-router.post("/login", UserController.login)
+router.post("/login", Auth.notExistCookie, UserController.login)
 router.post("/refresh-token", UserController.refreshToken)
 router.post("/logout-user", Auth.authenticate, UserController.logout)
 

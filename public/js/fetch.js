@@ -33,7 +33,7 @@ export const fetchToken = async () => {
       credentials: "include",
     })
 
-    if (response.ok === "200") {
+    if (response.ok) {
       return response.json()
     }
   } catch (err) {

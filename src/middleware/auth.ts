@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express"
 import JWT, { JwtPayload } from "jsonwebtoken"
 import dotenv from "dotenv"
 import prisma from "../database/prisma"
+import RefreshToken from "../utils/refreshToken.utils"
 dotenv.config()
 
 const Auth = {
@@ -21,7 +22,10 @@ const Auth = {
             (await prisma.refreshToken.findUnique({
               where: { id: decoded.sub as string },
             }))
-          if (refreshToken) {
+          const validRefreshToken = await RefreshToken.isValidRefreshToken(
+            refreshToken?.id,
+          )
+          if (refreshToken && validRefreshToken) {
             const acessTokenValid = await prisma.accessToken.findUnique({
               where: {
                 refresh_token_id: refreshToken.id,
@@ -77,6 +81,16 @@ const Auth = {
           error: "You are not authorization",
         })
       }
+    }
+  },
+
+  notExistCookie(req: Request, res: Response, next: NextFunction) {
+    const cookie = req.cookies.refreshToken
+
+    if (cookie) {
+      res.status(401).json({ error: "you are not loggin" })
+    } else {
+      next()
     }
   },
 }

@@ -59,6 +59,25 @@ const RefreshToken = {
       }
     }
   },
+
+  async isValidRefreshToken(refreshTokenId?: string) {
+    try {
+      const refreshToken = await prisma.refreshToken.findUnique({
+        where: { id: refreshTokenId },
+      })
+      if (refreshToken) {
+        const expiresInRefreshToken = refreshToken.expires_in
+        const currentDate = dayjs().unix()
+        if (expiresInRefreshToken > currentDate) {
+          return true
+        }
+        await prisma.refreshToken.delete({ where: { id: refreshToken.id } })
+        return false
+      }
+    } catch (err) {
+      throw new Error(`error in find refresh token ${err}`)
+    }
+  },
 }
 
 export default RefreshToken

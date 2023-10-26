@@ -112,7 +112,6 @@ export const login = async (req: Request, res: Response) => {
 
         if (refreshToken) {
           const timestamp = dayjs.unix(refreshToken.expires_in).diff()
-
           return res
             .status(200)
             .cookie("refreshToken", refreshToken, {
@@ -170,7 +169,6 @@ export const refreshToken = async (req: Request, res: Response) => {
     })
   } catch (err) {
     res.status(500).json({ error: "internal server error" })
-    console.log(err)
   }
 }
 
