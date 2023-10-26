@@ -11,3 +11,35 @@
 .button:hover {
   background-color: #0874b0;
 }
+
+.header-container-perfil:hover .menu-dropdown-user {
+  opacity: 1;
+  transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.menu-dropdown-user {
+  border-radius: 10px;
+  background-color: var(--primary-color);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  position: absolute;
+  top: 10%;
+  opacity: 0;
+}
+.menu-dropdown-user span {
+  font-size: 1.3rem;
+  color: white;
+}
+.button-logout {
+  cursor: pointer;
+  margin-top: 0.2rem;
+  padding: 0.2rem 1rem;
+  background-color: red;
+}
+
+.button-logout:hover {
+  background-color: rgba(255, 0, 0, 0.733);
+}

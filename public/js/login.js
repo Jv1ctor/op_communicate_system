@@ -16,8 +16,9 @@ form.addEventListener("submit", async (event) => {
     const response = await fetchLogin(nameUser, passUser)
 
     if (response.action.login) {
-      const { first_name, last_name } = response.user_profile
+      const { first_name, last_name, type_user } = response.user_profile
       localStorage.setItem("name-user", `${first_name} ${last_name}`)
+      localStorage.setItem("type-user", type_user)
       window.location.replace("./reatores.html")
       return
     }

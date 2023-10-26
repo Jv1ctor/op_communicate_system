@@ -4,6 +4,10 @@
   text-align: center;
 }
 
+#login .header-container {
+  justify-content: center;
+}
+
 .header-container-logo {
   width: 15rem;
 }

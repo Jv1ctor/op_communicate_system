@@ -95,6 +95,7 @@ export const login = async (req: Request, res: Response) => {
     if (firstName && lastName && password) {
       const user = await prisma.users.findFirst({
         where: { first_name: firstName, last_name: lastName },
+        include: { user_adm: true, user_cq: true, user_prod: true },
       })
 
       const correctPassword =
@@ -126,6 +127,10 @@ export const login = async (req: Request, res: Response) => {
               user_profile: {
                 first_name: user.first_name,
                 last_name: user.last_name,
+                type_user:
+                  (user.user_adm && "Admin") ||
+                  (user.user_cq && "Controle Qualidade") ||
+                  (user.user_prod && "Produção"),
               },
             })
         }
@@ -175,6 +180,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 export const logout = async (_req: Request, res: Response) => {
   try {
     const userId = res.locals.userId
+    res.clearCookie("refreshToken")
     const refreshToken = await prisma.refreshToken.findUnique({
       where: { fk_user_id: userId },
     })

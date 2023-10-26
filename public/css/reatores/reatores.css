@@ -1,6 +1,6 @@
-#reatores .header-container {
+.header-container {
   display: flex;
-  padding: 0 2.5rem;
+  padding: 0 5rem;
   padding-bottom: 0.5rem;
   align-items: center;
   justify-content: space-between;
@@ -14,7 +14,7 @@
 }
 
 .header-container-perfil {
-  cursor: default;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,8 +26,6 @@
   max-width: 20ch;
   word-break: keep-all;
   text-align: center;
-  position: absolute;
-  top: 5.3rem;
 }
 
 .main-container-reatores {

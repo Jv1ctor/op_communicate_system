@@ -20,7 +20,24 @@ export const fetchLogin = async (name, password) => {
   }
 }
 
-export const fetchReactorsList = () => {}
+export const fetchLogout = async (token) => {
+  try {
+    const response = await fetch(`${BASIC_URL}/api/user/logout-user`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    return response.json()
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+export const fetchReactorsList = async () => {}
 
 export const fetchToken = async () => {
   try {
