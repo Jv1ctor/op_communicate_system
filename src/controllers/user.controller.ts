@@ -3,7 +3,6 @@ import { Users } from "@prisma/client"
 import bcrypt from "bcrypt"
 import prisma from "../database/prisma"
 import RefreshToken from "../utils/refreshToken.utils"
-import dayjs from "dayjs"
 
 interface UserRegistration extends Users {
   type_user: "production" | "quality_control"
@@ -111,12 +110,10 @@ export const login = async (req: Request, res: Response) => {
           : existRefreshToken
 
         if (refreshToken) {
-          const timestamp = dayjs.unix(refreshToken.expires_in).diff()
           return res
             .status(200)
             .cookie("refreshToken", refreshToken, {
               httpOnly: true,
-              maxAge: timestamp,
               sameSite: "strict",
               secure: true,
             })
@@ -170,7 +167,6 @@ export const refreshToken = async (req: Request, res: Response) => {
       error: "values not found",
     })
   } catch (err) {
-    console.log(err)
     res.status(500).json({ error: "internal server error" })
   }
 }

@@ -49,7 +49,6 @@ export const fetchToken = async () => {
       },
       credentials: "include",
     })
-
     if (response.ok) {
       return response.json()
     }

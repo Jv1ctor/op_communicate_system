@@ -13,19 +13,13 @@ const Auth = {
       const [authType, token] = authCode.split(" ")
       if (authType === "Bearer") {
         try {
-          const decoded = JWT.verify(
-            token,
-            process.env.JWT_KEY as string,
-          ) as JwtPayload
+          const decoded = JWT.verify(token, process.env.JWT_KEY as string) as JwtPayload
           const refreshToken =
             decoded &&
             (await prisma.refreshToken.findUnique({
               where: { id: decoded.sub as string },
             }))
-          const validRefreshToken = await RefreshToken.isValidRefreshToken(
-            refreshToken?.id,
-          )
-          if (refreshToken && validRefreshToken) {
+          if (refreshToken) {
             const acessTokenValid = await prisma.accessToken.findUnique({
               where: {
                 refresh_token_id: refreshToken.id,
@@ -91,6 +85,22 @@ const Auth = {
       res.status(401).json({ error: "you are already logged in" })
     } else {
       next()
+    }
+  },
+
+  async validRefreshToken(req: Request, res: Response, next: NextFunction) {
+    try {
+      const refreshToken = req.cookies.refreshToken
+
+      if (refreshToken) {
+        const valid = await RefreshToken.isValidRefreshToken(refreshToken.id)
+        if (!valid) {
+          res.clearCookie("refreshToken")
+        }
+      }
+      next()
+    } catch (err) {
+      res.status(401).json({ error: "refresh token expired" })
     }
   },
 }

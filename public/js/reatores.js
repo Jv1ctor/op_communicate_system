@@ -13,9 +13,7 @@ const userNameFormat = (name) => {
     const firstNameLetter = firstName[0].toUpperCase()
     const lastNameLetter = lastName[0].toUpperCase()
 
-    return `${firstNameLetter}${firstName.slice(
-      1,
-    )} ${lastNameLetter}${lastName.slice(1)}`
+    return `${firstNameLetter}${firstName.slice(1)} ${lastNameLetter}${lastName.slice(1)}`
   }
 }
 
@@ -25,9 +23,7 @@ const userInfoRender = () => {
   const formatedName = userNameFormat(userName)
 
   userNameSpan.textContent = userName ? formatedName : "Sem Nome"
-  userSetorSpan.innerHTML = userType
-    ? `<strong>Setor:</strong>${userType}`
-    : "Sem Nome"
+  userSetorSpan.innerHTML = userType ? `<strong>Setor:</strong>${userType}` : "Sem Nome"
 }
 
 const reactorsRender = async () => {

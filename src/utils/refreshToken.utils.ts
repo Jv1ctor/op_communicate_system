@@ -60,7 +60,7 @@ const RefreshToken = {
     }
   },
 
-  async isValidRefreshToken(refreshTokenId?: string) {
+  async isValidRefreshToken(refreshTokenId: string) {
     try {
       const refreshToken = await prisma.refreshToken.findUnique({
         where: { id: refreshTokenId },
@@ -72,8 +72,8 @@ const RefreshToken = {
           return true
         }
         await prisma.refreshToken.delete({ where: { id: refreshToken.id } })
-        return false
       }
+      return false
     } catch (err) {
       throw new Error(`error in find refresh token ${err}`)
     }
