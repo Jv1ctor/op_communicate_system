@@ -230,12 +230,7 @@ export const createReactors = async (req: Request, res: Response) => {
 export const listReactors = async (_req: Request, res: Response) => {
   try {
     const reactors = await prisma.reactors.findMany({ select: { name_reactor: true } })
-    if (reactors.length > 0) {
-      return res.status(200).json({ action: { list_reactors: true }, reactors })
-    }
-    res
-      .status(400)
-      .json({ action: { list_reactors: false }, error: "not exist reactors" })
+    return res.status(200).json({ action: { list_reactors: true }, reactors })
   } catch (err) {
     res.status(500).json({ error: "internal server error" })
   }

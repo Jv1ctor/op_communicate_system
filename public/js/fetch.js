@@ -37,7 +37,23 @@ export const fetchLogout = async (token) => {
   }
 }
 
-export const fetchReactorsList = async () => {}
+export const fetchReactorsList = async (token) => {
+  try {
+    const response = await fetch(`${BASIC_URL}/api/user/list-reactors`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (response.ok) {
+      return response.json()
+    }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
 
 export const fetchToken = async () => {
   try {

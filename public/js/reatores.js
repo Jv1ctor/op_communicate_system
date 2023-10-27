@@ -1,4 +1,4 @@
-import { fetchLogout, fetchToken } from "./fetch.js"
+import { fetchLogout, fetchReactorsList, fetchToken } from "./fetch.js"
 
 const reactorList = document.querySelector('[data-js="reactors-list"]')
 const userNameSpan = document.querySelector('[data-js="user-name"]')
@@ -27,9 +27,17 @@ const userInfoRender = () => {
 }
 
 const reactorsRender = async () => {
-  const responseToken = await fetchToken()
-  if (responseToken) {
-    console.log("listar reatores")
+  const { action, token } = await fetchToken()
+  if (action.refresh_token) {
+    const { reactors } = await fetchReactorsList(token)
+    if (reactors.length > 0) {
+      reactors.map((reactor) => {
+        const formatNameReactor = reactor.name_reactor.replace("R", "")
+        reactorList.innerHTML += `<li><a href="">Reator ${formatNameReactor}</a></li>`
+      })
+      return
+    }
+    reactorList.innerHTML = "<span class='not-found-list'>Sem Reactores</span>"
     return
   }
   window.location.replace("./login.html")
