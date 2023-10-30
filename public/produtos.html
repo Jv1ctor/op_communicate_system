@@ -46,9 +46,58 @@
           </div>
         </div>
 
-        <div class="main-produto-tables">
+        <div class="main-produto-tables" data-js="tables">
           <div class="main-produto-table andamento">
-            <h2 class="main-produto-table-title">Em andamento</h2>
+            <div class="main-produto-table-header" data-js="show-andamento">
+              <h2 class="main-produto-table-title">Em andamento</h2>
+              <img
+                src="./img/down-arrow.png"
+                alt="arrow menu"
+                width="48"
+                height="48"
+                data-js="show-andamento"
+                class="arrow active-arrow" />
+            </div>
+
+            <table class="active-table">
+              <thead class="produto-table-head">
+                <tr>
+                  <th>Status</th>
+                  <th>Nome</th>
+                  <th>Quantidade</th>
+                  <th>Número-OP</th>
+                  <th>Número-Lote</th>
+                  <th>Turno</th>
+                  <th>Data</th>
+                </tr>
+              </thead>
+              <tbody class="produto-table-body">
+                <tr>
+                  <td><span class="circle"></span></td>
+                  <td>produto 1</td>
+                  <td>2kg</td>
+                  <td>12123</td>
+                  <td>16575</td>
+                  <td>A</td>
+                  <td>20/11/2023</td>
+                  <td><a href="" class="button">ver</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="main-produto-table aprovados">
+            <div class="main-produto-table-header" data-js="show-aprovados">
+              <h2 class="main-produto-table-title">aprovados</h2>
+              <img
+                src="./img/down-arrow.png"
+                alt="arrow menu"
+                width="48"
+                height="48"
+                data-js="show-aprovados"
+                class="arrow" />
+            </div>
+
             <table>
               <thead class="produto-table-head">
                 <tr>
@@ -70,22 +119,68 @@
                   <td>16575</td>
                   <td>A</td>
                   <td>20/11/2023</td>
+                  <td><a href="" class="button">ver</a></td>
+                </tr>
+                <tr>
+                  <td><span class="circle"></span></td>
+                  <td>produto 1</td>
+                  <td>2kg</td>
+                  <td>12123</td>
+                  <td>16575</td>
+                  <td>A</td>
+                  <td>20/11/2023</td>
+                  <td><a href="" class="button">ver</a></td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div class="main-produto-table aprovados">
-            <table>
-              <thead></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-
           <div class="main-produto-table reprovados">
+            <div class="main-produto-table-header" data-js="show-reprovados">
+              <h2 class="main-produto-table-title">reprovados</h2>
+              <img
+                src="./img/down-arrow.png"
+                alt="arrow menu"
+                width="48"
+                height="48"
+                data-js="show-reprovados"
+                class="arrow" />
+            </div>
+
             <table>
-              <thead></thead>
-              <tbody></tbody>
+              <thead class="produto-table-head">
+                <tr>
+                  <th>Status</th>
+                  <th>Nome</th>
+                  <th>Quantidade</th>
+                  <th>Número-OP</th>
+                  <th>Número-Lote</th>
+                  <th>Turno</th>
+                  <th>Data</th>
+                </tr>
+              </thead>
+              <tbody class="produto-table-body">
+                <tr>
+                  <td><span class="circle"></span></td>
+                  <td>produto 1</td>
+                  <td>2kg</td>
+                  <td>12123</td>
+                  <td>16575</td>
+                  <td>A</td>
+                  <td>20/11/2023</td>
+                  <td><a href="" class="button">ver</a></td>
+                </tr>
+                <tr>
+                  <td><span class="circle"></span></td>
+                  <td>produto 1</td>
+                  <td>2kg</td>
+                  <td>12123</td>
+                  <td>16575</td>
+                  <td>A</td>
+                  <td>20/11/2023</td>
+                  <td><a href="" class="button">ver</a></td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
