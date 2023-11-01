@@ -2,6 +2,10 @@ const reactorName = document.querySelector('[data-js="reactor-name"]')
 const tableContainer = document.querySelector("[data-js='tables']")
 const tableList = document.querySelectorAll(".main-produto-table")
 
+const modal = document.querySelector("[data-js='modal']")
+const buttonAddProduct = document.querySelector("[data-js='add-product']")
+const modalForm = document.querySelector("[data-js='form-register-product']")
+
 const renderReactorName = () => {
   const query = window.location.search
   const params = new URLSearchParams(query)
@@ -23,13 +27,14 @@ const currentArrow = (elemento) => {
 const menuEvent = (context, divTable, elemento) => {
   const table = divTable.querySelector("table")
   const isShowMenu = divTable.classList.contains(context)
-  const arrowElement = currentArrow(elemento)
+  const arrowOther = divTable.querySelector(".arrow")
   if (isShowMenu) {
+    const arrowElement = currentArrow(elemento)
     arrowElement.classList.toggle("active-arrow")
     table.classList.toggle("active-table")
   } else {
     table.classList.remove("active-table")
-    arrowElement.classList.remove("active-arrow")
+    arrowOther.classList.remove("active-arrow")
   }
 }
 
@@ -47,5 +52,54 @@ const showTablesMenu = (e) => {
   })
 }
 
+const openModalProduct = (e) => {
+  modal.classList.toggle("show-modal")
+  document.body.classList.toggle("show-modal")
+}
+
+const closeModalProduct = (e) => {
+  if (e.target.dataset.js === "button-exit") {
+    modal.classList.toggle("show-modal")
+    document.body.classList.toggle("show-modal")
+  }
+
+  if (e.target.dataset.js === "modal") {
+    modal.classList.toggle("show-modal")
+    document.body.classList.toggle("show-modal")
+  }
+}
+
+const formatWithRegex = (event, regex) => {
+  const value = event.target.value
+  const match = value.match(regex)
+
+  event.target.value = value.replace(regex, "")
+  if (match) {
+    event.target.classList.add("input-error")
+  } else {
+    event.target.classList.remove("input-error")
+  }
+}
+
+const formattingInputs = (e) => {
+  if (e.target.dataset.type === "number") {
+    const regex = /\D/g
+    formatWithRegex(e, regex)
+  }
+
+  if (e.target.dataset.type === "decimal") {
+    const regex = /[^\d.]/
+    formatWithRegex(e, regex)
+  }
+
+  if (e.target.dataset.type === "string") {
+    const regex = /[^A-Za-záàâãéèêíìóòôõúùûçÁÀÂÃÉÈÊÍÌÓÒÔÕÚÙÛÇ\s]/g
+    formatWithRegex(e, regex)
+  }
+}
+
 renderReactorName()
+modalForm.addEventListener("input", formattingInputs)
+buttonAddProduct.addEventListener("click", openModalProduct)
+modal.addEventListener("click", closeModalProduct)
 tableContainer.addEventListener("click", showTablesMenu)
