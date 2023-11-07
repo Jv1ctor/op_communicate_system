@@ -1,5 +1,4 @@
 const BASIC_URL = "http://localhost:3000"
-
 export const fetchLogin = async (name, password) => {
   try {
     const response = await fetch(`${BASIC_URL}/api/user/login`, {

@@ -35,6 +35,9 @@ span {
 }
 
 footer {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
   font-size: 1.1rem;
   text-align: center;
   padding-top: 10rem;

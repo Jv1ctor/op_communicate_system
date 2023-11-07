@@ -1,0 +1,48 @@
+.main-container-dados{
+  padding: 0;
+}
+
+.main-dados-header{
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  place-items: center;
+}
+
+.main-dados-header-title{
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin-bottom: 2rem;
+}
+
+.main-dados-header-content{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  justify-items: start;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.main-analise-header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.main-analise-header-title {
+  font-size: 3rem;
+  font-weight: 500;
+}
+
+#analise .main-analise-header .button {
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  position: absolute;
+  right: 0%;
+}

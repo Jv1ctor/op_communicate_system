@@ -12,6 +12,16 @@
   background-color: #0874b0;
 }
 
+.container{
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 5rem;
+  padding: 3rem;
+  border-radius: 20px;
+  background-color: var(--secondary-bg);
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.25);
+}
+
 .header-container-perfil:hover .menu-dropdown-user {
   opacity: 1;
   transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);

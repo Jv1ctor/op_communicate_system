@@ -10,3 +10,7 @@
 
 /* Page produto */
 @import url("./produtos/produto.css");
+
+
+/* Page analise */
+@import url("./analise/analise.css")
