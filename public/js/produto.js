@@ -4,7 +4,7 @@ const tableList = document.querySelectorAll(".main-produto-table")
 
 const modal = document.querySelector("[data-js='modal']")
 const buttonAddProduct = document.querySelector("[data-js='add-product']")
-const modalForm = document.querySelector("[data-js='form-register-product']")
+export const modalForm = document.querySelector("[data-js='form-register-product']")
 
 const renderReactorName = () => {
   const query = window.location.search

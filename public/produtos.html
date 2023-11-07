@@ -200,37 +200,37 @@
           <div class="register-produto-form-container">
             <div class="form-fields">
               <label for="name">Nome:</label>
-              <input type="text" id="name" data-type="string" />
+              <input type="text" id="name" data-type="string" value="produto" />
             </div>
 
             <div class="form-fields">
               <label for="qnt">Quantidade(kg):</label>
-              <input type="text" id="qnt" data-type="decimal" />
+              <input type="text" id="qnt" data-type="decimal" value="123" />
             </div>
 
             <div class="form-fields">
               <label for="num-op">Número-OP:</label>
-              <input type="text" id="num-op" data-type="number" />
+              <input type="text" id="num-op" data-type="number" value="123" />
             </div>
 
             <div class="form-fields">
               <label for="turn-supervisor">Supervisor de Turno:</label>
-              <input type="text" id="turn-supervisor" data-type="string" />
+              <input type="text" id="turn-supervisor" data-type="string" value="teste1" />
             </div>
 
             <div class="form-fields">
               <label for="num-roadmap">Número-Roteiro:</label>
-              <input type="text" id="num-roadmap" data-type="number" />
+              <input type="text" id="num-roadmap" data-type="number" value="123" />
             </div>
 
             <div class="form-fields">
               <label for="name-operator">Operador:</label>
-              <input type="text" id="name-operator" data-type="string" />
+              <input type="text" id="name-operator" data-type="string" value="teste2" />
             </div>
 
             <div class="form-fields">
               <label for="num-batch">Número-Lote:</label>
-              <input type="text" id="num-batch" data-type="number" />
+              <input type="text" id="num-batch" data-type="number" value="123" />
             </div>
 
             <div class="form-fields">
@@ -249,7 +249,9 @@
     </div>
     <footer>Desenvolvido por<a href=""> Jvictor</a></footer>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script type="module" src="./js/user.js"></script>
     <script type="module" src="./js/produto.js"></script>
+    <script type="module" src="./js/socketProduto.js"></script>
   </body>
 </html>
