@@ -27,7 +27,7 @@
 
 .main-analise-header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   position: relative;
 }
@@ -35,6 +35,7 @@
 .main-analise-header-title {
   font-size: 3rem;
   font-weight: 500;
+  margin-left: 10rem;
 }
 
 #analise .main-analise-header .button {
@@ -44,8 +45,6 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  position: absolute;
-  right: 0%;
 }
 
 [data-js="table-analise"] {

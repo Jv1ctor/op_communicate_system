@@ -1,13 +1,13 @@
 .main-produto-header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  position: relative;
 }
 
 .main-produto-header-title {
   font-size: 3rem;
   font-weight: 500;
+  margin-left: 10rem;
 }
 
 #produto .main-produto-header .button {
@@ -17,8 +17,6 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  position: absolute;
-  right: 0%;
 }
 
 .main-produto-tables {
