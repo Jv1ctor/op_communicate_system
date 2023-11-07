@@ -41,16 +41,16 @@
         <div class="main-dados-header">
           <h1 class="main-dados-header-title">Especificações</h1>
           <div class="main-dados-header-content">
-            <span>Nome: Produto 1</span>
-            <span>Número-Roteiro: 1555</span>
-            <span>Número-OP: 1234</span>
-            <span>Operador: Teste</span>
-            <span>Supervisor de Turno: Teste1</span>
-            <span>Reator: 11</span>
-            <span>Quantidade: 2kg</span>
-            <span>Número-Lote: 323232</span>
-            <span>Turno: A</span>
-            <span>Data: 12/10/2023</span>
+            <span><strong>Nome:</strong> Produto 1</span>
+            <span><strong>Número-Roteiro:</strong> 1555</span>
+            <span><strong>Número-OP:</strong> 1234</span>
+            <span><strong>Operador:</strong> Teste</span>
+            <span><strong>Supervisor de Turno:</strong> Teste1</span>
+            <span><strong>Reator:</strong> 11</span>
+            <span><strong>Quantidade:</strong> 2kg</span>
+            <span><strong>Número-Lote:</strong> 323232</span>
+            <span><strong>Turno:</strong> A</span>
+            <span><strong>Data:</strong> 12/10/2023</span>
           </div>
         </div>
       </div>
@@ -58,69 +58,68 @@
       <div class="main-container-analise container">
         <div class="main-analise-header">
           <h1 class="main-analise-header-title">Analises</h1>
-          <div class="button" data-js="add-product">
+          <div class="button" data-js="add-analise">
             Adicionar Analise
             <img src="./img/add.png" alt="adicionar image" width="24" height="24" />
           </div>
+        </div>
+
+        <div class="main-container-analise-content">
+          <table data-js="table-analise">
+            <thead class="analise-table-head">
+              <tr>
+                <th>Número da Analise</th>
+                <th>Ajuste</th>
+                <th>Hora</th>
+              </tr>
+            </thead>
+
+            <tbody class="analise-table-body">
+              <tr>
+                <td>Analise 1</td>
+                <td>tudo ok</td>
+                <td>10:00</td>
+              </tr>
+
+              <tr>
+                <td>Analise 1</td>
+                <td>tudo ok</td>
+                <td>10:00</td>
+              </tr>
+
+              <tr>
+                <td>Analise 1</td>
+                <td>tudo ok</td>
+                <td>10:00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
-    <div class="modal-register-produto" data-js="modal">
-      <div class="modal-register-produto-content">
+    <div class="modal-register-analise" data-js="modal">
+      <div class="modal-register-analise-content">
         <span class="button-exit" data-js="button-exit">X</span>
-        <form class="form-register-product" data-js="form-register-product">
-          <h2 class="register-produto-form-title">Cadastrar Produto</h2>
+        <form class="form-register-analise" data-js="form-register-analise">
+          <h2 class="register-analise-form-title">Enviar Analise</h2>
 
-          <div class="register-produto-form-container">
+          <div class="register-analise-form-container">
             <div class="form-fields">
-              <label for="name">Nome:</label>
-              <input type="text" id="name" data-type="string" />
+              <label for="analise-text">Ajuste:</label>
+              <textarea
+                name="analise"
+                id="analise-text"
+                cols="10"
+                rows="5"
+                maxlength="100"
+                placeholder="Digite o Ajuste..."></textarea>
             </div>
-
-            <div class="form-fields">
-              <label for="qnt">Quantidade(kg):</label>
-              <input type="text" id="qnt" data-type="decimal" />
-            </div>
-
-            <div class="form-fields">
-              <label for="num-op">Número-OP:</label>
-              <input type="text" id="num-op" data-type="number" />
-            </div>
-
-            <div class="form-fields">
-              <label for="turn-supervisor">Supervisor de Turno:</label>
-              <input type="text" id="turn-supervisor" data-type="string" />
-            </div>
-
-            <div class="form-fields">
-              <label for="num-roadmap">Número-Roteiro:</label>
-              <input type="text" id="num-roadmap" data-type="number" />
-            </div>
-
-            <div class="form-fields">
-              <label for="name-operator">Operador:</label>
-              <input type="text" id="name-operator" data-type="string" />
-            </div>
-
-            <div class="form-fields">
-              <label for="num-batch">Número-Lote:</label>
-              <input type="text" id="num-batch" data-type="number" />
-            </div>
-
-            <div class="form-fields">
-              <label for="turn">Turno:</label>
-              <select id="turn">
-                <option value="-1">Selecione o Turno</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-              </select>
-            </div>
+            <button class="button">Enviar</button>
           </div>
-
-          <button class="button">Cadastrar</button>
         </form>
       </div>
     </div>
-    <footer>Desenvolvido por <a href="">Jvictor</a></footer>
+    <footer>Desenvolvido por<a href=""> Jvictor</a></footer>
     <script type="module" src="./js/user.js"></script>
     <script type="module" src="./js/analise.js"></script>
   </body>

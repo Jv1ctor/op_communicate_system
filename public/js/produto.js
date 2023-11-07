@@ -25,7 +25,7 @@ const currentArrow = (elemento) => {
 }
 
 const menuEvent = (context, divTable, elemento) => {
-  const table = divTable.querySelector("table")
+  const table = divTable.querySelector("data-js='table-produto'")
   const isShowMenu = divTable.classList.contains(context)
   const arrowOther = divTable.querySelector(".arrow")
   if (isShowMenu) {

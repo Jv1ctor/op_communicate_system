@@ -43,3 +43,7 @@ footer {
   padding-top: 10rem;
   padding-bottom: 1rem;
 }
+
+table {
+  border-collapse: collapse;
+}

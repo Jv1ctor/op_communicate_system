@@ -51,10 +51,8 @@
   text-transform: uppercase;
 }
 
-table {
+[data-js="table-produto"] {
   display: none;
-  margin: 0 auto;
-  border-collapse: collapse;
 }
 
 .produto-table-head tr,

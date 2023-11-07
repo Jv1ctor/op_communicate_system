@@ -1,30 +1,31 @@
-.main-container-dados{
+.main-container-dados {
   padding: 0;
 }
 
-.main-dados-header{
+.main-dados-header {
   display: flex;
   flex-direction: column;
   padding: 2rem;
   place-items: center;
 }
 
-.main-dados-header-title{
-  font-size: 1.5rem;
+.main-dados-header-title {
+  font-size: 1.8rem;
   color: var(--primary-color);
   margin-bottom: 2rem;
 }
 
-.main-dados-header-content{
+.main-dados-header-content {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 0.5rem;
+  gap: 0.2rem;
   justify-items: start;
+  padding: 0.5rem 1rem;
   color: var(--text-color);
-  font-weight: 500;
+  font-size: 1.2rem;
 }
 
-.main-analise-header{
+.main-analise-header {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,4 +46,151 @@
   align-items: center;
   position: absolute;
   right: 0%;
+}
+
+[data-js="table-analise"] {
+  margin: 4rem auto;
+}
+
+.analise-table-head {
+  color: var(--secondary-color);
+  border-bottom: 3px solid var(--primary-color);
+}
+
+.analise-table-head tr,
+.analise-table-body tr {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+}
+
+.analise-table-head tr {
+  font-size: 1.2rem;
+  padding: 0.5rem 1.2rem;
+}
+
+.analise-table-body {
+  display: grid;
+  gap: 1rem;
+  font-size: 1.2rem;
+}
+
+.analise-table-body tr {
+  padding: 0.3rem 1.2rem;
+  border-left: 3px solid var(--secondary-color);
+  border-bottom: 3px solid var(--secondary-color);
+  box-shadow: -1px 4px 5px 1px rgba(0, 0, 0, 0.1);
+}
+
+.analise-table-body td {
+  padding: 0.5rem 7rem;
+}
+
+.analise-table-body td:last-child,
+.analise-table-head th:last-child {
+  justify-self: flex-end;
+  align-self: center;
+  padding: 0;
+}
+
+.analise-table-body td:first-child,
+.analise-table-head th:first-child {
+  justify-self: start;
+  align-self: center;
+  padding: 0;
+}
+
+/* MODAL */
+
+.modal-register-analise {
+  display: none;
+  background: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  z-index: 99999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: 100px;
+}
+
+.modal-register-analise-content {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--main-bg);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.form-register-analise {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
+
+.form-register-product .button {
+  align-self: center;
+  width: max-content;
+  padding: 0.7rem 3rem;
+  font-size: 1.225rem;
+}
+
+.register-analise-form-title {
+  font-size: 2.5rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.register-analise-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5rem;
+  width: 500px;
+  padding: 3rem;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-fields label {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.form-fields textarea {
+  resize: none;
+  font-size: 1.3rem;
+  padding: 0.5rem 0.225rem;
+  outline: none;
+  border: 3px solid transparent;
+  background-color: var(--input-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 20rem;
+}
+
+.form-fields textarea {
+  padding-left: 10px;
+}
+
+.form-fields textarea:focus {
+  border-color: var(--primary-color);
+}
+
+#analise .button {
+  padding: 0.7rem 3rem;
+  font-size: 1.4rem;
+}
+
+.show-modal {
+  display: block;
+  overflow: hidden;
 }
