@@ -7,11 +7,9 @@ const buttonAddProduct = document.querySelector("[data-js='add-product']")
 export const modalForm = document.querySelector("[data-js='form-register-product']")
 
 const renderReactorName = () => {
-  const query = window.location.search
-  const params = new URLSearchParams(query)
-  const name = params.get("reactor")
-
-  reactorName.textContent = `Reator ${name}`
+  const reactor = localStorage.getItem("reactor")
+  const formattedName = reactor.replace("R", " ")
+  reactorName.textContent = `Reator ${formattedName}`
 }
 
 const currentArrow = (elemento) => {

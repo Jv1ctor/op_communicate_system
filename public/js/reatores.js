@@ -10,7 +10,7 @@ const reactorsRender = async () => {
     if (reactors.length > 0) {
       reactors.map((reactor) => {
         const formatNameReactor = reactor.name_reactor.replace("R", "")
-        reactorList.innerHTML += `<li><a href="./produtos.html?reactor=${formatNameReactor}">Reator ${formatNameReactor}</a></li>`
+        reactorList.innerHTML += `<li><a href="./produtos.html" data-js="link-reactor-btn" id="${reactor.name_reactor}">Reator ${formatNameReactor}</a></li>`
       })
       return
     }
@@ -21,3 +21,10 @@ const reactorsRender = async () => {
 }
 
 reactorsRender()
+reactorList.addEventListener("click", (event) => {
+  if (event.target.dataset.js === "link-reactor-btn") {
+    const reactorName = event.target.id
+
+    localStorage.setItem("reactor", reactorName)
+  }
+})

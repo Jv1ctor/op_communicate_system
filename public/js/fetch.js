@@ -71,3 +71,21 @@ export const fetchToken = async () => {
     throw new Error(err)
   }
 }
+
+export const fetchCreateProduct = async (token, data) => {
+  try {
+    const response = await fetch(`${BASIC_URL}/api/events/create-product`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    })
+
+    return response.json()
+  } catch (err) {
+    throw new Error(err)
+  }
+}

@@ -24,7 +24,6 @@ model Products {
   quant_produce     Float
   reactor           String     @db.VarChar
   operator          String     @db.VarChar
-  installation_unit String     @db.VarChar
   num_op            Int
   num_batch         Int
   num_roadmap       Int
