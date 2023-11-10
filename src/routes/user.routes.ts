@@ -1,5 +1,6 @@
 import { Router } from "express"
 import * as UserController from "../controllers/user.controller"
+import * as ReactorController from "../controllers/reactor.controller"
 import Auth from "../middleware/auth"
 const router = Router()
 
@@ -7,21 +8,21 @@ router.get(
   "/list-reactors",
   Auth.authenticate,
   Auth.validRefreshToken,
-  UserController.listReactors,
+  ReactorController.listReactors,
 )
 router.post(
   "/create-reactors",
   Auth.authenticate,
   Auth.validRefreshToken,
   Auth.authorization("admin"),
-  UserController.createReactors,
+  ReactorController.createReactors,
 )
 router.post(
   "/register-user",
   Auth.authenticate,
   Auth.validRefreshToken,
   Auth.authorization("admin"),
-  UserController.registerUser,
+  UserController.createUser,
 )
 router.post("/login", Auth.notExistCookie, UserController.login)
 router.post("/refresh-token", Auth.validRefreshToken, UserController.refreshToken)

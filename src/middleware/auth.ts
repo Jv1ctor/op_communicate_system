@@ -18,16 +18,11 @@ const Auth = {
             decoded &&
             (await prisma.refreshToken.findUnique({
               where: { id: decoded.sub as string },
+              include: { acess_token: { where: { id: decoded.jti } } },
             }))
-          if (refreshToken) {
-            const acessTokenValid = await prisma.accessToken.findUnique({
-              where: {
-                refresh_token_id: refreshToken.id,
-                id: decoded.jti,
-              },
-            })
 
-            if (acessTokenValid) {
+          if (refreshToken) {
+            if (refreshToken.id && refreshToken.acess_token) {
               res.locals.userId = refreshToken.fk_user_id
               success = true
             } else {
@@ -56,13 +51,14 @@ const Auth = {
             where: { id: userId },
             include: { user_adm: true, user_cq: true, user_prod: true },
           })
-          if (permiss === "admin" && user && user.user_adm) {
-            success = true
+
+          const typeUser = {
+            admin: user?.user_adm,
+            quality: user?.user_cq,
+            production: user?.user_prod,
           }
-          if (permiss === "production" && user && user.user_prod) {
-            success = true
-          }
-          if (permiss === "quality" && user && user.user_cq) {
+
+          if (typeUser[permiss]) {
             success = true
           }
         } catch (err) {}

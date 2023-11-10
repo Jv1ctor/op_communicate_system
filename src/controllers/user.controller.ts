@@ -1,76 +1,28 @@
 import { Request, Response } from "express"
-import { Users } from "@prisma/client"
-import bcrypt from "bcrypt"
-import prisma from "../database/prisma"
-import RefreshToken from "../utils/refreshToken.utils"
+import UserService, { UserLogin, UserRegistration } from "../services/users.service"
 
-interface UserRegistration extends Users {
-  type_user: "production" | "quality_control"
-}
-
-interface UserLogin extends Users {
-  name: string
-}
-
-export const registerUser = async (req: Request, res: Response) => {
+export const createUser = async (req: Request, res: Response) => {
   try {
-    const {
-      first_name: firstName,
-      last_name: lastName,
-      password,
-      type_user: typeUser,
-    }: UserRegistration = req.body
+    const dataRegistration: UserRegistration = req.body
+    const validationExist =
+      (dataRegistration.first_name &&
+        dataRegistration.last_name &&
+        dataRegistration.password &&
+        dataRegistration.password.length >= 5 &&
+        dataRegistration.type_user &&
+        dataRegistration.type_user === "production") ||
+      dataRegistration.type_user === "quality_control"
 
-    if (firstName && lastName && password && password.length >= 5 && typeUser) {
-      const existUser = await prisma.users.findUnique({
-        where: { last_name: lastName },
-      })
-
-      if (!existUser) {
-        const saltRounds = 10
-        const salt = await bcrypt.genSalt(saltRounds)
-        const hashPassword = await bcrypt.hash(password, salt)
-        let userTypeCreate = null
-
-        if (typeUser === "production" || typeUser === "quality_control") {
-          const user = await prisma.users.create({
-            data: {
-              first_name: firstName,
-              last_name: lastName,
-              password: hashPassword,
-            },
-          })
-
-          if (typeUser === "production") {
-            userTypeCreate = await prisma.userProd.create({
-              data: { fk_id_user_prod: user.id },
-            })
-          }
-
-          if (typeUser === "quality_control") {
-            userTypeCreate = await prisma.userCq.create({
-              data: { fk_id_user_cq: user.id },
-            })
-          }
-
-          if (user && userTypeCreate) {
-            const refreshToken = await RefreshToken.create(user.id)
-            return (
-              refreshToken &&
-              res.status(201).json({
-                action: { created_user: true, user_type: typeUser },
-                message: "register success",
-                user_profile: {
-                  first_name: user.first_name,
-                  last_name: user.last_name,
-                },
-              })
-            )
-          }
-        }
-        return res.status(400).json({
-          action: { created_user: false },
-          error: "invalid credentials",
+    if (validationExist) {
+      const userRegistration = await UserService.registerUser(dataRegistration)
+      if (userRegistration) {
+        return res.status(201).json({
+          action: { created_user: true, user_type: userRegistration.user.type_user },
+          message: "register success",
+          user_profile: {
+            first_name: userRegistration.user.first_name,
+            last_name: userRegistration.user.last_name,
+          },
         })
       }
       return res.status(400).json({
@@ -78,9 +30,9 @@ export const registerUser = async (req: Request, res: Response) => {
         error: "user already exists",
       })
     }
-    res.status(400).json({
+    return res.status(400).json({
       action: { created_user: false },
-      error: "values not found",
+      error: "invalid credentials",
     })
   } catch (err) {
     res.status(500).json({ error: "internal server error" })
@@ -92,44 +44,31 @@ export const login = async (req: Request, res: Response) => {
     const { name, password }: UserLogin = req.body
     const [firstName, lastName] = name.split(".")
     if (firstName && lastName && password) {
-      const user = await prisma.users.findFirst({
-        where: { first_name: firstName, last_name: lastName },
-        include: { user_adm: true, user_cq: true, user_prod: true },
-      })
+      const dataLogin = {
+        name: name,
+        first_name: firstName,
+        last_name: lastName,
+        password: password,
+      }
 
-      const correctPassword = user && (await bcrypt.compare(password, user.password))
-
-      if (correctPassword) {
-        const existRefreshToken = await prisma.refreshToken.findUnique({
-          where: { fk_user_id: user.id },
-          select: { id: true, expires_in: true },
-        })
-
-        const refreshToken = !existRefreshToken
-          ? await RefreshToken.create(user.id)
-          : existRefreshToken
-
-        if (refreshToken) {
-          return res
-            .status(200)
-            .cookie("refreshToken", refreshToken, {
-              httpOnly: true,
-              sameSite: "strict",
-              secure: true,
-            })
-            .json({
-              action: { login: true },
-              message: "logging success",
-              user_profile: {
-                first_name: user.first_name,
-                last_name: user.last_name,
-                type_user:
-                  (user.user_adm && "Admin") ||
-                  (user.user_cq && "Controle Qualidade") ||
-                  (user.user_prod && "Produção"),
-              },
-            })
-        }
+      const userLogin = await UserService.loginUser(dataLogin)
+      if (userLogin) {
+        return res
+          .status(200)
+          .cookie("refreshToken", userLogin.refreshToken, {
+            httpOnly: true,
+            sameSite: "strict",
+            secure: true,
+          })
+          .json({
+            action: { login: true },
+            message: "logging success",
+            user_profile: {
+              first_name: userLogin.user.first_name,
+              last_name: userLogin.user.last_name,
+              type_user: userLogin.user.type_user,
+            },
+          })
       }
       return res.status(400).json({
         action: { login: false },
@@ -149,12 +88,8 @@ export const refreshToken = async (req: Request, res: Response) => {
   try {
     const cookieRefreshToken = req.cookies.refreshToken
     if (cookieRefreshToken) {
-      const refreshTokenId = cookieRefreshToken.id
-      const existRefreshToken = await prisma.refreshToken.findUnique({
-        where: { id: refreshTokenId },
-      })
-      if (existRefreshToken) {
-        const token = await RefreshToken.generateToken(refreshTokenId)
+      const token = await UserService.refreshTokenUser(cookieRefreshToken)
+      if (token) {
         return res.status(200).json({ action: { refresh_token: true }, token: token })
       }
       return res.status(400).json({
@@ -175,62 +110,11 @@ export const logout = async (_req: Request, res: Response) => {
   try {
     const userId = res.locals.userId
     res.clearCookie("refreshToken")
-    const refreshToken = await prisma.refreshToken.findUnique({
-      where: { fk_user_id: userId },
-    })
+    const refreshToken = await UserService.logoutUser(userId)
     if (refreshToken) {
-      await prisma.refreshToken.delete({ where: { id: refreshToken.id } })
       return res.status(200).json({ action: { logout: true } })
     }
     res.status(200).json({ action: { logout: false }, error: "refresh token not exist" })
-  } catch (err) {
-    res.status(500).json({ error: "internal server error" })
-  }
-}
-
-export const createReactors = async (req: Request, res: Response) => {
-  try {
-    const reactorName = req.body.name_reactor
-    const userId = res.locals.userId
-    if (reactorName) {
-      const existReactor = await prisma.reactors.findUnique({
-        where: { name_reactor: reactorName },
-      })
-
-      const reactor =
-        !existReactor &&
-        (await prisma.reactors.create({
-          data: {
-            name_reactor: reactorName,
-            fk_user_adm: userId,
-          },
-        }))
-
-      if (reactor) {
-        return res.status(201).json({
-          action: { reactors_created: true },
-          message: "created reactor success",
-          reactor: reactor.name_reactor,
-        })
-      }
-      return res.status(400).json({
-        action: { reactors_created: false },
-        error: "reactor already exists",
-      })
-    }
-    res.status(400).json({
-      action: { reactors_created: false },
-      error: "values not found",
-    })
-  } catch (err) {
-    res.status(500).json({ error: "internal server error" })
-  }
-}
-
-export const listReactors = async (_req: Request, res: Response) => {
-  try {
-    const reactors = await prisma.reactors.findMany({ select: { name_reactor: true } })
-    return res.status(200).json({ action: { list_reactors: true }, reactors })
   } catch (err) {
     res.status(500).json({ error: "internal server error" })
   }
