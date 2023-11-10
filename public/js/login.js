@@ -4,6 +4,14 @@ const form = document.querySelector('[data-js="login-form"]')
 const message = document.querySelector('[data-js="message-js"]')
 message.textContent = ""
 
+const verifyLogin = () => {
+  const token = localStorage.getItem("access-token")
+  if (token) {
+    window.location.replace("./index.html")
+  }
+}
+
+verifyLogin()
 form.addEventListener("submit", async (event) => {
   event.preventDefault()
   message.textContent = ""

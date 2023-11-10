@@ -1,4 +1,5 @@
-import { fetchLogout, fetchToken } from "./fetch.js"
+import { fetchLogout } from "./fetch.js"
+import { verifyGenerateToken } from "./token.js"
 
 const userNameSpan = document.querySelector('[data-js="user-name"]')
 const userSetorSpan = document.querySelector('[data-js="user-setor"]')
@@ -26,12 +27,10 @@ const userInfoRender = () => {
 }
 
 const userLogout = async (event) => {
-  const responseToken = await fetchToken()
-  if (responseToken.action["refresh_token"]) {
-    const token = responseToken.token
+  const token = await verifyGenerateToken()
+  if (token) {
     await fetchLogout(token)
-    localStorage.removeItem("name-user")
-    localStorage.removeItem("type-user")
+    localStorage.clear()
     window.location.replace("./login.html")
   }
 }

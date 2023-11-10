@@ -1,17 +1,10 @@
 import { modalForm } from "./produto.js"
-import { fetchCreateProduct, fetchToken } from "./fetch.js"
+import { fetchCreateProduct } from "./fetch.js"
+import { generateToken, verifyGenerateToken } from "./token.js"
 
-const eventSource = new EventSource("http://localhost:3000/api/events/sse")
-
-eventSource.addEventListener("notification", (messageEvent) => {
-  console.log(messageEvent.data)
-})
-
-console.log(eventSource)
-const runEvent = async () => {
-  const responseRefreshToken = await fetchToken()
-  if (responseRefreshToken) {
-    const token = responseRefreshToken.token
+const renderProduto = async () => {
+  const token = await verifyGenerateToken()
+  if (token) {
     const createProduct = async (e) => {
       e.preventDefault()
       const listInputValue = Array.from(e.target)
@@ -24,9 +17,10 @@ const runEvent = async () => {
         return acc
       }, {})
 
+      const newToken = await generateToken()
       const nameReactor = localStorage.getItem("reactor")
       data.reactor = nameReactor
-      const response = await fetchCreateProduct(token, data)
+      const response = await fetchCreateProduct(newToken, data)
       console.log(response)
       modalForm.reset()
     }
@@ -37,4 +31,4 @@ const runEvent = async () => {
   window.location.replace("./login.html")
 }
 
-runEvent()
+renderProduto()

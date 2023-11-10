@@ -1,11 +1,12 @@
-import { fetchReactorsList, fetchToken } from "./fetch.js"
+import { fetchReactorsList } from "./fetch.js"
+import { verifyGenerateToken } from "./token.js"
 
 const reactorList = document.querySelector('[data-js="reactors-list"]')
 
 const reactorsRender = async () => {
-  const resRefreshToken = await fetchToken()
-  if (resRefreshToken) {
-    const token = resRefreshToken.token
+  const token = await verifyGenerateToken()
+  if (token) {
+    console.log(token)
     const { reactors } = await fetchReactorsList(token)
     if (reactors.length > 0) {
       reactors.map((reactor) => {
@@ -17,6 +18,8 @@ const reactorsRender = async () => {
     reactorList.innerHTML = "<span class='not-found-list'>Sem Reactores</span>"
     return
   }
+  console.log(token)
+  localStorage.removeItem("access-token")
   window.location.replace("./login.html")
 }
 
