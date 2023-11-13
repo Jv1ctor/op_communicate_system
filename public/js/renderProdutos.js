@@ -1,7 +1,7 @@
 import { modalForm } from "./produto.js"
 import { fetchCreateProduct } from "./fetch.js"
 import { generateToken, verifyGenerateToken } from "./token.js"
-
+import { modal } from "./produto.js"
 const renderProduto = async () => {
   const token = await verifyGenerateToken()
   if (token) {
@@ -21,14 +21,16 @@ const renderProduto = async () => {
       const nameReactor = localStorage.getItem("reactor")
       data.reactor = nameReactor
       const response = await fetchCreateProduct(newToken, data)
-      console.log(response)
-      modalForm.reset()
+      if (response) {
+        modalForm.reset()
+        modal.classList.toggle("show-modal")
+        document.body.classList.toggle("show-modal")
+      }
     }
 
     modalForm.addEventListener("submit", createProduct)
     return
   }
-  window.location.replace("./login.html")
 }
 
 renderProduto()

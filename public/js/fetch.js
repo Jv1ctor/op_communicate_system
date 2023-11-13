@@ -46,7 +46,8 @@ export const fetchReactorsList = async (token) => {
         Authorization: `Bearer ${token}`,
       },
     })
-    if (response.ok) {
+
+    if (response.status == "200") {
       return response.json()
     }
   } catch (err) {
@@ -64,7 +65,8 @@ export const fetchToken = async () => {
       },
       credentials: "include",
     })
-    if (response.ok) {
+
+    if (response.status == 200) {
       return response.json()
     }
   } catch (err) {
@@ -84,7 +86,9 @@ export const fetchCreateProduct = async (token, data) => {
       body: JSON.stringify(data),
     })
 
-    return response.json()
+    if (response.status == "201") {
+      return response.json()
+    }
   } catch (err) {
     throw new Error(err)
   }

@@ -2,7 +2,7 @@ const reactorName = document.querySelector('[data-js="reactor-name"]')
 const tableContainer = document.querySelector("[data-js='tables']")
 const tableList = document.querySelectorAll(".main-produto-table")
 
-const modal = document.querySelector("[data-js='modal']")
+export const modal = document.querySelector("[data-js='modal']")
 const buttonAddProduct = document.querySelector("[data-js='add-product']")
 export const modalForm = document.querySelector("[data-js='form-register-product']")
 
