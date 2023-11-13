@@ -43,10 +43,20 @@ export const createProduct = async (req: Request, res: Response) => {
           fk_user_prod: user.user_prod.fk_id_user_prod,
           fk_reactor: reactor.id_reactor,
         },
+        select: {
+          name_product: true,
+          quant_produce: true,
+          num_op: true,
+          turn_supervisor: true,
+          num_roadmap: true,
+          operator: true,
+          num_batch: true,
+          turn: true,
+          reactor: true,
+        },
       })
 
-      res.locals.reactorId = product.fk_reactor
-      myEmitter.emit("create-product")
+      myEmitter.emit("create-product", product)
       return (
         product &&
         res.status(201).json({
@@ -64,35 +74,43 @@ export const createProduct = async (req: Request, res: Response) => {
   }
 }
 
+export const listProduct = async (req: Request, res: Response) => {
+  try {
+    const reactor = req.params.reactor
+
+    const listProduct = await prisma.products.findMany({
+      where: { reactor: reactor },
+      select: {
+        name_product: true,
+        quant_produce: true,
+        num_op: true,
+        turn_supervisor: true,
+        num_roadmap: true,
+        operator: true,
+        num_batch: true,
+        turn: true,
+        reactor: true,
+      },
+    })
+    return res
+      .status(200)
+      .json({ action: { list_product: true }, product_list: listProduct })
+  } catch (err) {
+    res.status(500).json({ error: "internal server error" })
+  }
+}
+
 export const createAnalisys = (req: Request, res: Response) => {}
 
-export const events = (req: Request, res: Response) => {
+export const events = (_req: Request, res: Response) => {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
     connection: "keep-alive",
     "cache-control": "no-cache",
   })
-  res.flushHeaders()
 
-  myEmitter.on("create-product", async () => {
-    try {
-      const reactorId = res.locals.reactorId
-      const listProduct = await prisma.products.findMany({
-        where: { fk_reactor: reactorId },
-        select: {
-          name_product: true,
-          quant_produce: true,
-          num_op: true,
-          turn_supervisor: true,
-          num_roadmap: true,
-          operator: true,
-          num_batch: true,
-          turn: true,
-          reactor: true,
-        },
-      })
-      res.write("event: notification\n")
-      res.write(`data:${JSON.stringify(listProduct)}\n\n`)
-    } catch (err) {}
+  myEmitter.on("create-product", async (product: string) => {
+    res.write("event: notification\n")
+    res.write(`data:${JSON.stringify(product)}\n\n`)
   })
 }
