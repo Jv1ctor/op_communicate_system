@@ -101,7 +101,6 @@ export const listProduct = async (req: Request, res: Response) => {
 }
 
 export const createAnalisys = (req: Request, res: Response) => {}
-
 export const events = (_req: Request, res: Response) => {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",

@@ -22,7 +22,33 @@
   box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.25);
 }
 
-.header-container-perfil:hover .menu-dropdown-user {
+.perfil-icon-user {
+  display: grid;
+  grid-template-columns: repeat(3, 0.5fr);
+  align-items: center;
+  justify-items: end;
+  column-gap: 0.5rem;
+  border: 4px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+}
+
+.perfil-icon-user i {
+  grid-row: span 2;
+}
+
+.perfil-icon-user span {
+  margin-right: 1rem;
+  justify-self: center;
+}
+
+.perfil-icon-user .button-logout {
+  grid-row: 1/3;
+  grid-column: 3;
+  justify-self: center;
+}
+
+.perfil-icon-user:hover .menu-dropdown-user {
   opacity: 1;
   transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
@@ -42,8 +68,6 @@
 .menu-dropdown-user span {
   font-size: 1.3rem;
   color: white;
-}
-.setor-user {
   display: flex;
   flex-direction: column;
 }
@@ -51,12 +75,13 @@
 .button-logout {
   cursor: pointer;
   margin-top: 0.2rem;
-  padding: 0.2rem 1rem;
-  background-color: red;
+  /* padding: 0.2rem 1rem; */
+  font-size: 2rem;
+  color: red;
 }
 
 .button-logout:hover {
-  background-color: rgba(255, 0, 0, 0.733);
+  color: rgb(119, 4, 4);
 }
 
 .not-found-list {
@@ -91,4 +116,9 @@
 }
 .button-voltar:hover img {
   filter: invert(100%);
+}
+
+.icon-perfil {
+  color: var(--primary-color);
+  font-size: 2rem;
 }

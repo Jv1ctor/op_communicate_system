@@ -5,7 +5,6 @@ import dotenv from "dotenv"
 import path from "path"
 import userRoutes from "./routes/user.routes"
 import eventRoutes from "./routes/event.routes"
-
 dotenv.config()
 
 const app = express()

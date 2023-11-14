@@ -11,22 +11,21 @@
   font-size: 3.5rem;
   letter-spacing: 2px;
   font-weight: 700;
-  margin-right: 10.5rem;
+  margin-left: 2rem;
 }
 
 .header-container-perfil {
   cursor: pointer;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  justify-items: center;
+  gap: 2.5rem;
 }
 
 .header-container-perfil span {
   font-size: 1.112rem;
-  max-width: 20ch;
-  word-break: keep-all;
-  text-align: center;
+  width: max-content;
+  font-weight: 700;
 }
 
 .main-container-reatores {

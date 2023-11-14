@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import UserService, { UserLogin, UserRegistration } from "../services/users.service"
+import dayjs from "dayjs"
 
 export const createUser = async (req: Request, res: Response) => {
   try {
@@ -53,12 +54,16 @@ export const login = async (req: Request, res: Response) => {
 
       const userLogin = await UserService.loginUser(dataLogin)
       if (userLogin) {
+        const expiresIn = userLogin.refreshToken.expires_in
+        const expiresCookie = dayjs.unix(expiresIn).diff()
+
         return res
           .status(200)
           .cookie("refreshToken", userLogin.refreshToken, {
             httpOnly: true,
             sameSite: "strict",
             secure: true,
+            maxAge: expiresCookie,
           })
           .json({
             action: { login: true },

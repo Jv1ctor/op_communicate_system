@@ -23,14 +23,15 @@
         <h1 class="header-container-title" data-js="reactor-name">Reator</h1>
 
         <div class="header-container-perfil">
-          <img src="./img/user_perfil 1.png" alt="perfil" width="56" height="56" />
+          <i class="fa-regular fa-bell icon-perfil perfil-notification"></i>
+          <div class="perfil-icon-user">
+            <i class="fa-regular fa-user icon-perfil"></i>
 
-          <div class="menu-dropdown-user">
-            <span data-js="user-name">User Name</span>
-            <span data-js="user-setor" class="setor-user"
-              ><strong>Setor:</strong> Produção</span
-            >
-            <span class="button-logout" data-js="btn-logout">Sair</span>
+            <span data-js="user-name"><strong>Nome:</strong></span>
+            <span data-js="user-setor"><strong>Setor:</strong> Produção</span>
+            <i
+              class="fa-solid fa-arrow-right-from-bracket button-logout"
+              data-js="btn-logout"></i>
           </div>
         </div>
       </div>
@@ -39,7 +40,7 @@
     <main>
       <div class="main-container-produto container">
         <div class="main-produto-header">
-          <a href="./index.html" class="button-voltar"
+          <a href="./index.html" class="button-voltar" data-js="teste"
             ><img src="./img/seta-direita.png" alt="" />Voltar</a
           >
           <h1 class="main-produto-header-title">Produtos</h1>
@@ -84,7 +85,7 @@
                   <td>A</td>
                   <td>20/11/2023</td>
                   <td>
-                    <a href="./analises.html?analise=produto 1" class="button">ver</a>
+                    <a href="./analises.html" class="button">ver</a>
                   </td>
                 </tr>
               </tbody>
@@ -249,9 +250,12 @@
     </div>
     <footer>Desenvolvido por<a href=""> Jvictor</a></footer>
 
-    <script type="module" src="./js/notificationEvent.js"></script>
     <script type="module" src="./js/user.js"></script>
     <script type="module" src="./js/produto.js"></script>
     <script type="module" src="./js/renderProdutos.js"></script>
+    <script
+      src="https://kit.fontawesome.com/7e1d3b5b7e.js"
+      crossorigin="anonymous"></script>
+    <script type="module" src="./js/notificationEvent.js"></script>
   </body>
 </html>

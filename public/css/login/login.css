@@ -50,6 +50,11 @@
   cursor: pointer;
 }
 
+.login-icon {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
 .button-login {
   margin-top: 3rem;
 }

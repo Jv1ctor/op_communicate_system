@@ -22,8 +22,8 @@ const userInfoRender = () => {
   const userType = localStorage.getItem("type-user")
   const formatedName = userNameFormat(userName)
 
-  userNameSpan.textContent = userName ? formatedName : "Sem Nome"
-  userSetorSpan.innerHTML = userType ? `<strong>Setor:</strong>${userType}` : "Sem Nome"
+  userNameSpan.innerHTML = userName ? formatedName : "Sem Nome"
+  userSetorSpan.innerHTML = userType ? userType : "Sem Nome"
 }
 
 const userLogout = async (event) => {
