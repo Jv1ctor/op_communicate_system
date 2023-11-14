@@ -2,7 +2,7 @@ import { modalForm } from "./produto.js"
 import { fetchCreateProduct } from "./fetch.js"
 import { generateToken, verifyGenerateToken } from "./token.js"
 import { modal } from "./produto.js"
-import { eventSource } from "./notificationEvent.js"
+
 const renderProduto = async () => {
   const token = await verifyGenerateToken()
   if (token) {
@@ -33,3 +33,5 @@ const renderProduto = async () => {
     return
   }
 }
+
+renderProduto()
