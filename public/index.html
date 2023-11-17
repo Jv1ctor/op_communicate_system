@@ -23,15 +23,33 @@
         <h1 class="header-container-title">Reatores</h1>
 
         <div class="header-container-perfil">
-          <i class="fa-regular fa-bell icon-perfil perfil-notification"></i>
+          <div class="perfil-notification">
+            <i class="fa-regular fa-bell icon-perfil"></i>
+            <div class="menu-dropdown-notification">
+              <ul>
+                <li>
+                  <i class="fa-solid fa-circle-exclamation"></i>
+                  <h3>Atenção Produto: nome do produto - reator 10</h3>
+                </li>
+                <li>
+                  <i class="fa-solid fa-circle-exclamation"></i>
+                  <h3>Atenção Analise: nome do produto - reator 10</h3>
+                </li>
+              </ul>
+            </div>
+          </div>
           <div class="perfil-icon-user">
             <i class="fa-regular fa-user icon-perfil"></i>
 
-            <span data-js="user-name"><strong>Nome:</strong></span>
-            <span data-js="user-setor"><strong>Setor:</strong> Produção</span>
-            <i
-              class="fa-solid fa-arrow-right-from-bracket button-logout"
-              data-js="btn-logout"></i>
+            <div class="menu-options-user">
+              <div>
+                <span data-js="user-name"><strong>Nome:</strong></span>
+                <span data-js="user-setor"><strong>Setor:</strong> Produção</span>
+              </div>
+              <i
+                class="fa-solid fa-arrow-right-from-bracket button-logout"
+                data-js="btn-logout"></i>
+            </div>
           </div>
         </div>
       </div>

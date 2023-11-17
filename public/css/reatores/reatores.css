@@ -19,7 +19,9 @@
   display: flex;
   align-items: center;
   justify-items: center;
-  gap: 2.5rem;
+  gap: 1rem;
+  position: relative;
+  left: 40px;
 }
 
 .header-container-perfil span {
