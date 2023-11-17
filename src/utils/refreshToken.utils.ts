@@ -9,7 +9,7 @@ const RefreshToken = {
   async create(userId: string) {
     try {
       if (userId) {
-        const expiresIn = dayjs().add(24, "second").unix()
+        const expiresIn = dayjs().add(24, "hour").unix()
 
         const refreshToken = await prisma.refreshToken.create({
           data: {
