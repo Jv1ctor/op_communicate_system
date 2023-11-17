@@ -41,12 +41,12 @@
       <div class="main-container-produto container">
         <div class="main-produto-header">
           <a href="./index.html" class="button-voltar" data-js="teste"
-            ><img src="./img/seta-direita.png" alt="" />Voltar</a
+            ><i class="fa-solid fa-arrow-left"></i>Voltar</a
           >
           <h1 class="main-produto-header-title">Produtos</h1>
           <div class="button" data-js="add-product">
             Adicionar Produto
-            <img src="./img/add.png" alt="adicionar image" width="24" height="24" />
+            <i class="fa-solid fa-plus button-add-product-icon"></i>
           </div>
         </div>
 
@@ -54,13 +54,9 @@
           <div class="main-produto-table andamento">
             <div class="main-produto-table-header" data-js="show-andamento">
               <h2 class="main-produto-table-title">Em andamento</h2>
-              <img
-                src="./img/down-arrow.png"
-                alt="arrow menu"
-                width="48"
-                height="48"
-                data-js="show-andamento"
-                class="arrow active-arrow" />
+              <i
+                class="fa-solid fa-chevron-down arrow active-arrow"
+                data-js="show-andamento"></i>
             </div>
 
             <table class="active-table" data-js="table-produto">
@@ -95,13 +91,9 @@
           <div class="main-produto-table aprovados">
             <div class="main-produto-table-header" data-js="show-aprovados">
               <h2 class="main-produto-table-title">aprovados</h2>
-              <img
-                src="./img/down-arrow.png"
-                alt="arrow menu"
-                width="48"
-                height="48"
-                data-js="show-aprovados"
-                class="arrow" />
+              <i
+                class="fa-solid fa-chevron-down arrow active-arrow"
+                data-js="show-aprovados"></i>
             </div>
 
             <table data-js="table-produto" data-js="table-produto">
@@ -144,13 +136,9 @@
           <div class="main-produto-table reprovados">
             <div class="main-produto-table-header" data-js="show-reprovados">
               <h2 class="main-produto-table-title">reprovados</h2>
-              <img
-                src="./img/down-arrow.png"
-                alt="arrow menu"
-                width="48"
-                height="48"
-                data-js="show-reprovados"
-                class="arrow" />
+              <i
+                class="fa-solid fa-chevron-down arrow active-arrow"
+                data-js="show-reprovados"></i>
             </div>
 
             <table data-js="table-produto" data-js="table-produto">
@@ -194,7 +182,7 @@
     </main>
     <div class="modal-register-produto" data-js="modal">
       <div class="modal-register-produto-content">
-        <span class="button-exit" data-js="button-exit">X</span>
+        <i class="fa-solid fa-xmark button-exit" data-js="button-exit"></i>
         <form class="form-register-product" data-js="form-register-product">
           <h2 class="register-produto-form-title">Cadastrar Produto</h2>
 
@@ -253,9 +241,9 @@
     <script type="module" src="./js/user.js"></script>
     <script type="module" src="./js/produto.js"></script>
     <script type="module" src="./js/renderProdutos.js"></script>
+    <script type="module" src="./js/notificationEvent.js"></script>
     <script
       src="https://kit.fontawesome.com/7e1d3b5b7e.js"
       crossorigin="anonymous"></script>
-    <script type="module" src="./js/notificationEvent.js"></script>
   </body>
 </html>

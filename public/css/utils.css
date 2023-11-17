@@ -12,6 +12,14 @@
   background-color: #0874b0;
 }
 
+.button-add-product-icon {
+  font-size: 1rem;
+  border: 2.5px solid white;
+  text-align: center;
+  padding: 0.35rem;
+  border-radius: 50%;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -75,7 +83,6 @@
 .button-logout {
   cursor: pointer;
   margin-top: 0.2rem;
-  /* padding: 0.2rem 1rem; */
   font-size: 2rem;
   color: red;
 }
@@ -102,23 +109,35 @@
   color: var(--primary-color);
 }
 
-.button-voltar img {
-  filter: invert(59%) sepia(69%) saturate(2982%) hue-rotate(152deg) brightness(92%)
-    contrast(101%);
-  width: 16px;
-  transform: rotate(180deg);
-}
-
 .button-voltar:hover {
   color: #fff;
   background-color: var(--primary-color);
   transition: 0.3s;
 }
-.button-voltar:hover img {
-  filter: invert(100%);
-}
 
 .icon-perfil {
   color: var(--primary-color);
   font-size: 2rem;
+}
+
+.arrow {
+  font-size: 2.1rem;
+  color: rgb(88, 88, 88);
+}
+
+.button-exit {
+  align-self: end;
+  cursor: pointer;
+  background-color: red;
+  height: 34px;
+  width: 34px;
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  color: white;
+}
+
+.button-exit:hover {
+  background-color: brown;
 }

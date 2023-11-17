@@ -30,17 +30,13 @@
 .main-produto-table-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border-bottom: 5px solid var(--primary-color);
   margin-bottom: 0.5rem;
   padding: 0 0.9rem;
   position: relative;
   z-index: 10;
   cursor: pointer;
-}
-
-.main-produto-table-header img {
-  width: 34px;
-  height: auto;
 }
 
 .main-produto-table-title {
@@ -214,23 +210,6 @@
 .form-fields input:focus,
 .form-fields select:focus {
   border-color: var(--primary-color);
-}
-
-.button-exit {
-  align-self: end;
-  cursor: pointer;
-  background-color: red;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.button-exit:hover {
-  background-color: brown;
 }
 
 .show-modal {
