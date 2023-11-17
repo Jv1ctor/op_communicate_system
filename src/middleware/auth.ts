@@ -76,7 +76,6 @@ const Auth = {
 
   notExistCookie(req: Request, res: Response, next: NextFunction) {
     const cookie = req.cookies.refreshToken
-
     if (cookie) {
       res.status(401).json({ error: "you are already logged in" })
     } else {
@@ -87,7 +86,6 @@ const Auth = {
   async validRefreshToken(req: Request, res: Response, next: NextFunction) {
     try {
       const refreshToken = req.cookies.refreshToken
-
       if (refreshToken) {
         const valid = await RefreshToken.isValidRefreshToken(refreshToken.id)
         if (!valid) {

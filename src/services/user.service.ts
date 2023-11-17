@@ -86,9 +86,14 @@ const UserService = {
           select: { id: true, expires_in: true },
         })
 
-        const refreshToken = !existRefreshToken
-          ? await RefreshToken.create(user.id)
-          : existRefreshToken
+        const isValid =
+          existRefreshToken &&
+          (await RefreshToken.isValidRefreshToken(existRefreshToken.id))
+
+        const refreshToken =
+          !existRefreshToken || !isValid
+            ? await RefreshToken.create(user.id)
+            : existRefreshToken
 
         if (refreshToken) {
           return {

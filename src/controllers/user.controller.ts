@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import UserService, { UserLogin, UserRegistration } from "../services/users.service"
+import UserService, { UserLogin, UserRegistration } from "../services/user.service"
 import dayjs from "dayjs"
 
 export const createUser = async (req: Request, res: Response) => {
