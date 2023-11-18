@@ -23,7 +23,9 @@ const userInfoRender = () => {
   const formatedName = userNameFormat(userName)
 
   userNameSpan.innerHTML = userName ? formatedName : "Sem Nome"
+  userNameSpan.setAttribute("title", userName ? formatedName : "Sem Nome")
   userSetorSpan.innerHTML = userType ? userType : "Sem Nome"
+  userSetorSpan.setAttribute("title", userType ? userType : "Sem Nome")
 }
 
 const userLogout = async (event) => {

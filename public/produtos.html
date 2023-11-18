@@ -23,7 +23,32 @@
         <h1 class="header-container-title" data-js="reactor-name">Reator</h1>
 
         <div class="header-container-perfil">
-          <i class="fa-regular fa-bell icon-perfil perfil-notification"></i>
+          <div class="perfil-notification">
+            <label for="dropdown"><i class="fa-regular fa-bell icon-perfil"></i></label>
+            <input type="checkbox" name="dropdown" id="dropdown">
+            <div class="menu-dropdown-notification">
+              <ul>
+                <li>
+                  <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
+                  <div class="content-notification">
+                    <h3 class="title-notification">Atenção Produto: </h3>
+                    <p>Nome do produto - Reator 10</p>
+                  </div>
+                  <p>10:42</p>
+                  <i class="fa-solid fa-xmark button-exit" data-js="button-exit"></i>
+                </li>
+                <li>
+                  <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
+                  <div class="content-notification">
+                    <h3 class="title-notification">Atenção Analise: </h3>
+                    <p>Nome do produto - Reator 10</p>
+                  </div>
+                  <p>10:42</p>
+                  <i class="fa-solid fa-xmark button-exit" data-js="button-exit"></i>
+                </li>
+              </ul>
+            </div>
+          </div>
           <div class="perfil-icon-user">
             <i class="fa-regular fa-user icon-perfil"></i>
 

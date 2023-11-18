@@ -26,8 +26,11 @@
 
 .header-container-perfil span {
   font-size: 1.112rem;
-  width: max-content;
   font-weight: 700;
+  max-width: 8ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .main-container-reatores {

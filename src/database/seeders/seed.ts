@@ -27,7 +27,17 @@ const main = async () => {
     },
   })
 
-  if (admin && prod) {
+  const cq = await prisma.users.upsert({
+    where: { first_name: "teste", last_name: "cq"},
+    update:{},
+    create: {
+      first_name: "teste",
+      last_name: "cq",
+      password: hashPassword,
+    },
+  })
+
+  if (admin && prod && cq) {
     const users = await prisma.$transaction([
       prisma.userAdm.upsert({
         where: { fk_id_user_adm: admin.id },
@@ -42,14 +52,21 @@ const main = async () => {
         create: {
           fk_id_user_prod: prod.id,
         },
-      })
+      }),
+      prisma.userCq.upsert({
+        where: { fk_id_user_cq: cq.id },
+        update: {},
+        create: {
+          fk_id_user_cq: cq.id,
+        },
+      }),
     ])
     console.log(
       "---------USER ADMIN---------\n",
       "USUARIOS CRIADO:\n",
-      admin, prod,
+      admin, prod, cq,
       "\nPERMISSÕES:\n",
-      users[0],users[1],
+      users[0],users[1],users[2]
     )
   }
 

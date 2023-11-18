@@ -1,0 +1,220 @@
+.perfil-icon-user {
+  width: 210px;
+  display: flex;
+  align-items: center;
+  border: 4px solid transparent;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  position: relative;
+}
+
+.perfil-icon-user i {
+  border: 4px solid var(--primary-color);
+  padding: 0.8rem 0.5rem;
+  border-radius: 8px;
+  position: absolute;
+}
+
+.perfil-icon-user:hover {
+  border-color: var(--primary-color);
+  gap: 1rem;
+}
+
+.perfil-icon-user:hover i {
+  border: none;
+  padding: 0;
+  position: relative;
+}
+
+.perfil-icon-user::after {
+  content: "";
+  width: 0%;
+  height: 100%;
+  background: var(--primary-color);
+  position: absolute;
+  left: 0;
+}
+
+.perfil-icon-user:hover::after {
+  animation: move-block 0.6s both ease-in-out;
+}
+
+.perfil-icon-user:hover .menu-options-user {
+  opacity: 1;
+  width: 100%;
+  transition: 0.6s ease-in-out;
+}
+
+.menu-options-user {
+  display: grid;
+  grid-template-columns: repeat(2, 0.5fr);
+  align-items: center;
+  gap: 1rem;
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.perfil-notification .icon-perfil{
+  cursor: pointer;
+}
+
+.perfil-notification #dropdown{
+  display: none;
+}
+
+#dropdown:checked + .menu-dropdown-notification{
+  display: block;
+  animation: fade 0.6s both ease-in-out;
+}
+
+.menu-dropdown-notification {
+  cursor: default;
+  border-radius:4px;
+  background-color: #fff;
+  border:3px solid var(--primary-color);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  position: absolute;
+  left: -25px;
+  top: 80px;
+  display: none;
+}
+
+
+.menu-dropdown-notification::-webkit-scrollbar {
+  width: 5px;   
+}
+
+.menu-dropdown-notification::-webkit-scrollbar-track {
+  background: #f2f2f2;  
+}
+
+.menu-dropdown-notification::-webkit-scrollbar-thumb{
+  background-color: var(--primary-color); 
+  border-radius: 10px;
+
+}
+
+.menu-dropdown-notification::after {
+  display: block;
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 25px;
+  width: 0; 
+  height: 0; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent; 
+  border-bottom: 10px solid var(--primary-color);
+  z-index: 2;
+}
+
+.menu-dropdown-notification ul {
+  max-height: 500px;
+  overflow-y: auto;
+  font-size: 1rem;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-dropdown-notification ul::-webkit-scrollbar {
+  width: 6px;
+}
+
+.menu-dropdown-notification ul::-webkit-scrollbar-track {
+  background: #f2f2f2;
+  border-radius: 20px;
+}
+
+.menu-dropdown-notification ul::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 20px; 
+}
+
+.menu-dropdown-notification ul li {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid coral;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.menu-dropdown-notification ul li h3{
+  width: max-content;
+  align-self: flex-end;
+}
+
+.menu-dropdown-notification ul li p{
+  align-self: flex-end;
+}
+
+.menu-dropdown-notification .alert-notification-icon{
+  font-size: 1.5rem;
+  color: coral;
+}
+
+.menu-dropdown-notification .button-exit{
+  position: absolute;
+  background: none;
+  color: red;
+  top: 0;
+  right: 0;
+}
+
+.menu-dropdown-notification .button-exit:hover{
+  background: none;
+  color: rgb(156, 6, 6);
+}
+
+.content-notification p{
+  font-weight: 400;
+  font-size: 1.1rem;
+}
+
+.content-two-notification{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.title-notification{
+  font-size: 1.2rem;
+  line-height: 1.2rem;
+  font-weight: 700;
+}
+
+@keyframes move-block {
+  0% {
+    width: 0%;
+    opacity: 1;
+  }
+  50% {
+    width: 100%;
+    opacity: 0.5;
+  }
+  100% {
+    width: 100%;
+    opacity: 0;
+    display: none;
+  }
+}
+
+@keyframes fade {
+  0%{
+    transform: translateY(-15px);
+    opacity: 0;
+  }
+  100%{
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
