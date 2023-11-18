@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 const main = async () => {
   const saltRounds = 10
   const salt = await bcrypt.genSalt(saltRounds)
-  const hashPassword = await bcrypt.hash("1234admin", salt)
+  const hashPassword = await bcrypt.hash("12345", salt)
 
   const admin = await prisma.users.upsert({
     where: { first_name: "teste", last_name: "admin" },
@@ -17,20 +17,39 @@ const main = async () => {
     },
   })
 
-  if (admin) {
-    const adminRole = await prisma.userAdm.upsert({
-      where: { fk_id_user_adm: admin.id },
-      update: {},
-      create: {
-        fk_id_user_adm: admin.id,
-      },
-    })
+  const prod = await prisma.users.upsert({
+    where: { first_name: "teste", last_name: "prod"},
+    update:{},
+    create: {
+      first_name: "teste",
+      last_name: "prod",
+      password: hashPassword,
+    },
+  })
+
+  if (admin && prod) {
+    const users = await prisma.$transaction([
+      prisma.userAdm.upsert({
+        where: { fk_id_user_adm: admin.id },
+        update: {},
+        create: {
+          fk_id_user_adm: admin.id,
+        },
+      }),
+      prisma.userProd.upsert({
+        where: { fk_id_user_prod: prod.id },
+        update: {},
+        create: {
+          fk_id_user_prod: prod.id,
+        },
+      })
+    ])
     console.log(
       "---------USER ADMIN---------\n",
-      "USUARIO CRIADO:\n",
-      admin,
+      "USUARIOS CRIADO:\n",
+      admin, prod,
       "\nPERMISSÕES:\n",
-      adminRole,
+      users[0],users[1],
     )
   }
 
