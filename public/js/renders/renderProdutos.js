@@ -3,7 +3,7 @@ import { generateToken, verifyGenerateToken } from "../user/token.js"
 import { modal, modalForm } from "../modal.js"
 
 const productList = document.querySelector("[data-js='product-list']")
-const productListArr = productList.children
+const productListArr = productList?.children
 
 export const submitFormProduct = async () => {
   const token = await verifyGenerateToken()
@@ -27,10 +27,7 @@ export const submitFormProduct = async () => {
         const nameReactor = localStorage.getItem("reactor")
         data.reactor = nameReactor
         const response = await fetchCreateProduct(newToken, data)
-
         if (response) {
-          const data = await response.data
-          await renderProduct(data)
           modalForm.reset()
           modal.classList.toggle("show-modal")
           document.body.classList.toggle("show-modal")
@@ -44,7 +41,7 @@ export const submitFormProduct = async () => {
 }
 
 const formattingHTMLData = (data) => {
-  const currentDate = data.created_at
+  const currentDate = new Date(data.created_at)
   const formattingDate = new Intl.DateTimeFormat("pt-BR").format(currentDate)
 
   return `<tr>

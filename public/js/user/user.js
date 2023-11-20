@@ -1,6 +1,7 @@
 import { eventSource } from "../notificationEvent.js"
 import { fetchLogout } from "./fetch.js"
 import { verifyGenerateToken } from "./token.js"
+import { runNotification } from "./notification.js"
 
 const userNameSpan = document.querySelector('[data-js="user-name"]')
 const userSetorSpan = document.querySelector('[data-js="user-setor"]')
@@ -40,6 +41,8 @@ const userLogout = async (event) => {
 
 const closeSSE = () => eventSource.close()
 
+userPermissOptions()
 userInfoRender()
+runNotification()
 btnLogout.addEventListener("click", userLogout)
 window.addEventListener("beforeunload", closeSSE)

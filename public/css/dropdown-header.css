@@ -81,6 +81,7 @@
   align-items: center;
   gap: 0.2rem;
   position: absolute;
+  z-index: 1000;
   left: -25px;
   top: 80px;
   display: none;
@@ -120,6 +121,7 @@
   color: #000;
   display: flex;
   flex-direction: column;
+  padding: 0 0.2rem;
 }
 
 .menu-dropdown-notification ul::-webkit-scrollbar {
@@ -143,7 +145,7 @@
   margin-bottom: 1rem;
   border-left: 4px solid coral;
   border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
   position: relative;
 }
 
@@ -205,6 +207,10 @@
   left: 18px;
   animation: pulse-animation 1s infinite ease-in-out;
   display: none;
+}
+
+.show-notification-circle {
+  display: block;
 }
 
 @keyframes move-block {

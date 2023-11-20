@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import prisma from "../database/prisma"
 import EventEmitter from "events"
+import { Products } from "@prisma/client"
 
 const myEmitter = new EventEmitter()
 
@@ -14,6 +15,13 @@ interface ProductDataInterface {
   "num-batch": number
   turn: string
   reactor: string
+}
+
+interface NotificationInterface {
+  type_notification: "product" | "analisys"
+  product_name: string
+  reactor_name: string
+  created_at: Date
 }
 
 export const createProduct = async (req: Request, res: Response) => {
@@ -53,20 +61,23 @@ export const createProduct = async (req: Request, res: Response) => {
           num_batch: true,
           turn: true,
           reactor: true,
+          created_at: true,
         },
       })
 
-      const dataNotification = {
+      const dataNotification: NotificationInterface = {
+        type_notification: "product",
         product_name: product.name_product,
         reactor_name: product.reactor,
+        created_at: product.created_at,
       }
-      myEmitter.emit("create-product", dataNotification)
+      myEmitter.emit("notification", dataNotification)
+      myEmitter.emit("create-product", product)
       return (
         product &&
         res.status(201).json({
           action: { created_product: true },
           message: "successfully created product",
-          data: product,
         })
       )
     }
@@ -95,6 +106,7 @@ export const listProduct = async (req: Request, res: Response) => {
         num_batch: true,
         turn: true,
         reactor: true,
+        created_at: true,
       },
     })
 
@@ -107,15 +119,36 @@ export const listProduct = async (req: Request, res: Response) => {
 }
 
 export const createAnalisys = (req: Request, res: Response) => {}
-export const events = (_req: Request, res: Response) => {
+export const events = async (_req: Request, res: Response) => {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
     connection: "keep-alive",
     "cache-control": "no-cache",
   })
 
-  myEmitter.on("create-product", (data: string) => {
+  myEmitter.on("notification", (data: NotificationInterface) => {
     res.write("event: notification\n")
     res.write(`data:${JSON.stringify(data)}\n\n`)
   })
+  myEmitter.on("create-product", (product: Products) => {
+    res.write("event: create-product\n")
+    res.write(`data:${JSON.stringify(product)}\n\n`)
+  })
+
+  const listProduct = await prisma.products.findMany({
+    select: { name_product: true, reactor: true, created_at: true },
+  })
+
+  if (listProduct.length > 0) {
+    listProduct.forEach((product) => {
+      const dataNotification: NotificationInterface = {
+        type_notification: "product",
+        product_name: product.name_product,
+        reactor_name: product.reactor,
+        created_at: product.created_at,
+      }
+
+      myEmitter.emit("notification", dataNotification)
+    })
+  }
 }
