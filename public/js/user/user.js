@@ -2,10 +2,24 @@ import { eventSource } from "../notificationEvent.js"
 import { fetchLogout } from "./fetch.js"
 import { verifyGenerateToken } from "./token.js"
 import { runNotification } from "./notification.js"
+import { buttonModal } from "../modal.js"
 
 const userNameSpan = document.querySelector('[data-js="user-name"]')
 const userSetorSpan = document.querySelector('[data-js="user-setor"]')
 const btnLogout = document.querySelector('[data-js="btn-logout"]')
+
+const userPermissOptions = () => {
+  const typeUser = localStorage.getItem("type-user")
+  const permissUserProdBtn = buttonModal?.dataset.permiss === "producer"
+  const permissUserCQBtn = buttonModal?.dataset.permiss === "controler-quality"
+  if (typeUser === "Produção" && permissUserProdBtn) {
+    buttonModal.classList.remove("hidden-button")
+  }
+
+  if (typeUser === "Controle Qualidade" && permissUserCQBtn) {
+    buttonModal.classList.remove("hidden-button")
+  }
+}
 
 const userNameFormat = (name) => {
   if (name) {

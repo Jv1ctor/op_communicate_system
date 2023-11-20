@@ -86,3 +86,17 @@
 .button-exit:hover {
   background-color: brown;
 }
+
+.button-product {
+  font-size: 2rem;
+  color: var(--primary-color);
+}
+
+.button-product:hover {
+  color: var(--secondary-color);
+  transition: 0.3s ease;
+}
+
+.hidden-button {
+  visibility: hidden;
+}

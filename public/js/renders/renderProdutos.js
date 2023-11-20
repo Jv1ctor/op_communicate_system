@@ -53,8 +53,10 @@ const formattingHTMLData = (data) => {
   <td>${data.turn}</td>
   <td>${formattingDate}</td>
   <td>
-    <a href="./analises.html" class="button">ver</a>
-  </td>
+  <a href="./analises.html" class="button-product">
+    <i class="fa-solid fa-circle-chevron-right"></i>
+  </a>
+</td>
 </tr>`
 }
 

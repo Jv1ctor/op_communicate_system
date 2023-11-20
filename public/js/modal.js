@@ -1,5 +1,5 @@
 export const modal = document.querySelector("[data-js='modal']")
-const buttonModal = document.querySelector("[data-js='open-modal']")
+export const buttonModal = document.querySelector("[data-js='open-modal']")
 export const modalForm = document.querySelector("[data-js='form-register']")
 
 const openModalProduct = (e) => {
