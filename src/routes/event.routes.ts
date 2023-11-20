@@ -5,7 +5,7 @@ import Auth from "../middleware/auth"
 const router = Router()
 
 router.get("/sse", EventController.events)
-router.get("/list-product/:reactor", EventController.listProduct)
+router.get("/list-product/", EventController.listProduct)
 router.post(
   "/create-product",
   Auth.authenticate,

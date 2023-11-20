@@ -29,6 +29,7 @@ model Products {
   num_roadmap       Int
   turn_supervisor   String     @db.VarChar
   turn              String     @db.Char(1)
+  created_at        DateTime   @db.Timestamp()          @default(now())  
   fk_reactor        String     @db.VarChar
   fk_user_prod      String     @db.VarChar
   analisys          Analisys[]

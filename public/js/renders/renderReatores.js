@@ -11,7 +11,13 @@ export const renderReactor = async () => {
       if (resListReactor.reactors.length > 0) {
         resListReactor.reactors.map((reactor) => {
           const formatNameReactor = reactor.name_reactor.replace("R", "")
-          reactorList.innerHTML += `<li><a href="./produtos.html" data-js="link-reactor-btn" id="${reactor.name_reactor}">Reator ${formatNameReactor} <i class="fa-solid fa-exclamation notification-reactor"></i></a> </li>`
+          reactorList.innerHTML += `
+          <li>
+            <a href="./produtos.html" data-js="link-reactor-btn" id="${reactor.name_reactor}">
+            Reator ${formatNameReactor} 
+            <i class="fa-solid fa-exclamation notification-reactor"></i>
+            </a>
+          </li>`
         })
         return
       }

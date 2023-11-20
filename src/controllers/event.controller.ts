@@ -56,12 +56,17 @@ export const createProduct = async (req: Request, res: Response) => {
         },
       })
 
-      myEmitter.emit("create-product", product)
+      const dataNotification = {
+        product_name: product.name_product,
+        reactor_name: product.reactor,
+      }
+      myEmitter.emit("create-product", dataNotification)
       return (
         product &&
         res.status(201).json({
           action: { created_product: true },
           message: "successfully created product",
+          data: product,
         })
       )
     }
@@ -76,7 +81,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const listProduct = async (req: Request, res: Response) => {
   try {
-    const reactor = req.params.reactor
+    const reactor = req.headers.reactor as string
 
     const listProduct = await prisma.products.findMany({
       where: { reactor: reactor },
@@ -92,6 +97,7 @@ export const listProduct = async (req: Request, res: Response) => {
         reactor: true,
       },
     })
+
     return res
       .status(200)
       .json({ action: { list_product: true }, product_list: listProduct })
@@ -108,8 +114,8 @@ export const events = (_req: Request, res: Response) => {
     "cache-control": "no-cache",
   })
 
-  myEmitter.on("create-product", (product: string) => {
+  myEmitter.on("create-product", (data: string) => {
     res.write("event: notification\n")
-    res.write(`data:${JSON.stringify(product)}\n\n`)
+    res.write(`data:${JSON.stringify(data)}\n\n`)
   })
 }

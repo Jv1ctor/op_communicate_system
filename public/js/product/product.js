@@ -1,6 +1,7 @@
 import { runModal } from "../modal.js"
 import { runMenu } from "./menu.js"
-import { renderProduto } from "../renders/renderProdutos.js"
+import { renderProduct, submitFormProduct } from "../renders/renderProdutos.js"
+import { runFormattingInput } from "./formattingInputs.js"
 
 const reactorName = document.querySelector('[data-js="reactor-name"]')
 
@@ -11,6 +12,8 @@ const renderReactorName = () => {
 }
 
 renderReactorName()
-renderProduto()
+runFormattingInput()
+renderProduct()
 runModal()
 runMenu()
+submitFormProduct()
