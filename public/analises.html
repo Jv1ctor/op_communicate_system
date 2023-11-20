@@ -24,14 +24,17 @@
 
         <div class="header-container-perfil">
           <div class="perfil-notification">
-            <label for="dropdown"><i class="fa-regular fa-bell icon-perfil"></i></label>
-            <input type="checkbox" name="dropdown" id="dropdown">
+            <label class="perfil-notification-icon" for="dropdown">
+              <i class="fa-regular fa-bell icon-perfil"></i>
+              <span class="circle-notification"></span>
+            </label>
+            <input type="checkbox" name="dropdown" id="dropdown" />
             <div class="menu-dropdown-notification">
               <ul>
                 <li>
                   <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
                   <div class="content-notification">
-                    <h3 class="title-notification">Atenção Produto: </h3>
+                    <h3 class="title-notification">Atenção Produto:</h3>
                     <p>Nome do produto - Reator 10</p>
                   </div>
                   <p>10:42</p>
@@ -40,7 +43,7 @@
                 <li>
                   <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
                   <div class="content-notification">
-                    <h3 class="title-notification">Atenção Analise: </h3>
+                    <h3 class="title-notification">Atenção Analise:</h3>
                     <p>Nome do produto - Reator 10</p>
                   </div>
                   <p>10:42</p>
@@ -91,7 +94,7 @@
             ><i class="fa-solid fa-arrow-left"></i> Voltar</a
           >
           <h1 class="main-analise-header-title">Analises</h1>
-          <div class="button" data-js="add-analise">
+          <div class="button" data-js="open-modal">
             Adicionar Analise
             <i class="fa-solid fa-circle-plus button-add-product-icon"></i>
           </div>
@@ -133,7 +136,7 @@
     <div class="modal-register-analise" data-js="modal">
       <div class="modal-register-analise-content">
         <i class="fa-solid fa-xmark button-exit" data-js="button-exit"></i>
-        <form class="form-register-analise" data-js="form-register-analise">
+        <form class="form-register-analise" data-js="form-register">
           <h2 class="register-analise-form-title">Enviar Analise</h2>
 
           <div class="register-analise-form-container">
@@ -155,7 +158,7 @@
     <footer>Desenvolvido por<a href=""> Jvictor</a></footer>
 
     <script type="module" src="./js/user.js"></script>
-    <script type="module" src="./js/analise.js"></script>
+    <script type="module" src="./js/analisys/analisys.js"></script>
     <script type="module" src="./js/notificationEvent.js"></script>
     <script
       src="https://kit.fontawesome.com/7e1d3b5b7e.js"

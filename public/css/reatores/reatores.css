@@ -1,3 +1,7 @@
+header {
+  background: white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
 .header-container {
   display: flex;
   padding: 0 5rem;
@@ -44,19 +48,28 @@
 }
 
 .main-container-reatores-card li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-weight: 500;
   border-radius: 4px;
   color: var(--text-color);
   margin-bottom: 1.5rem;
   box-shadow: -2px 3px 4px 1px rgba(0, 0, 0, 0.1);
   padding: 0.34rem;
-  padding-left: 20px;
+  padding-inline: 20px;
   font-size: 2.5rem;
   border-bottom: 4px solid var(--secondary-color);
   border-left: 4px solid var(--secondary-color);
 }
 
-.main-container-reatores-card li a:hover {
+.notification-reactor {
+  visibility: hidden;
+  font-size: 1.5rem;
+  color: #f17c57fa;
+}
+
+.main-container-reatores-card li a .main-container-reatores-card li a:hover {
   background-color: #dcdcdd;
   transition: 0.4s ease-in-out;
 }

@@ -24,14 +24,17 @@
 
         <div class="header-container-perfil">
           <div class="perfil-notification">
-            <label for="dropdown"><i class="fa-regular fa-bell icon-perfil"></i></label>
-            <input type="checkbox" name="dropdown" id="dropdown">
+            <label class="perfil-notification-icon" for="dropdown">
+              <i class="fa-regular fa-bell icon-perfil"></i>
+              <span class="circle-notification"></span>
+            </label>
+            <input type="checkbox" name="dropdown" id="dropdown" />
             <div class="menu-dropdown-notification">
               <ul>
                 <li>
                   <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
                   <div class="content-notification">
-                    <h3 class="title-notification">Atenção Produto: </h3>
+                    <h3 class="title-notification">Atenção Produto:</h3>
                     <p>Nome do produto - Reator 10</p>
                   </div>
                   <p>10:42</p>
@@ -40,7 +43,7 @@
                 <li>
                   <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
                   <div class="content-notification">
-                    <h3 class="title-notification">Atenção Analise: </h3>
+                    <h3 class="title-notification">Atenção Analise:</h3>
                     <p>Nome do produto - Reator 10</p>
                   </div>
                   <p>10:42</p>
@@ -69,11 +72,11 @@
     <main>
       <div class="main-container-produto container">
         <div class="main-produto-header">
-          <a href="./index.html" class="button-voltar" data-js="teste"
+          <a href="./index.html" class="button-voltar"
             ><i class="fa-solid fa-arrow-left"></i>Voltar</a
           >
           <h1 class="main-produto-header-title">Produtos</h1>
-          <div class="button" data-js="add-product">
+          <div class="button" data-js="open-modal">
             Adicionar Produto
             <i class="fa-solid fa-circle-plus button-add-product-icon"></i>
           </div>
@@ -212,7 +215,7 @@
     <div class="modal-register-produto" data-js="modal">
       <div class="modal-register-produto-content">
         <i class="fa-solid fa-xmark button-exit" data-js="button-exit"></i>
-        <form class="form-register-product" data-js="form-register-product">
+        <form class="form-register-product" data-js="form-register">
           <h2 class="register-produto-form-title">Cadastrar Produto</h2>
 
           <div class="register-produto-form-container">
@@ -267,9 +270,8 @@
     </div>
     <footer>Desenvolvido por<a href=""> Jvictor</a></footer>
 
-    <script type="module" src="./js/user.js"></script>
-    <script type="module" src="./js/produto.js"></script>
-    <script type="module" src="./js/renderProdutos.js"></script>
+    <script type="module" src="./js/user/user.js"></script>
+    <script type="module" src="./js/product/product.js"></script>
     <script type="module" src="./js/notificationEvent.js"></script>
     <script
       src="https://kit.fontawesome.com/7e1d3b5b7e.js"
