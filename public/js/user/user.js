@@ -1,3 +1,4 @@
+import { eventSource } from "../notificationEvent.js"
 import { fetchLogout } from "./fetch.js"
 import { verifyGenerateToken } from "./token.js"
 
@@ -37,5 +38,8 @@ const userLogout = async (event) => {
   }
 }
 
+const closeSSE = () => eventSource.close()
+
 userInfoRender()
 btnLogout.addEventListener("click", userLogout)
+window.addEventListener("beforeunload", closeSSE)

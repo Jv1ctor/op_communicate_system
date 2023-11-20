@@ -1,4 +1,7 @@
-const BASIC_URL = "http://localhost:3000"
+import config from "../config.js"
+
+const { BASIC_URL } = config
+
 export const fetchLogin = async (name, password) => {
   try {
     const response = await fetch(`${BASIC_URL}/api/user/login`, {

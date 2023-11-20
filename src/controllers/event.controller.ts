@@ -108,7 +108,7 @@ export const events = (_req: Request, res: Response) => {
     "cache-control": "no-cache",
   })
 
-  myEmitter.on("create-product", async (product: string) => {
+  myEmitter.on("create-product", (product: string) => {
     res.write("event: notification\n")
     res.write(`data:${JSON.stringify(product)}\n\n`)
   })

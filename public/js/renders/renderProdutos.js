@@ -1,9 +1,8 @@
-import { modalForm } from "./produto.js"
-import { fetchCreateProduct } from "./fetch.js"
-import { generateToken, verifyGenerateToken } from "./token.js"
-import { modal } from "./produto.js"
+import { fetchCreateProduct } from "../user/fetch.js"
+import { generateToken, verifyGenerateToken } from "../user/token.js"
+import { modal, modalForm } from "../modal.js"
 
-const renderProduto = async () => {
+export const renderProduto = async () => {
   const token = await verifyGenerateToken()
   if (token) {
     const createProduct = async (e) => {
@@ -33,5 +32,3 @@ const renderProduto = async () => {
     return
   }
 }
-
-renderProduto()

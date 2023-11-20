@@ -1,7 +1,7 @@
-const eventSource = new EventSource("http://localhost:3000/api/events/sse")
+import config from "./config.js"
+
+export const eventSource = new EventSource(`${config.BASIC_URL}/api/events/sse`)
 
 eventSource.addEventListener("notification", (messageEvent) => {
-  console.log(messageEvent.data)
+  console.log(messageEvent)
 })
-
-console.log(eventSource)
