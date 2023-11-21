@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import prisma from "../database/prisma"
 import EventEmitter from "events"
-import { Products } from "@prisma/client"
+import { Analysis, Products } from "@prisma/client"
 
 const myEmitter = new EventEmitter()
 
@@ -18,7 +18,7 @@ interface ProductDataInterface {
 }
 
 interface NotificationInterface {
-  type_notification: "product" | "analisys"
+  type_notification: "product" | "analysis"
   product_name: string
   reactor_name: string
   created_at: Date
@@ -52,7 +52,7 @@ export const createProduct = async (req: Request, res: Response) => {
           fk_reactor: reactor.id_reactor,
         },
         select: {
-          product_id:true,
+          product_id: true,
           name_product: true,
           quant_produce: true,
           num_op: true,
@@ -120,23 +120,77 @@ export const listProduct = async (req: Request, res: Response) => {
   }
 }
 
-export const createAnalisys = (req: Request, res: Response) => {}
-export const events = async (_req: Request, res: Response) => {
-  res.writeHead(200, {
-    "Content-Type": "text/event-stream",
-    connection: "keep-alive",
-    "cache-control": "no-cache",
-  })
+export const createAnalysis = async (req: Request, res: Response) => {
+  try {
+    const analysisData = req.body
+    const userId = res.locals.userId
 
-  myEmitter.on("notification", (data: NotificationInterface) => {
-    res.write("event: notification\n")
-    res.write(`data:${JSON.stringify(data)}\n\n`)
-  })
-  myEmitter.on("create-product", (product: Products) => {
-    res.write("event: create-product\n")
-    res.write(`data:${JSON.stringify(product)}\n\n`)
-  })
+    const user = await prisma.users.findFirst({
+      where: { id: userId },
+      select: { user_cq: true },
+    })
 
+    if (user && user.user_cq) {
+      const analyse = await prisma.analysis.create({
+        data: {
+          adjustment: analysisData.adjustment,
+          fk_product: analysisData.product_id,
+          fk_user_cq: user.user_cq.fk_id_user_cq,
+        },
+        select: {
+          adjustment: true,
+          created_at: true,
+          products: { select: { reactor: true, name_product: true } },
+        },
+      })
+
+      const dataNotification: NotificationInterface = {
+        type_notification: "analysis",
+        created_at: analyse.created_at,
+        product_name: analyse.products.name_product,
+        reactor_name: analyse.products.reactor,
+      }
+
+      myEmitter.emit("notification", dataNotification)
+      myEmitter.emit("created-analyse", analyse)
+      return (
+        analyse &&
+        res.status(201).json({
+          action: { created_analyse: true },
+          message: "successfully created analyse",
+        })
+      )
+    }
+    res.status(400).json({
+      action: { created_product: false },
+      error: "data when creating the analyse",
+    })
+  } catch (err) {
+    res.status(500).json({ error: "internal server error" })
+  }
+}
+
+export const listAnalysis = async (req: Request, res: Response) => {
+  try {
+    const productId = req.headers.product as string
+
+    const listAnalysis = await prisma.analysis.findMany({
+      where: { fk_product: productId },
+      select: {
+        adjustment: true,
+        created_at: true,
+      },
+    })
+
+    return res
+      .status(200)
+      .json({ action: { list_analysis: true }, analyse_list: listAnalysis })
+  } catch (err) {
+    res.status(500).json({ error: "internal server error" })
+  }
+}
+
+const listProductCallback = async () => {
   const listProduct = await prisma.products.findMany({
     select: { name_product: true, reactor: true, created_at: true },
   })
@@ -153,4 +207,50 @@ export const events = async (_req: Request, res: Response) => {
       myEmitter.emit("notification", dataNotification)
     })
   }
+}
+
+const listAnalyseCallback = async () => {
+  const listAnalyse = await prisma.analysis.findMany({
+    select: {
+      created_at: true,
+      products: { select: { reactor: true, name_product: true } },
+    },
+  })
+
+  if (listAnalyse.length > 0) {
+    listAnalyse.forEach((analyse) => {
+      const dataNotification: NotificationInterface = {
+        type_notification: "analysis",
+        product_name: analyse.products.name_product,
+        reactor_name: analyse.products.reactor,
+        created_at: analyse.created_at,
+      }
+
+      myEmitter.emit("notification", dataNotification)
+    })
+  }
+}
+
+export const events = async (_req: Request, res: Response) => {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    connection: "keep-alive",
+    "cache-control": "no-cache",
+  })
+
+  myEmitter.on("notification", (data: NotificationInterface) => {
+    res.write("event: notification\n")
+    res.write(`data:${JSON.stringify(data)}\n\n`)
+  })
+  myEmitter.on("create-product", (product: Products) => {
+    res.write("event: create-product\n")
+    res.write(`data:${JSON.stringify(product)}\n\n`)
+  })
+  myEmitter.on("created-analyse", (analyse: Analysis) => {
+    res.write("event: create-product\n")
+    res.write(`data:${JSON.stringify(analyse)}\n\n`)
+  })
+
+  listProductCallback()
+  listAnalyseCallback()
 }

@@ -7,15 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Analisys {
-  analisys_id String   @id(map: "analisys_pk") @default(uuid()) @db.VarChar
+model Analysis {
+  analysis_id String   @id(map: "analysis_pk") @default(uuid()) @db.VarChar
   adjustment  String
+  created_at  DateTime @db.Timestamp()         @default(now())  
   fk_product  String   @db.VarChar
   fk_user_cq  String   @db.VarChar
-  products    Products @relation(fields: [fk_product], references: [product_id], onDelete: NoAction, onUpdate: NoAction, map: "analisys_fk")
-  user_cq     userCq   @relation(fields: [fk_user_cq], references: [fk_id_user_cq], onDelete: NoAction, onUpdate: NoAction, map: "analisys_user_fk")
+  products    Products @relation(fields: [fk_product], references: [product_id], onDelete: NoAction, onUpdate: NoAction, map: "analysis_fk")
+  user_cq     userCq   @relation(fields: [fk_user_cq], references: [fk_id_user_cq], onDelete: NoAction, onUpdate: NoAction, map: "analysis_user_fk")
 
-  @@map("analisys")
+  @@map("analysis")
 }
 
 model Products {
@@ -32,7 +33,7 @@ model Products {
   created_at        DateTime   @db.Timestamp()          @default(now())  
   fk_reactor        String     @db.VarChar
   fk_user_prod      String     @db.VarChar
-  analisys          Analisys[]
+  analysis          Analysis[]
   reactors          Reactors   @relation(fields: [fk_reactor], references: [id_reactor], onDelete: NoAction, onUpdate: NoAction, map: "products_fk")
   user_prod         userProd   @relation(fields: [fk_user_prod], references: [fk_id_user_prod], onDelete: NoAction, onUpdate: NoAction, map: "products_user_fk")
 
@@ -77,7 +78,7 @@ model userAdm {
 
 model userCq {
   fk_id_user_cq String     @id(map: "user_cq_pk") @db.VarChar
-  analisys      Analisys[]
+  analisys      Analysis[]
   users         Users      @relation(fields: [fk_id_user_cq], references: [id], onDelete: Cascade, map: "user_cq_fk")
 
   @@map("user_cq")

@@ -5,13 +5,31 @@ import Auth from "../middleware/auth"
 const router = Router()
 
 router.get("/sse", EventController.events)
-router.get("/list-product/", EventController.listProduct)
+router.get(
+  "/list-product",
+  Auth.authenticate,
+  Auth.validRefreshToken,
+  EventController.listProduct,
+)
 router.post(
   "/create-product",
   Auth.authenticate,
   Auth.validRefreshToken,
+  Auth.authorization("production"),
   EventController.createProduct,
 )
-router.post("/create-analisys", EventController.createAnalisys)
+router.post(
+  "/create-analysis",
+  Auth.authenticate,
+  Auth.validRefreshToken,
+  Auth.authorization("quality"),
+  EventController.createAnalysis,
+)
+router.post(
+  "/list-analysis",
+  Auth.authenticate,
+  Auth.validRefreshToken,
+  EventController.listAnalysis,
+)
 
 export default router
