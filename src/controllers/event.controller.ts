@@ -52,6 +52,7 @@ export const createProduct = async (req: Request, res: Response) => {
           fk_reactor: reactor.id_reactor,
         },
         select: {
+          product_id:true,
           name_product: true,
           quant_produce: true,
           num_op: true,
@@ -97,6 +98,7 @@ export const listProduct = async (req: Request, res: Response) => {
     const listProduct = await prisma.products.findMany({
       where: { reactor: reactor },
       select: {
+        product_id: true,
         name_product: true,
         quant_produce: true,
         num_op: true,

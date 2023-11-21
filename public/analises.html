@@ -53,7 +53,7 @@
     <main>
       <div class="main-container-dados container">
         <div class="main-dados-header">
-          <h1 class="main-dados-header-title">Especificações</h1>
+          <h1 class="main-dados-header-title">Dados do Produto</h1>
           <div class="main-dados-header-content">
             <span><strong>Nome:</strong> Produto 1</span>
             <span><strong>Número-Roteiro:</strong> 1555</span>
@@ -74,46 +74,31 @@
           <a href="./produtos.html" class="button-voltar"
             ><i class="fa-solid fa-arrow-left"></i> Voltar</a
           >
-          <h1 class="main-analise-header-title">Analises</h1>
+          <h1 class="main-analise-header-title">Análises</h1>
           <div
             class="button hidden-button"
             data-js="open-modal"
             data-permiss="controler-quality">
-            Adicionar Analise
+            Adicionar Análise
             <i class="fa-solid fa-circle-plus button-add-product-icon"></i>
           </div>
         </div>
 
         <div class="main-container-analise-content">
-          <table data-js="table-analise">
-            <thead class="analise-table-head">
-              <tr>
-                <th>Número da Analise</th>
-                <th>Ajuste</th>
-                <th>Hora</th>
-              </tr>
-            </thead>
+          <ul class="list-analise">
+            <li class="list-analise-item">
+              <h3>Análise 1</h3>
+              <p>É necessario adicionar mais...</p>
+              <span>10:30</span>
+            </li>
+          </ul>
+        </div>
 
-            <tbody class="analise-table-body">
-              <tr>
-                <td>Analise 1</td>
-                <td>tudo ok</td>
-                <td>10:00</td>
-              </tr>
-
-              <tr>
-                <td>Analise 1</td>
-                <td>tudo ok</td>
-                <td>10:00</td>
-              </tr>
-
-              <tr>
-                <td>Analise 1</td>
-                <td>tudo ok</td>
-                <td>10:00</td>
-              </tr>
-            </tbody>
-          </table>
+        <div
+          class="button btn-finish-product hidden-button"
+          data-js="open-modal-finish"
+          data-permiss="controler-quality">
+          Finalizar Produto
         </div>
       </div>
     </main>
@@ -121,7 +106,7 @@
       <div class="modal-register-analise-content">
         <i class="fa-solid fa-xmark button-exit" data-js="button-exit"></i>
         <form class="form-register-analise" data-js="form-register">
-          <h2 class="register-analise-form-title">Enviar Analise</h2>
+          <h2 class="register-analise-form-title">Enviar Análise</h2>
 
           <div class="register-analise-form-container">
             <div class="form-fields">
@@ -135,6 +120,34 @@
                 placeholder="Digite o Ajuste..."></textarea>
             </div>
             <button class="button">Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-register-analise" data-js="modal-finish" id="finish-modal-product">
+      <div class="modal-register-analise-content">
+        <i class="fa-solid fa-xmark button-exit" data-js="button-exit"></i>
+        <form class="form-register-analise" data-js="form-finish">
+          <h2 class="register-analise-form-title">Finalizar Produto:</h2>
+          <h3>NOME_PRODUTO - NOME_REATOR</h3>
+
+          <div class="register-analise-form-container">
+            <div class="form-fields">
+              <label for="status">Situação Final:</label>
+              <select name="status" id="status">
+                <option value="true">Aprovado</option>
+                <option value="false">Reprovado</option>
+              </select>
+
+              <label for="product-reactor">Digite o Nome do Produto e Reator</label>
+              <input
+                type="text"
+                name="product-reactor"
+                id="product-reactor"
+                placeholder="Ex: Produto - Reator" />
+            </div>
+            <button class="button">Finalizar</button>
           </div>
         </form>
       </div>

@@ -1,4 +1,4 @@
-import { fetchCreateProduct, fetchListProduct, fetchReactorsList } from "../user/fetch.js"
+import { fetchCreateProduct, fetchListProduct } from "../user/fetch.js"
 import { generateToken, verifyGenerateToken } from "../user/token.js"
 import { modal, modalForm } from "../modal.js"
 
@@ -54,7 +54,7 @@ const formattingHTMLData = (data) => {
   <td>${formattingDate}</td>
   <td>
   <a href="./analises.html" class="button-product">
-    <i class="fa-solid fa-circle-chevron-right"></i>
+    <i class="fa-solid fa-circle-chevron-right" data-js="link-product-btn" data-name="${data.name_product}" data-id="${data.product_id}"></i>
   </a>
 </td>
 </tr>`

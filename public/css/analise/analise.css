@@ -40,6 +40,7 @@
 }
 
 #analise .main-analise-header .button {
+  width: max-content;
   padding: 0.7rem 1rem;
   border-radius: 10px;
   font-size: 1.2rem;
@@ -48,56 +49,67 @@
   align-items: center;
 }
 
-[data-js="table-analise"] {
-  margin: 4rem auto;
+.main-container-analise {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.analise-table-head {
-  color: var(--secondary-color);
-  border-bottom: 3px solid var(--primary-color);
-}
-
-.analise-table-head tr,
-.analise-table-body tr {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  justify-items: center;
-}
-
-.analise-table-head tr {
-  font-size: 1.2rem;
-  padding: 0.5rem 1.2rem;
-}
-
-.analise-table-body {
-  display: grid;
-  gap: 1rem;
-  font-size: 1.2rem;
-}
-
-.analise-table-body tr {
-  padding: 0.3rem 1.2rem;
-  border-left: 3px solid var(--secondary-color);
-  border-bottom: 3px solid var(--secondary-color);
-  box-shadow: -1px 4px 5px 1px rgba(0, 0, 0, 0.1);
-}
-
-.analise-table-body td {
-  padding: 0.5rem 7rem;
-}
-
-.analise-table-body td:last-child,
-.analise-table-head th:last-child {
-  justify-self: flex-end;
+#analise .main-container-analise .btn-finish-product {
   align-self: center;
-  padding: 0;
+  margin-top: 2.5rem;
+  width: max-content;
+  font-weight: 600;
+  border-radius: 8px;
 }
 
-.analise-table-body td:first-child,
-.analise-table-head th:first-child {
-  justify-self: start;
-  align-self: center;
-  padding: 0;
+.btn-incomplete {
+  cursor: no-drop;
+  background: var(--input-placeholder-color);
+  color: #4b4b4b;
+  border: 3px solid #b0b0b0;
+}
+
+.btn-incomplete:hover {
+  background: var(--input-placeholder-color);
+}
+
+.list-analise {
+  padding-top: 2rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.list-analise-item {
+  border: 3px solid var(--secondary-color);
+  height: 200px;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
+  position: relative;
+}
+
+.list-analise-item h3 {
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.list-analise-item p {
+  max-width: 30ch;
+  word-break: break-all;
+  font-size: 1.2rem;
+}
+
+.list-analise-item span {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--table-head-color);
+  position: absolute;
+  top: 10px;
+  right: 15px;
 }
 
 /* MODAL */
@@ -128,6 +140,7 @@
 
 .form-register-analise {
   display: flex;
+  align-items: center;
   flex-direction: column;
   align-content: center;
 }
@@ -193,4 +206,17 @@
 .show-modal {
   display: block;
   overflow: hidden;
+}
+
+#finish-modal-product .modal-register-analise-content {
+  padding: 1.5rem;
+}
+
+#finish-modal-product .form-fields input,
+#finish-modal-product .form-fields select {
+  width: 100%;
+}
+
+#finish-modal-product .form-fields select {
+  margin-bottom: 1.5rem;
 }
