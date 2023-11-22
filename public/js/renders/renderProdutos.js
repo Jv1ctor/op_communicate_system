@@ -1,6 +1,6 @@
 import { fetchCreateProduct, fetchListProduct } from "../user/fetch.js"
 import { generateToken, verifyGenerateToken } from "../user/token.js"
-import { modal, modalForm } from "../modal.js"
+import { modal, modalForm } from "../config.js"
 
 const productList = document.querySelector("[data-js='product-list']")
 const productListArr = productList?.children

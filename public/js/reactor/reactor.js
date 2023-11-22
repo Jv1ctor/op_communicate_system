@@ -1,4 +1,5 @@
-import { renderReactor, reactorList } from "../renders/renderReatores.js"
+import { renderReactor } from "../renders/renderReatores.js"
+import { reactorList } from "../config.js"
 
 const saveReactorName = (event) => {
   if (event.target.dataset.js === "link-reactor-btn") {

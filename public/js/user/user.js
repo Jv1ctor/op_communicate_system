@@ -2,18 +2,18 @@ import { eventSource } from "../notificationEvent.js"
 import { fetchLogout } from "./fetch.js"
 import { verifyGenerateToken } from "./token.js"
 import { runNotification } from "./notification.js"
-import { buttonModal } from "../modal.js"
+import { buttonModal, buttonModalFinish } from "../config.js"
 
 const userNameSpan = document.querySelector('[data-js="user-name"]')
 const userSetorSpan = document.querySelector('[data-js="user-setor"]')
 const btnLogout = document.querySelector('[data-js="btn-logout"]')
-const btnFinish = document.querySelector("[data-js='open-modal-finish']")
 
 const userPermissOptions = () => {
   const typeUser = localStorage.getItem("type-user")
   const permissUserProdBtn = buttonModal?.dataset.permiss === "producer"
   const permissUserCQBtn = buttonModal?.dataset.permiss === "controler-quality"
-  const permissUserCQBtnFinish = btnFinish?.dataset.permiss === "controler-quality"
+  const permissUserCQBtnFinish =
+    buttonModalFinish?.dataset.permiss === "controler-quality"
   if (typeUser === "Produção" && permissUserProdBtn) {
     buttonModal.classList.remove("hidden-button")
   }
@@ -23,7 +23,7 @@ const userPermissOptions = () => {
   }
 
   if (typeUser === "Controle Qualidade" && permissUserCQBtnFinish) {
-    btnFinish.classList.remove("hidden-button")
+    buttonModalFinish.classList.remove("hidden-button")
   }
 }
 

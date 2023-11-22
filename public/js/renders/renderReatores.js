@@ -1,7 +1,6 @@
 import { fetchReactorsList } from "../user/fetch.js"
 import { verifyGenerateToken } from "../user/token.js"
-
-export const reactorList = document.querySelector('[data-js="reactors-list"]')
+import { reactorList } from "../config.js"
 
 export const renderReactor = async () => {
   const token = await verifyGenerateToken()

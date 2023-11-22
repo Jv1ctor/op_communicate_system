@@ -1,4 +1,4 @@
-import { modalForm } from "../modal.js"
+import { modalForm } from "../config.js"
 
 const formatWithRegex = (event, regex) => {
   const value = event.target.value
