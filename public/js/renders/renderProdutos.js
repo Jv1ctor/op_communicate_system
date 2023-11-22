@@ -4,6 +4,7 @@ import { modal, modalForm } from "../config.js"
 
 const productList = document.querySelector("[data-js='product-list']")
 const productListArr = productList?.children
+const buttonConfirm = document.querySelector("[data-js='button-confirm']")
 
 export const submitFormProduct = async () => {
   const token = await verifyGenerateToken()
@@ -78,5 +79,9 @@ export const renderProduct = async (data) => {
         productList.innerHTML = formatData
       }
     }
+  }
+
+  if (productListArr.length > 0) {
+    buttonConfirm.classList.add("btn-incomplete")
   }
 }

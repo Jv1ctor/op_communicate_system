@@ -1,4 +1,9 @@
 import { runModal } from "../modal.js"
+import {
+  renderAnalyse,
+  renderProductData,
+  submitFormAnalyse,
+} from "../renders/renderAnalyse.js"
 
 const productName = document.querySelector("[data-js='product-name']")
 const renderProductName = () => {
@@ -8,4 +13,7 @@ const renderProductName = () => {
 }
 
 renderProductName()
+renderProductData()
 runModal()
+submitFormAnalyse()
+renderAnalyse()

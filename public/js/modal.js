@@ -5,7 +5,7 @@ const openModalProduct = (e) => {
   document.body.classList.toggle("show-modal")
 }
 
-const openModalFinish = (e) => {
+export const openModalFinish = (e) => {
   modalFinish.classList.toggle("show-modal")
   document.body.classList.toggle("show-modal")
 }

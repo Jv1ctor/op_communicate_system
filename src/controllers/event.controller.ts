@@ -22,6 +22,7 @@ interface NotificationInterface {
   product_name: string
   reactor_name: string
   created_at: Date
+  count?: number
 }
 
 export const createProduct = async (req: Request, res: Response) => {
@@ -94,9 +95,10 @@ export const createProduct = async (req: Request, res: Response) => {
 export const listProduct = async (req: Request, res: Response) => {
   try {
     const reactor = req.headers.reactor as string
+    const productId = req.headers?.product_id as string
 
     const listProduct = await prisma.products.findMany({
-      where: { reactor: reactor },
+      where: { OR: [{ reactor: reactor }, { product_id: productId }] },
       select: {
         product_id: true,
         name_product: true,
@@ -131,14 +133,20 @@ export const createAnalysis = async (req: Request, res: Response) => {
     })
 
     if (user && user.user_cq) {
+      const analyseList = await prisma.analysis.findMany({
+        where: { fk_product: analysisData.product_id },
+      })
+
       const analyse = await prisma.analysis.create({
         data: {
           adjustment: analysisData.adjustment,
           fk_product: analysisData.product_id,
           fk_user_cq: user.user_cq.fk_id_user_cq,
+          count: analyseList.length + 1,
         },
         select: {
           adjustment: true,
+          count: true,
           created_at: true,
           products: { select: { reactor: true, name_product: true } },
         },
@@ -149,10 +157,11 @@ export const createAnalysis = async (req: Request, res: Response) => {
         created_at: analyse.created_at,
         product_name: analyse.products.name_product,
         reactor_name: analyse.products.reactor,
+        count: analyse.count,
       }
 
       myEmitter.emit("notification", dataNotification)
-      myEmitter.emit("created-analyse", analyse)
+      myEmitter.emit("create-analyse", analyse)
       return (
         analyse &&
         res.status(201).json({
@@ -178,6 +187,7 @@ export const listAnalysis = async (req: Request, res: Response) => {
       where: { fk_product: productId },
       select: {
         adjustment: true,
+        count: true,
         created_at: true,
       },
     })
@@ -213,6 +223,8 @@ const listAnalyseCallback = async () => {
   const listAnalyse = await prisma.analysis.findMany({
     select: {
       created_at: true,
+      adjustment: true,
+      count: true,
       products: { select: { reactor: true, name_product: true } },
     },
   })
@@ -224,6 +236,7 @@ const listAnalyseCallback = async () => {
         product_name: analyse.products.name_product,
         reactor_name: analyse.products.reactor,
         created_at: analyse.created_at,
+        count: analyse.count,
       }
 
       myEmitter.emit("notification", dataNotification)
@@ -246,8 +259,8 @@ export const events = async (_req: Request, res: Response) => {
     res.write("event: create-product\n")
     res.write(`data:${JSON.stringify(product)}\n\n`)
   })
-  myEmitter.on("created-analyse", (analyse: Analysis) => {
-    res.write("event: create-product\n")
+  myEmitter.on("create-analyse", (analyse: Analysis) => {
+    res.write("event: create-analyse\n")
     res.write(`data:${JSON.stringify(analyse)}\n\n`)
   })
 

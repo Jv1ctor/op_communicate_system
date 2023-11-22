@@ -158,9 +158,23 @@
   align-self: flex-end;
 }
 
+.notification-product .alert-notification-icon {
+  color: var(--yellow-product);
+}
+
+[data-notification="product"] {
+  background: var(--yellow-product);
+}
+
+.notification-analysis .alert-notification-icon {
+  color: var(--orange-product);
+}
+[data-notification="analysis"] {
+  background: var(--orange-product);
+}
+
 .menu-dropdown-notification .alert-notification-icon {
   font-size: 1.5rem;
-  color: var(--yellow-product);
 }
 
 .menu-dropdown-notification .button-exit {
@@ -200,7 +214,6 @@
 .circle-notification {
   width: 15px;
   height: 15px;
-  background: var(--yellow-product);
   border-radius: 50%;
   position: absolute;
   top: 10px;

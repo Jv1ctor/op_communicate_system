@@ -25,7 +25,7 @@ router.post(
   Auth.authorization("quality"),
   EventController.createAnalysis,
 )
-router.post(
+router.get(
   "/list-analysis",
   Auth.authenticate,
   Auth.validRefreshToken,

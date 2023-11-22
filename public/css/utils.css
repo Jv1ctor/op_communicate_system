@@ -100,3 +100,14 @@
 .hidden-button {
   visibility: hidden;
 }
+
+.btn-incomplete {
+  cursor: no-drop;
+  background: var(--input-placeholder-color);
+  color: #4b4b4b;
+  border: 3px solid #b0b0b0;
+}
+
+.btn-incomplete:hover {
+  background: var(--input-placeholder-color);
+}

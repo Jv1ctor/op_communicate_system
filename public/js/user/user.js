@@ -1,7 +1,7 @@
 import { eventSource } from "../notificationEvent.js"
 import { fetchLogout } from "./fetch.js"
 import { verifyGenerateToken } from "./token.js"
-import { runNotification } from "./notification.js"
+import { runNotification } from "../renders/renderNotification.js"
 import { buttonModal, buttonModalFinish } from "../config.js"
 
 const userNameSpan = document.querySelector('[data-js="user-name"]')

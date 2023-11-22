@@ -18,8 +18,8 @@ const main = async () => {
   })
 
   const prod = await prisma.users.upsert({
-    where: { first_name: "teste", last_name: "prod"},
-    update:{},
+    where: { first_name: "teste", last_name: "prod" },
+    update: {},
     create: {
       first_name: "teste",
       last_name: "prod",
@@ -28,8 +28,8 @@ const main = async () => {
   })
 
   const cq = await prisma.users.upsert({
-    where: { first_name: "teste", last_name: "cq"},
-    update:{},
+    where: { first_name: "teste", last_name: "cq" },
+    update: {},
     create: {
       first_name: "teste",
       last_name: "cq",
@@ -61,12 +61,17 @@ const main = async () => {
         },
       }),
     ])
+
     console.log(
       "---------USER ADMIN---------\n",
       "USUARIOS CRIADO:\n",
-      admin, prod, cq,
+      admin,
+      prod,
+      cq,
       "\nPERMISSÕES:\n",
-      users[0],users[1],users[2]
+      users[0],
+      users[1],
+      users[2],
     )
   }
 

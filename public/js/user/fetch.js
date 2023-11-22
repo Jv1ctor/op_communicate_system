@@ -97,7 +97,7 @@ export const fetchCreateProduct = async (token, data) => {
   }
 }
 
-export const fetchListProduct = async (token, reactor) => {
+export const fetchListProduct = async (token, reactor, productId) => {
   try {
     const response = await fetch(`${BASIC_URL}/api/events/list-product`, {
       method: "GET",
@@ -106,6 +106,47 @@ export const fetchListProduct = async (token, reactor) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
         reactor: reactor,
+        product_id: productId,
+      },
+    })
+
+    if (response.status == "200") {
+      return response.json()
+    }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+export const fetchCreateAnalysis = async (token, data) => {
+  try {
+    const response = await fetch(`${BASIC_URL}/api/events/create-analysis`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    })
+
+    if (response.status == "201") {
+      return response.json()
+    }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+export const fetchListAnalysis = async (token, product) => {
+  try {
+    const response = await fetch(`${BASIC_URL}/api/events/list-analysis`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        product: product,
       },
     })
 
