@@ -50,7 +50,7 @@ const userInfoRender = () => {
   userSetorSpan.setAttribute("title", userType ? userType : "Sem Nome")
 }
 
-const userLogout = async (event) => {
+const userLogout = async (_event) => {
   const token = await verifyGenerateToken()
   if (token) {
     await fetchLogout(token)

@@ -18,6 +18,13 @@ router.post(
   Auth.authorization("production"),
   EventController.createProduct,
 )
+router.put(
+  "/finish-product",
+  Auth.authenticate,
+  Auth.validRefreshToken,
+  Auth.authorization("quality"),
+  EventController.finishProduct,
+)
 router.post(
   "/create-analysis",
   Auth.authenticate,

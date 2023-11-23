@@ -16,17 +16,23 @@ const saveProductName = (e) => {
   if (e.target.dataset.js === "link-product-btn") {
     const productName = e.target.dataset.name
     const productId = e.target.dataset.id
-
+    const productStatus = e.target.dataset.status
     localStorage.setItem(
       "product",
-      JSON.stringify({ product_name: productName, product_id: productId }),
+      JSON.stringify({
+        product_name: productName,
+        product_id: productId,
+        product_status: productStatus,
+      }),
     )
   }
 }
 
 renderReactorName()
 runFormattingInput()
-renderProduct()
+renderProduct(null, "andamento")
+renderProduct(null, "aprovado")
+renderProduct(null, "reprovado")
 runModal()
 runMenu()
 submitFormProduct()

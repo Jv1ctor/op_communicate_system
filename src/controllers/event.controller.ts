@@ -23,6 +23,7 @@ interface NotificationInterface {
   reactor_name: string
   created_at: Date
   count?: number
+  status?: string
 }
 
 export const createProduct = async (req: Request, res: Response) => {
@@ -62,8 +63,10 @@ export const createProduct = async (req: Request, res: Response) => {
           operator: true,
           num_batch: true,
           turn: true,
+          status: true,
           reactor: true,
           created_at: true,
+          updated_at: true,
         },
       })
 
@@ -71,7 +74,8 @@ export const createProduct = async (req: Request, res: Response) => {
         type_notification: "product",
         product_name: product.name_product,
         reactor_name: product.reactor,
-        created_at: product.created_at,
+        status: product.status,
+        created_at: product.updated_at,
       }
       myEmitter.emit("notification", dataNotification)
       myEmitter.emit("create-product", product)
@@ -95,10 +99,14 @@ export const createProduct = async (req: Request, res: Response) => {
 export const listProduct = async (req: Request, res: Response) => {
   try {
     const reactor = req.headers.reactor as string
+    const product_status = req.headers.product_status as string
     const productId = req.headers?.product_id as string
 
     const listProduct = await prisma.products.findMany({
-      where: { OR: [{ reactor: reactor }, { product_id: productId }] },
+      where: {
+        OR: [{ reactor: reactor }, { product_id: productId }],
+        AND: { status: product_status },
+      },
       select: {
         product_id: true,
         name_product: true,
@@ -109,6 +117,7 @@ export const listProduct = async (req: Request, res: Response) => {
         operator: true,
         num_batch: true,
         turn: true,
+        status: true,
         reactor: true,
         created_at: true,
       },
@@ -200,9 +209,71 @@ export const listAnalysis = async (req: Request, res: Response) => {
   }
 }
 
+export const finishProduct = async (req: Request, res: Response) => {
+  try {
+    const { product_id, product_analyst, product_status } = req.body
+
+    if (product_id && product_status) {
+      const product = await prisma.products.findUnique({
+        where: { product_id: product_id },
+        select: {
+          status: true,
+          analyst_name: true,
+        },
+      })
+      if (product?.status === "andamento") {
+        const productFinish = await prisma.products.update({
+          where: { product_id: product_id },
+          data: {
+            status: product_status,
+            analyst_name: product_analyst,
+            updated_at: new Date(),
+          },
+          select: {
+            product_id: true,
+            name_product: true,
+            quant_produce: true,
+            num_op: true,
+            turn_supervisor: true,
+            num_roadmap: true,
+            operator: true,
+            num_batch: true,
+            turn: true,
+            status: true,
+            reactor: true,
+            created_at: true,
+            updated_at: true,
+          },
+        })
+
+        const dataNotification: NotificationInterface = {
+          type_notification: "product",
+          created_at: productFinish.updated_at,
+          product_name: productFinish.name_product,
+          reactor_name: productFinish.reactor,
+          status: productFinish.status,
+        }
+
+        myEmitter.emit("notification", dataNotification)
+        myEmitter.emit("finish-product", productFinish)
+        return res.status(200).json({
+          action: { finish_product: true },
+          message: "successfully finish product",
+        })
+      }
+      res.status(400).json({
+        action: { finish_product: true },
+        error: "error when finalizing the product",
+      })
+    }
+  } catch (err) {
+    res.status(500).json({ error: "internal server error" })
+  }
+}
+
 const listProductCallback = async () => {
   const listProduct = await prisma.products.findMany({
-    select: { name_product: true, reactor: true, created_at: true },
+    select: { name_product: true, reactor: true, updated_at: true, status: true },
   })
 
   if (listProduct.length > 0) {
@@ -211,7 +282,8 @@ const listProductCallback = async () => {
         type_notification: "product",
         product_name: product.name_product,
         reactor_name: product.reactor,
-        created_at: product.created_at,
+        created_at: product.updated_at,
+        status: product.status,
       }
 
       myEmitter.emit("notification", dataNotification)
@@ -262,6 +334,10 @@ export const events = async (_req: Request, res: Response) => {
   myEmitter.on("create-analyse", (analyse: Analysis) => {
     res.write("event: create-analyse\n")
     res.write(`data:${JSON.stringify(analyse)}\n\n`)
+  })
+  myEmitter.on("finish-product", (product: Products) => {
+    res.write("event: finish-product\n")
+    res.write(`data:${JSON.stringify(product)}\n\n`)
   })
 
   listProductCallback()

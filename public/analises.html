@@ -115,22 +115,25 @@
         <i class="fa-solid fa-xmark button-exit" data-js="button-exit"></i>
         <form class="form-register-analise" data-js="form-finish">
           <h2 class="register-analise-form-title">Finalizar Produto:</h2>
-          <h3>NOME_PRODUTO - NOME_REATOR</h3>
+          <h3 data-js="product-reactor-title"></h3>
 
           <div class="register-analise-form-container">
             <div class="form-fields">
               <label for="status">Situação Final:</label>
               <select name="status" id="status">
-                <option value="true">Aprovado</option>
-                <option value="false">Reprovado</option>
+                <option value="aprovado">Aprovado</option>
+                <option value="reprovado">Reprovado</option>
               </select>
 
-              <label for="product-reactor">Digite o Nome do Produto e Reator</label>
+              <label for="product-reactor">Digite o Nome do Produto e Reator:</label>
               <input
                 type="text"
                 name="product-reactor"
                 id="product-reactor"
                 placeholder="Ex: Produto - Reator" />
+
+              <label for="name-analyst">Digite o Nome do Analista:</label>
+              <input type="text" name="name-analyst" id="name-analyst" />
             </div>
             <button class="button">Finalizar</button>
           </div>

@@ -2,8 +2,8 @@ import { fetchCreateProduct, fetchListProduct } from "../user/fetch.js"
 import { generateToken, verifyGenerateToken } from "../user/token.js"
 import { modal, modalForm } from "../config.js"
 
-const productList = document.querySelector("[data-js='product-list']")
-const productListArr = productList?.children
+const productListProgress = document.querySelector("[data-js='product-list-andamento']")
+const productListProgressArr = productListProgress?.children
 const buttonConfirm = document.querySelector("[data-js='button-confirm']")
 
 export const submitFormProduct = async () => {
@@ -23,7 +23,7 @@ export const submitFormProduct = async () => {
         return acc
       }, {})
 
-      if (data && productListArr.length <= 0) {
+      if (data && productListProgressArr.length <= 0) {
         const newToken = await generateToken()
         const nameReactor = localStorage.getItem("reactor")
         data.reactor = nameReactor
@@ -37,51 +37,60 @@ export const submitFormProduct = async () => {
     }
 
     modalForm.addEventListener("submit", createProduct)
-    return
   }
 }
 
 const formattingHTMLData = (data) => {
-  const currentDate = new Date(data.created_at)
-  const formattingDate = new Intl.DateTimeFormat("pt-BR").format(currentDate)
+  let template = ""
+  data.forEach((item) => {
+    const currentDate = new Date(item.created_at)
+    const formattingDate = new Intl.DateTimeFormat("pt-BR").format(currentDate)
 
-  return `<tr>
-  <td><span class="circle"></span></td>
-  <td>${data.name_product}</td>
-  <td>${data.quant_produce}</td>
-  <td>${data.num_op}</td>
-  <td>${data.num_batch}</td>
-  <td>${data.turn}</td>
-  <td>${formattingDate}</td>
-  <td>
-  <a href="./analises.html" class="button-product">
-    <i class="fa-solid fa-circle-chevron-right" data-js="link-product-btn" data-name="${data.name_product}" data-id="${data.product_id}"></i>
-  </a>
-</td>
-</tr>`
+    template += `<tr>
+    <td><span class="circle ${item.status}"></span></td>
+    <td>${item.name_product}</td>
+    <td>${item.quant_produce}</td>
+    <td>${item.num_op}</td>
+    <td>${item.num_batch}</td>
+    <td>${item.turn}</td>
+    <td>${formattingDate}</td>
+    <td>
+    <a href="./analises.html" class="button-product">
+      <i class="fa-solid fa-circle-chevron-right" data-js="link-product-btn" data-name="${item.name_product}" data-id="${item.product_id}" data-status="${item.status}"></i>
+    </a>
+  </td>
+  </tr>`
+  })
+  return template
 }
-
-export const renderProduct = async (data) => {
-  if (data && productListArr.length <= 0) {
+export const renderProduct = async (data, product_status) => {
+  const productList = document.querySelector(`[data-js='product-list-${product_status}']`)
+  const productListProgressArr = productListProgress?.children
+  productListProgress.innerHTML = ""
+  if (productListProgressArr.length > 0) {
+    buttonConfirm.classList.add("btn-incomplete")
+  }
+  if (data && productListProgressArr.length <= 0) {
     const formatData = formattingHTMLData(data)
     productList.innerHTML = formatData
   }
 
-  if (productListArr.length <= 0) {
-    const token = await verifyGenerateToken()
-    if (token) {
-      const nameReactor = localStorage.getItem("reactor")
-      const response = await fetchListProduct(token, nameReactor)
+  const token = await verifyGenerateToken()
+  if (token) {
+    const nameReactor = localStorage.getItem("reactor")
+    const response = await fetchListProduct(token, nameReactor, null, product_status)
 
-      const { product_list: product } = response
-      if (product.length > 0) {
-        const formatData = formattingHTMLData(product[0])
-        productList.innerHTML = formatData
-      }
+    const { product_list: product } = response
+    if (
+      product_status === "andamento" &&
+      product.length > 0 &&
+      productListProgressArr.length <= 0
+    ) {
+      const formatData = formattingHTMLData(product)
+      productList.innerHTML = formatData
+    } else {
+      const formatData = formattingHTMLData(product)
+      productList.innerHTML = formatData
     }
-  }
-
-  if (productListArr.length > 0) {
-    buttonConfirm.classList.add("btn-incomplete")
   }
 }

@@ -97,7 +97,7 @@ export const fetchCreateProduct = async (token, data) => {
   }
 }
 
-export const fetchListProduct = async (token, reactor, productId) => {
+export const fetchListProduct = async (token, reactor, productId, productStatus) => {
   try {
     const response = await fetch(`${BASIC_URL}/api/events/list-product`, {
       method: "GET",
@@ -107,6 +107,7 @@ export const fetchListProduct = async (token, reactor, productId) => {
         Authorization: `Bearer ${token}`,
         reactor: reactor,
         product_id: productId,
+        product_status: productStatus,
       },
     })
 
@@ -148,6 +149,26 @@ export const fetchListAnalysis = async (token, product) => {
         Authorization: `Bearer ${token}`,
         product: product,
       },
+    })
+
+    if (response.status == "200") {
+      return response.json()
+    }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+export const fetchFinishProduct = async (token, data) => {
+  try {
+    const response = await fetch(`${BASIC_URL}/api/events/finish-product`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
     })
 
     if (response.status == "200") {

@@ -11,6 +11,9 @@ const formattingHTMLData = (data) => {
   })
 
   notifyCircle.setAttribute("data-notification", notifications[0][1].type_notification)
+  if (notifications[0][1].type_notification === "product") {
+    notifyCircle.setAttribute("data-status", notifications[0][1].status)
+  }
   let template = ""
   const typeNotificationFormat = {
     product: "Produto",
@@ -25,13 +28,22 @@ const formattingHTMLData = (data) => {
       minute: "2-digit",
     }).format(currentDate)
     template += `
-      <li class="notification-${notificationData.type_notification}">
+      <li class="
+        notification-${notificationData.type_notification} 
+        ${notificationData.status ? `product-${notificationData.status}` : ""}
+      ">
         <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
           <div class="content-notification">
             <h3 class="title-notification">Atenção ${
               typeNotificationFormat[notificationData.type_notification]
-            } ${notificationData?.count ? notificationData.count : ""}:</h3>
-            <p>${notificationData.product_name} - ${notificationData.reactor_name}</p>
+            } ${notificationData?.count || ""}:</h3>
+            
+            <p>${notificationData.product_name} - ${notificationData.reactor_name} 
+            ${
+              notificationData.status && notificationData.status !== "andamento"
+                ? notificationData.status
+                : ""
+            }</p>
           </div>
           <p>${dateFormat}</p>
       </li>`

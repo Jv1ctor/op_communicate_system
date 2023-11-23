@@ -1,7 +1,14 @@
-import { modal, modalForm, buttonModalFinish } from "../config.js"
+import {
+  modal,
+  modalForm,
+  modalFormFinish,
+  buttonModalFinish,
+  modalFinish,
+} from "../config.js"
 import { openModalFinish } from "../modal.js"
 import {
   fetchCreateAnalysis,
+  fetchFinishProduct,
   fetchListAnalysis,
   fetchListProduct,
 } from "../user/fetch.js"
@@ -11,6 +18,7 @@ const analyseList = document.querySelector("[data-js='analyse-list']")
 const titleNotAnalyse = document.querySelector(".not-analise-title")
 const analyseListArr = analyseList?.children
 const productDataContainer = document.querySelector("[data-js='data-product']")
+
 export const submitFormAnalyse = async () => {
   const token = await verifyGenerateToken()
   if (token) {
@@ -33,7 +41,36 @@ export const submitFormAnalyse = async () => {
         }
       }
     }
+
+    const finishProduct = async (e) => {
+      e.preventDefault()
+      const statusProduct = e.target.status.value
+      const productAndReactor = e.target["product-reactor"].value
+      const analystName = e.target["name-analyst"].value
+      const product = JSON.parse(localStorage.getItem("product"))
+      const reactor = localStorage.getItem("reactor")
+      const data = {
+        product_id: product.product_id,
+        product_analyst: analystName,
+        product_status: statusProduct,
+      }
+
+      const confirm =
+        productAndReactor.toLowerCase() ===
+        `${product.product_name}-${reactor.toLowerCase()}`
+      if (statusProduct && productAndReactor && analystName && confirm) {
+        const newToken = await generateToken()
+        const response = await fetchFinishProduct(newToken, data)
+        if (response) {
+          modalFormFinish.reset()
+          modalFinish.classList.toggle("show-modal")
+          document.body.classList.toggle("show-modal")
+        }
+      }
+    }
+
     modalForm.addEventListener("submit", createAnalyse)
+    modalFormFinish.addEventListener("submit", finishProduct)
   }
 }
 
@@ -69,6 +106,7 @@ const formattingHTMLDataProduct = (data) => {
     <span><strong>Quantidade:</strong> ${product.quant_produce}kg</span>
     <span><strong>Número-Lote:</strong>${product.num_batch} </span>
     <span><strong>Turno:</strong>${product.turn}</span>
+    <span><strong>Status:</strong>${product.status}</span>
     <span><strong>Data:</strong> ${formattingDate}</span>`
 }
 
@@ -98,13 +136,22 @@ export const renderAnalyse = async (data) => {
   }
 }
 
-export const renderProductData = async () => {
+export const renderProductData = async (data) => {
+  if (data) {
+    const formatData = formattingHTMLDataProduct(data)
+    productDataContainer.innerHTML = formatData
+  }
+
   const token = await verifyGenerateToken()
   if (token) {
     const reactor = localStorage.getItem("reactor")
     const product = JSON.parse(localStorage.getItem("product"))
-
-    const response = await fetchListProduct(token, reactor, product.product_id)
+    const response = await fetchListProduct(
+      token,
+      reactor,
+      product.product_id,
+      product.product_status,
+    )
 
     const { product_list: productList } = response
     if (productList.length > 0) {

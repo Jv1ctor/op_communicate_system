@@ -31,7 +31,10 @@ model Products {
   num_roadmap       Int
   turn_supervisor   String     @db.VarChar
   turn              String     @db.Char(1)
+  status            String     @db.VarChar              @default("andamento")
+  analyst_name      String     @db.VarChar              @default("none") 
   created_at        DateTime   @db.Timestamp()          @default(now())  
+  updated_at        DateTime   @db.Timestamp()          @default(now())  
   fk_reactor        String     @db.VarChar
   fk_user_prod      String     @db.VarChar
   analysis          Analysis[]

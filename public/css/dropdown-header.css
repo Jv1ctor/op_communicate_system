@@ -161,6 +161,9 @@
 .notification-product .alert-notification-icon {
   color: var(--yellow-product);
 }
+.menu-dropdown-notification .notification-product {
+  border-color: var(--yellow-product);
+}
 
 [data-notification="product"] {
   background: var(--yellow-product);
@@ -169,8 +172,26 @@
 .notification-analysis .alert-notification-icon {
   color: var(--orange-product);
 }
+.menu-dropdown-notification .notification-analysis {
+  border-color: var(--orange-product);
+}
 [data-notification="analysis"] {
   background: var(--orange-product);
+}
+
+.product-aprovado .alert-notification-icon {
+  color: var(--green-product);
+  border-color: var(--green-product);
+}
+.menu-dropdown-notification .product-aprovado {
+  border-color: var(--green-product);
+}
+
+.product-reprovado .alert-notification-icon {
+  color: var(--red-product);
+}
+.menu-dropdown-notification .product-reprovado {
+  border-color: var(--red-product);
 }
 
 .menu-dropdown-notification .alert-notification-icon {
