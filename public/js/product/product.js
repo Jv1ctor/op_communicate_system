@@ -2,6 +2,7 @@ import { runModal } from "../modal.js"
 import { runMenu } from "./menu.js"
 import { renderProduct, submitFormProduct } from "../renders/renderProdutos.js"
 import { runFormattingInput } from "./formattingInputs.js"
+import { verifyGenerateToken } from "../user/token.js"
 
 const reactorName = document.querySelector('[data-js="reactor-name"]')
 const tables = document.querySelector("[data-js='tables']")
@@ -28,11 +29,15 @@ const saveProductName = (e) => {
   }
 }
 
+verifyGenerateToken()
+  .then((token) => {
+    renderProduct(null, "andamento", token)
+    renderProduct(null, "aprovado", token)
+    renderProduct(null, "reprovado", token)
+  })
+  .catch((err) => console.log(err))
 renderReactorName()
 runFormattingInput()
-renderProduct(null, "andamento")
-renderProduct(null, "aprovado")
-renderProduct(null, "reprovado")
 runModal()
 runMenu()
 submitFormProduct()

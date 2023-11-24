@@ -33,7 +33,7 @@ const RefreshToken = {
     const tokenId = uuidv4()
     if (refreshToken) {
       const token = JWT.sign({}, process.env.JWT_KEY as string, {
-        expiresIn: "24h",
+        expiresIn: "2h",
         subject: refreshTokenId,
         jwtid: tokenId,
       })
@@ -48,14 +48,15 @@ const RefreshToken = {
             where: { refresh_token_id: decoded.sub },
           })
         }
-        await prisma.accessToken.create({
+        const createAccessToken = await prisma.accessToken.create({
           data: {
             id: decoded.jti,
             expires_in: decoded.exp,
             refresh_token_id: decoded.sub,
           },
         })
-        return token
+
+        return createAccessToken && token
       }
     }
   },

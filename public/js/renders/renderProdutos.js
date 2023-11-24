@@ -1,5 +1,5 @@
 import { fetchCreateProduct, fetchListProduct } from "../user/fetch.js"
-import { generateToken, verifyGenerateToken } from "../user/token.js"
+import { generateToken } from "../user/token.js"
 import { modal, modalForm } from "../config.js"
 
 const productListProgress = document.querySelector("[data-js='product-list-andamento']")
@@ -7,37 +7,34 @@ const productListProgressArr = productListProgress?.children
 const buttonConfirm = document.querySelector("[data-js='button-confirm']")
 
 export const submitFormProduct = async () => {
-  const token = await verifyGenerateToken()
-  if (token) {
-    const createProduct = async (e) => {
-      e.preventDefault()
-      const listInputValue = Array.from(e.target)
-      const data = listInputValue.reduce((acc, item) => {
-        if (!item.classList.contains("button")) {
-          if (item.value && modalForm.turn.value !== "-1") {
-            acc[item.id] = item.value
-          } else {
-            return null
-          }
-        }
-        return acc
-      }, {})
-
-      if (data && productListProgressArr.length <= 0) {
-        const newToken = await generateToken()
-        const nameReactor = localStorage.getItem("reactor")
-        data.reactor = nameReactor
-        const response = await fetchCreateProduct(newToken, data)
-        if (response) {
-          modalForm.reset()
-          modal.classList.toggle("show-modal")
-          document.body.classList.toggle("show-modal")
+  const createProduct = async (e) => {
+    e.preventDefault()
+    const listInputValue = Array.from(e.target)
+    const data = listInputValue.reduce((acc, item) => {
+      if (!item.classList.contains("button")) {
+        if (item.value && modalForm.turn.value !== "-1") {
+          acc[item.id] = item.value
+        } else {
+          return null
         }
       }
-    }
+      return acc
+    }, {})
 
-    modalForm.addEventListener("submit", createProduct)
+    if (data && productListProgressArr.length <= 0) {
+      const newToken = await generateToken()
+      const nameReactor = localStorage.getItem("reactor")
+      data.reactor = nameReactor
+      const response = await fetchCreateProduct(newToken, data)
+      if (response) {
+        modalForm.reset()
+        modal.classList.toggle("show-modal")
+        document.body.classList.toggle("show-modal")
+      }
+    }
   }
+
+  modalForm.addEventListener("submit", createProduct)
 }
 
 const formattingHTMLData = (data) => {
@@ -63,7 +60,7 @@ const formattingHTMLData = (data) => {
   })
   return template
 }
-export const renderProduct = async (data, product_status) => {
+export const renderProduct = async (data, product_status, token) => {
   const productList = document.querySelector(`[data-js='product-list-${product_status}']`)
   const productListProgressArr = productListProgress?.children
   productListProgress.innerHTML = ""
@@ -75,22 +72,25 @@ export const renderProduct = async (data, product_status) => {
     productList.innerHTML = formatData
   }
 
-  const token = await verifyGenerateToken()
   if (token) {
     const nameReactor = localStorage.getItem("reactor")
     const response = await fetchListProduct(token, nameReactor, null, product_status)
-
-    const { product_list: product } = response
-    if (
-      product_status === "andamento" &&
-      product.length > 0 &&
-      productListProgressArr.length <= 0
-    ) {
-      const formatData = formattingHTMLData(product)
-      productList.innerHTML = formatData
+    if (response) {
+      const { product_list: product } = response
+      if (
+        product_status === "andamento" &&
+        product.length > 0 &&
+        productListProgressArr.length <= 0
+      ) {
+        const formatData = formattingHTMLData(product)
+        productList.innerHTML = formatData
+      } else {
+        const formatData = formattingHTMLData(product)
+        productList.innerHTML = formatData
+      }
     } else {
-      const formatData = formattingHTMLData(product)
-      productList.innerHTML = formatData
+      localStorage.removeItem("access-token")
+      window.location.reload()
     }
   }
 }

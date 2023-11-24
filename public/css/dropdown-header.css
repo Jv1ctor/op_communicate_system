@@ -186,12 +186,18 @@
 .menu-dropdown-notification .product-aprovado {
   border-color: var(--green-product);
 }
+[data-status_product="aprovado"] {
+  background: var(--green-product);
+}
 
 .product-reprovado .alert-notification-icon {
   color: var(--red-product);
 }
 .menu-dropdown-notification .product-reprovado {
   border-color: var(--red-product);
+}
+[data-status_product="reprovado"] {
+  background: var(--red-product);
 }
 
 .menu-dropdown-notification .alert-notification-icon {

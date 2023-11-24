@@ -20,58 +20,55 @@ const analyseListArr = analyseList?.children
 const productDataContainer = document.querySelector("[data-js='data-product']")
 
 export const submitFormAnalyse = async () => {
-  const token = await verifyGenerateToken()
-  if (token) {
-    const createAnalyse = async (e) => {
-      e.preventDefault()
-      const inputValue = e.target["analise-text"].value
-      const product = JSON.parse(localStorage.getItem("product"))
-      const data = {
-        adjustment: inputValue,
-        product_id: product.product_id,
-      }
-
-      if (data && inputValue) {
-        const newToken = await generateToken()
-        const response = await fetchCreateAnalysis(newToken, data)
-        if (response) {
-          modalForm.reset()
-          modal.classList.toggle("show-modal")
-          document.body.classList.toggle("show-modal")
-        }
-      }
+  const createAnalyse = async (e) => {
+    e.preventDefault()
+    const inputValue = e.target["analise-text"].value
+    const product = JSON.parse(localStorage.getItem("product"))
+    const data = {
+      adjustment: inputValue,
+      product_id: product.product_id,
     }
 
-    const finishProduct = async (e) => {
-      e.preventDefault()
-      const statusProduct = e.target.status.value
-      const productAndReactor = e.target["product-reactor"].value
-      const analystName = e.target["name-analyst"].value
-      const product = JSON.parse(localStorage.getItem("product"))
-      const reactor = localStorage.getItem("reactor")
-      const data = {
-        product_id: product.product_id,
-        product_analyst: analystName,
-        product_status: statusProduct,
-      }
-
-      const confirm =
-        productAndReactor.toLowerCase() ===
-        `${product.product_name}-${reactor.toLowerCase()}`
-      if (statusProduct && productAndReactor && analystName && confirm) {
-        const newToken = await generateToken()
-        const response = await fetchFinishProduct(newToken, data)
-        if (response) {
-          modalFormFinish.reset()
-          modalFinish.classList.toggle("show-modal")
-          document.body.classList.toggle("show-modal")
-        }
+    if (data && inputValue) {
+      const newToken = await generateToken()
+      const response = await fetchCreateAnalysis(newToken, data)
+      if (response) {
+        modalForm.reset()
+        modal.classList.toggle("show-modal")
+        document.body.classList.toggle("show-modal")
       }
     }
-
-    modalForm.addEventListener("submit", createAnalyse)
-    modalFormFinish.addEventListener("submit", finishProduct)
   }
+
+  const finishProduct = async (e) => {
+    e.preventDefault()
+    const statusProduct = e.target.status.value
+    const productAndReactor = e.target["product-reactor"].value
+    const analystName = e.target["name-analyst"].value
+    const product = JSON.parse(localStorage.getItem("product"))
+    const reactor = localStorage.getItem("reactor")
+    const data = {
+      product_id: product.product_id,
+      product_analyst: analystName,
+      product_status: statusProduct,
+    }
+
+    const confirm =
+      productAndReactor.toLowerCase() ===
+      `${product.product_name}-${reactor.toLowerCase()}`
+    if (statusProduct && productAndReactor && analystName && confirm) {
+      const newToken = await generateToken()
+      const response = await fetchFinishProduct(newToken, data)
+      if (response) {
+        modalFormFinish.reset()
+        modalFinish.classList.toggle("show-modal")
+        document.body.classList.toggle("show-modal")
+      }
+    }
+  }
+
+  modalForm.addEventListener("submit", createAnalyse)
+  modalFormFinish.addEventListener("submit", finishProduct)
 }
 
 const formattingHTMLDataAnalyse = (data) => {
@@ -110,7 +107,7 @@ const formattingHTMLDataProduct = (data) => {
     <span><strong>Data:</strong> ${formattingDate}</span>`
 }
 
-export const renderAnalyse = async (data) => {
+export const renderAnalyse = async (data, token) => {
   if (data) {
     titleNotAnalyse.remove()
     buttonModalFinish.classList.remove("btn-incomplete")
@@ -119,30 +116,32 @@ export const renderAnalyse = async (data) => {
     const formatData = formattingHTMLDataAnalyse([data])
     analyseList.innerHTML += formatData
   } else {
-    const token = await verifyGenerateToken()
     if (token) {
       const product = JSON.parse(localStorage.getItem("product"))
       const response = await fetchListAnalysis(token, product.product_id)
-
-      const { analyse_list: analyse } = response
-      if (analyse.length > 0) {
-        const formatData = formattingHTMLDataAnalyse(analyse)
-        analyseList.innerHTML = formatData
+      if (response) {
+        const { analyse_list: analyse } = response
+        if (analyse.length > 0) {
+          const formatData = formattingHTMLDataAnalyse(analyse)
+          analyseList.innerHTML = formatData
+        } else {
+          buttonModalFinish.classList.add("btn-incomplete")
+          buttonModalFinish.removeEventListener("click", openModalFinish)
+        }
       } else {
-        buttonModalFinish.classList.add("btn-incomplete")
-        buttonModalFinish.removeEventListener("click", openModalFinish)
+        localStorage.removeItem("access-token")
+        window.location.reload()
       }
     }
   }
 }
 
-export const renderProductData = async (data) => {
+export const renderProductData = async (data, token) => {
   if (data) {
     const formatData = formattingHTMLDataProduct(data)
     productDataContainer.innerHTML = formatData
   }
 
-  const token = await verifyGenerateToken()
   if (token) {
     const reactor = localStorage.getItem("reactor")
     const product = JSON.parse(localStorage.getItem("product"))
@@ -152,11 +151,15 @@ export const renderProductData = async (data) => {
       product.product_id,
       product.product_status,
     )
-
-    const { product_list: productList } = response
-    if (productList.length > 0) {
-      const formatData = formattingHTMLDataProduct(productList)
-      productDataContainer.innerHTML = formatData
+    if (response) {
+      const { product_list: productList } = response
+      if (productList.length > 0) {
+        const formatData = formattingHTMLDataProduct(productList)
+        productDataContainer.innerHTML = formatData
+      }
+    } else {
+      localStorage.removeItem("access-token")
+      window.location.reload()
     }
   }
 }

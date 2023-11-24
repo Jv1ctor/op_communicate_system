@@ -1,9 +1,7 @@
 import { fetchReactorsList } from "../user/fetch.js"
-import { verifyGenerateToken } from "../user/token.js"
 import { reactorList } from "../config.js"
 
-export const renderReactor = async () => {
-  const token = await verifyGenerateToken()
+export const renderReactor = async (token) => {
   if (token) {
     const resListReactor = await fetchReactorsList(token)
     if (resListReactor && resListReactor.reactors) {
@@ -21,9 +19,9 @@ export const renderReactor = async () => {
         return
       }
       reactorList.innerHTML = "<span class='not-found-list'>Sem Reatores</span>"
-      return
+    } else {
+      localStorage.removeItem("access-token")
+      window.location.reload()
     }
-    localStorage.removeItem("access-token")
-    window.location.reload()
   }
 }

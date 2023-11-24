@@ -121,8 +121,7 @@ const UserService = {
         where: { id: refreshTokenId },
       })
       if (existRefreshToken) {
-        const token = RefreshToken.generateToken(refreshTokenId)
-
+        const token = await RefreshToken.generateToken(refreshTokenId)
         return token
       }
     } catch (err) {

@@ -12,7 +12,7 @@ const formattingHTMLData = (data) => {
 
   notifyCircle.setAttribute("data-notification", notifications[0][1].type_notification)
   if (notifications[0][1].type_notification === "product") {
-    notifyCircle.setAttribute("data-status", notifications[0][1].status)
+    notifyCircle.setAttribute("data-status_product", notifications[0][1].status)
   }
   let template = ""
   const typeNotificationFormat = {
