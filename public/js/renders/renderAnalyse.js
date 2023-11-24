@@ -12,12 +12,13 @@ import {
   fetchListAnalysis,
   fetchListProduct,
 } from "../user/fetch.js"
-import { verifyGenerateToken, generateToken } from "../user/token.js"
+import { generateToken } from "../user/token.js"
 
 const analyseList = document.querySelector("[data-js='analyse-list']")
 const titleNotAnalyse = document.querySelector(".not-analise-title")
 const analyseListArr = analyseList?.children
 const productDataContainer = document.querySelector("[data-js='data-product']")
+const buttonAnalysisSubmit = document.querySelector("[data-js='button-analysis-submit']")
 
 export const submitFormAnalyse = async () => {
   const createAnalyse = async (e) => {
@@ -108,6 +109,8 @@ const formattingHTMLDataProduct = (data) => {
 }
 
 export const renderAnalyse = async (data, token) => {
+  const product = JSON.parse(localStorage.getItem("product"))
+
   if (data) {
     titleNotAnalyse.remove()
     buttonModalFinish.classList.remove("btn-incomplete")
@@ -115,23 +118,28 @@ export const renderAnalyse = async (data, token) => {
     data.count = analyseListArr.length + 1
     const formatData = formattingHTMLDataAnalyse([data])
     analyseList.innerHTML += formatData
-  } else {
-    if (token) {
-      const product = JSON.parse(localStorage.getItem("product"))
-      const response = await fetchListAnalysis(token, product.product_id)
-      if (response) {
-        const { analyse_list: analyse } = response
-        if (analyse.length > 0) {
-          const formatData = formattingHTMLDataAnalyse(analyse)
-          analyseList.innerHTML = formatData
-        } else {
-          buttonModalFinish.classList.add("btn-incomplete")
-          buttonModalFinish.removeEventListener("click", openModalFinish)
-        }
+  }
+
+  if (product.product_status !== "andamento") {
+    buttonModalFinish.removeEventListener("click", openModalFinish)
+    buttonAnalysisSubmit.classList.add("btn-incomplete")
+    buttonModalFinish.classList.add("btn-incomplete")
+  }
+
+  if (token) {
+    const response = await fetchListAnalysis(token, product.product_id)
+    if (response) {
+      const { analyse_list: analyse } = response
+      if (analyse.length > 0) {
+        const formatData = formattingHTMLDataAnalyse(analyse)
+        analyseList.innerHTML = formatData
       } else {
-        localStorage.removeItem("access-token")
-        window.location.reload()
+        buttonModalFinish.classList.add("btn-incomplete")
+        buttonModalFinish.removeEventListener("click", openModalFinish)
       }
+    } else {
+      localStorage.removeItem("access-token")
+      window.location.reload()
     }
   }
 }

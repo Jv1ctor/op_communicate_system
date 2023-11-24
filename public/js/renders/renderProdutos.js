@@ -3,7 +3,6 @@ import { generateToken } from "../user/token.js"
 import { modal, modalForm } from "../config.js"
 
 const productListProgress = document.querySelector("[data-js='product-list-andamento']")
-const productListProgressArr = productListProgress?.children
 const buttonConfirm = document.querySelector("[data-js='button-confirm']")
 
 export const submitFormProduct = async () => {
@@ -21,7 +20,7 @@ export const submitFormProduct = async () => {
       return acc
     }, {})
 
-    if (data && productListProgressArr.length <= 0) {
+    if (data) {
       const newToken = await generateToken()
       const nameReactor = localStorage.getItem("reactor")
       data.reactor = nameReactor
@@ -62,12 +61,10 @@ const formattingHTMLData = (data) => {
 }
 export const renderProduct = async (data, product_status, token) => {
   const productList = document.querySelector(`[data-js='product-list-${product_status}']`)
-  const productListProgressArr = productListProgress?.children
   productListProgress.innerHTML = ""
-  if (productListProgressArr.length > 0) {
-    buttonConfirm.classList.add("btn-incomplete")
-  }
-  if (data && productListProgressArr.length <= 0) {
+  buttonConfirm.classList.remove("btn-incomplete")
+
+  if (data) {
     const formatData = formattingHTMLData(data)
     productList.innerHTML = formatData
   }
@@ -77,11 +74,7 @@ export const renderProduct = async (data, product_status, token) => {
     const response = await fetchListProduct(token, nameReactor, null, product_status)
     if (response) {
       const { product_list: product } = response
-      if (
-        product_status === "andamento" &&
-        product.length > 0 &&
-        productListProgressArr.length <= 0
-      ) {
+      if (product_status === "andamento" && product.length > 0) {
         const formatData = formattingHTMLData(product)
         productList.innerHTML = formatData
       } else {
@@ -92,5 +85,10 @@ export const renderProduct = async (data, product_status, token) => {
       localStorage.removeItem("access-token")
       window.location.reload()
     }
+  }
+
+  if (product_status === "andamento" && productList.children.length > 0) {
+    console.log("passow")
+    buttonConfirm.classList.add("btn-incomplete")
   }
 }

@@ -12,10 +12,14 @@ eventSource.addEventListener("notification", (messageEvent) => {
   const data = JSON.parse(messageEvent.data)
 
   if (data.type_notification === "product") {
-    notificationMap.set(data.reactor_name + data.status, data)
+    notificationMap.set(data.product_id + data.status, data)
   }
   if (data.type_notification === "analysis" && data.count) {
-    notificationMap.set(data.reactor_name + data.count, data)
+    notificationMap.set(data.product_id + data.count + data.status, data)
+  }
+  if (data.status !== "andamento") {
+    console.log(notificationMap.get(data.product_id + data.count + data.status))
+    console.log(notificationMap.delete(data.product_id + data.count + data.status))
   }
   renderNotification(notificationMap)
 })
@@ -39,5 +43,6 @@ eventSource.addEventListener("finish-product", (messageEvent) => {
   product.product_status = data.status
   localStorage.setItem("product", JSON.stringify(product))
   renderProduct([data], data.status)
+  renderAnalyse()
   renderProductData([data])
 })

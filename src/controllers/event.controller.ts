@@ -19,6 +19,7 @@ interface ProductDataInterface {
 
 interface NotificationInterface {
   type_notification: "product" | "analysis"
+  product_id: string
   product_name: string
   reactor_name: string
   created_at: Date
@@ -38,7 +39,13 @@ export const createProduct = async (req: Request, res: Response) => {
       where: { name_reactor: productData.reactor },
       select: { id_reactor: true },
     })
-    if (user && user.user_prod && reactor) {
+
+    const product = await prisma.products.count({
+      where: { reactor: productData.reactor, status: "andamento" },
+      select: { status: true },
+    })
+
+    if (user && user.user_prod && reactor && product.status === 0) {
       const product = await prisma.products.create({
         data: {
           name_product: productData.name,
@@ -72,6 +79,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
       const dataNotification: NotificationInterface = {
         type_notification: "product",
+        product_id: product.product_id,
         product_name: product.name_product,
         reactor_name: product.reactor,
         status: product.status,
@@ -145,39 +153,60 @@ export const createAnalysis = async (req: Request, res: Response) => {
       const analyseList = await prisma.analysis.findMany({
         where: { fk_product: analysisData.product_id },
       })
-
-      const analyse = await prisma.analysis.create({
-        data: {
-          adjustment: analysisData.adjustment,
-          fk_product: analysisData.product_id,
-          fk_user_cq: user.user_cq.fk_id_user_cq,
-          count: analyseList.length + 1,
-        },
-        select: {
-          adjustment: true,
-          count: true,
-          created_at: true,
-          products: { select: { reactor: true, name_product: true } },
-        },
+      const product = await prisma.products.findUnique({
+        where: { product_id: analysisData.product_id },
+        select: { status: true },
       })
 
-      const dataNotification: NotificationInterface = {
-        type_notification: "analysis",
-        created_at: analyse.created_at,
-        product_name: analyse.products.name_product,
-        reactor_name: analyse.products.reactor,
-        count: analyse.count,
+      if (product?.status === "andamento") {
+        console.log(product)
+        const analyse = await prisma.analysis.create({
+          data: {
+            adjustment: analysisData.adjustment,
+            fk_product: analysisData.product_id,
+            fk_user_cq: user.user_cq.fk_id_user_cq,
+            count: analyseList.length + 1,
+          },
+          select: {
+            adjustment: true,
+            count: true,
+            created_at: true,
+            products: {
+              select: {
+                reactor: true,
+                name_product: true,
+                product_id: true,
+                status: true,
+              },
+            },
+          },
+        })
+
+        const dataNotification: NotificationInterface = {
+          type_notification: "analysis",
+          product_id: analyse.products.product_id,
+          created_at: analyse.created_at,
+          status: analyse.products.status,
+          product_name: analyse.products.name_product,
+          reactor_name: analyse.products.reactor,
+          count: analyse.count,
+        }
+
+        myEmitter.emit("notification", dataNotification)
+        myEmitter.emit("create-analyse", analyse)
+        return (
+          analyse &&
+          res.status(201).json({
+            action: { created_analyse: true },
+            message: "successfully created analyse",
+          })
+        )
       }
 
-      myEmitter.emit("notification", dataNotification)
-      myEmitter.emit("create-analyse", analyse)
-      return (
-        analyse &&
-        res.status(201).json({
-          action: { created_analyse: true },
-          message: "successfully created analyse",
-        })
-      )
+      return res.status(403).json({
+        action: { created_analyse: true },
+        error: "finished product",
+      })
     }
     res.status(400).json({
       action: { created_product: false },
@@ -249,6 +278,7 @@ export const finishProduct = async (req: Request, res: Response) => {
         const dataNotification: NotificationInterface = {
           type_notification: "product",
           created_at: productFinish.updated_at,
+          product_id: productFinish.product_id,
           product_name: productFinish.name_product,
           reactor_name: productFinish.reactor,
           status: productFinish.status,
@@ -261,7 +291,7 @@ export const finishProduct = async (req: Request, res: Response) => {
           message: "successfully finish product",
         })
       }
-      res.status(400).json({
+      res.status(403).json({
         action: { finish_product: true },
         error: "error when finalizing the product",
       })
@@ -273,13 +303,20 @@ export const finishProduct = async (req: Request, res: Response) => {
 
 const listProductCallback = async () => {
   const listProduct = await prisma.products.findMany({
-    select: { name_product: true, reactor: true, updated_at: true, status: true },
+    select: {
+      name_product: true,
+      reactor: true,
+      updated_at: true,
+      status: true,
+      product_id: true,
+    },
   })
 
   if (listProduct.length > 0) {
     listProduct.forEach((product) => {
       const dataNotification: NotificationInterface = {
         type_notification: "product",
+        product_id: product.product_id,
         product_name: product.name_product,
         reactor_name: product.reactor,
         created_at: product.updated_at,
@@ -297,7 +334,9 @@ const listAnalyseCallback = async () => {
       created_at: true,
       adjustment: true,
       count: true,
-      products: { select: { reactor: true, name_product: true } },
+      products: {
+        select: { reactor: true, name_product: true, product_id: true, status: true },
+      },
     },
   })
 
@@ -305,7 +344,9 @@ const listAnalyseCallback = async () => {
     listAnalyse.forEach((analyse) => {
       const dataNotification: NotificationInterface = {
         type_notification: "analysis",
+        product_id: analyse.products.product_id,
         product_name: analyse.products.name_product,
+        status: analyse.products.status,
         reactor_name: analyse.products.reactor,
         created_at: analyse.created_at,
         count: analyse.count,
