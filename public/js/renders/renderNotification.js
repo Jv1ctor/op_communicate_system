@@ -33,7 +33,11 @@ const formattingHTMLData = (data) => {
         notification-${notificationData.type_notification} 
         ${notificationData.status ? `product-${notificationData.status}` : ""}
       ">
-        <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
+        ${
+          notificationData.type_notification === "analysis"
+            ? '<i class="fa-solid fa-triangle-exclamation alert-notification-icon"></i>'
+            : '<i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>'
+        }  
           <div class="content-notification">
             <h3 class="title-notification">Atenção ${
               typeNotificationFormat[notificationData.type_notification]

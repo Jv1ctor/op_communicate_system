@@ -57,8 +57,8 @@ const formattingHTMLData = (data) => {
     <td>${item.turn}</td>
     <td>${formattingDate}</td>
     <td>
-    <a href="./analises.html" class="button-product">
-      <i class="fa-solid fa-circle-chevron-right" data-js="link-product-btn" data-name="${item.name_product}" data-id="${item.product_id}" data-status="${item.status}"></i>
+    <a href="./analises.html" class="button-product" data-js="link-product-btn" data-name="${item.name_product}" data-id="${item.product_id}" data-status="${item.status}">
+      <i class="fa-solid fa-circle-chevron-right" ></i>
     </a>
   </td>
   </tr>`

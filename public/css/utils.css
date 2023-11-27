@@ -88,8 +88,15 @@
 }
 
 .button-product {
+  position: relative;
+  z-index: 10;
   font-size: 2rem;
   color: var(--primary-color);
+}
+
+.button-product i {
+  position: relative;
+  z-index: -11;
 }
 
 .button-product:hover {
