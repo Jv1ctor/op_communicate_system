@@ -25,6 +25,7 @@ interface NotificationInterface {
   created_at: Date
   count?: number
   status?: string
+  analysis?: { count: number }[]
 }
 
 export const createProduct = async (req: Request, res: Response) => {
@@ -272,6 +273,7 @@ export const finishProduct = async (req: Request, res: Response) => {
             reactor: true,
             created_at: true,
             updated_at: true,
+            analysis: { select: { count: true } },
           },
         })
 
@@ -282,6 +284,7 @@ export const finishProduct = async (req: Request, res: Response) => {
           product_name: productFinish.name_product,
           reactor_name: productFinish.reactor,
           status: productFinish.status,
+          analysis: productFinish.analysis,
         }
 
         myEmitter.emit("notification", dataNotification)
