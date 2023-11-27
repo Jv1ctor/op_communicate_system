@@ -11,9 +11,7 @@ const formattingHTMLData = (data) => {
   })
 
   notifyCircle.setAttribute("data-notification", notifications[0][1].type_notification)
-  if (notifications[0][1].type_notification === "product") {
-    notifyCircle.setAttribute("data-status_product", notifications[0][1].status)
-  }
+  notifyCircle.setAttribute("data-status_product", notifications[0][1].status)
 
   let template = ""
 
@@ -41,12 +39,13 @@ const formattingHTMLData = (data) => {
               typeNotificationFormat[notificationData.type_notification]
             } ${notificationData?.count || ""}:</h3>
             
-            <p>${notificationData.product_name} - ${notificationData.reactor_name} 
+            <p>${notificationData.product_name} - ${notificationData.reactor_name}
+            </p>
             ${
-              notificationData.status && notificationData.status !== "andamento"
-                ? notificationData.status
+              notificationData.status && notificationData.type_notification === "product"
+                ? `<p class="status-notification"> ${notificationData.status}</p>`
                 : ""
-            }</p>
+            }
           </div>
           <p>${dateFormat}</p>
       </li>`
