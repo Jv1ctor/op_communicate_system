@@ -5,17 +5,24 @@ import dotenv from "dotenv"
 import path from "path"
 import userRoutes from "./routes/user.routes"
 import eventRoutes from "./routes/event.routes"
+import mustacheExpress from "mustache-express"
+import homeRoutes from "./routes/home.routes"
 dotenv.config()
 
 const app = express()
 const port = process.env.PORT || 3000
 
+
+app.engine("mustache", mustacheExpress())
+app.set("views", path.join(__dirname, "./views"))
+app.set("view engine", "mustache")
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, "../public")))
 app.use(helmet())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+app.use("/", homeRoutes)
 app.use("/api/events", eventRoutes)
 app.use("/api/user", userRoutes)
 
