@@ -6,6 +6,7 @@ import { verifyGenerateToken } from "../user/token.js"
 
 const reactorName = document.querySelector('[data-js="reactor-name"]')
 const tables = document.querySelector("[data-js='tables']")
+const tablesBody = document.querySelectorAll(".produto-table-body")
 
 const renderReactorName = () => {
   const reactor = localStorage.getItem("reactor")
@@ -28,6 +29,11 @@ const saveProductName = (e) => {
     )
   }
 }
+
+tablesBody.forEach((item) => {
+  const reactor = localStorage.getItem("reactor")
+  item.dataset.js += `-${reactor}`
+})
 
 verifyGenerateToken()
   .then((token) => {

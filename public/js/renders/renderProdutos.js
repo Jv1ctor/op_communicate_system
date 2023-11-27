@@ -2,7 +2,6 @@ import { fetchCreateProduct, fetchListProduct } from "../user/fetch.js"
 import { generateToken } from "../user/token.js"
 import { modal, modalForm } from "../config.js"
 
-const productListProgress = document.querySelector("[data-js='product-list-andamento']")
 const buttonConfirm = document.querySelector("[data-js='button-confirm']")
 
 export const submitFormProduct = async () => {
@@ -39,8 +38,15 @@ export const submitFormProduct = async () => {
 const formattingHTMLData = (data) => {
   let template = ""
   data.forEach((item) => {
-    const currentDate = new Date(item.created_at)
-    const formattingDate = new Intl.DateTimeFormat("pt-BR").format(currentDate)
+    const currentDate = new Date(item.updated_at)
+    const formattingDate = new Intl.DateTimeFormat("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "short",
+    })
+      .format(currentDate)
+      .replace(".,", " - ")
 
     template += `<tr>
     <td><span class="circle ${item.status}"></span></td>
@@ -60,13 +66,21 @@ const formattingHTMLData = (data) => {
   return template
 }
 export const renderProduct = async (data, product_status, token) => {
-  const productList = document.querySelector(`[data-js='product-list-${product_status}']`)
-  productListProgress.innerHTML = ""
+  const reactor = localStorage.getItem("reactor")
+  const productList = document.querySelector(
+    `[data-js='product-list-${product_status}-${reactor}']`,
+  )
   buttonConfirm.classList.remove("btn-incomplete")
 
   if (data) {
-    const formatData = formattingHTMLData(data)
-    productList.innerHTML = formatData
+    if (reactor === data[0].reactor) {
+      const productListProgress = document.querySelector(
+        `[data-js='product-list-andamento-${reactor}']`,
+      )
+      productListProgress.innerHTML = ""
+      const formatData = formattingHTMLData(data)
+      productList.innerHTML += formatData
+    }
   }
 
   if (token) {
@@ -88,7 +102,6 @@ export const renderProduct = async (data, product_status, token) => {
   }
 
   if (product_status === "andamento" && productList.children.length > 0) {
-    console.log("passow")
     buttonConfirm.classList.add("btn-incomplete")
   }
 }

@@ -67,6 +67,7 @@ export const runNotification = () => {
     if (notificationListChildren.length > 0) {
       notifyCircle.classList.add("show-notification-circle")
     } else {
+      notifyCircle.classList.remove("show-notification-circle")
       notificationList.innerHTML = "Nenhuma Notificação"
     }
   }, 200)

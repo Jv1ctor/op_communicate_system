@@ -18,11 +18,33 @@
 .main-dados-header-content {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 0.2rem;
+  gap: 1rem;
   justify-items: start;
   padding: 0.5rem 1rem;
   color: var(--text-color);
   font-size: 1.2rem;
+}
+
+.data-status {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  color: white;
+  text-transform: uppercase;
+  grid-column: 1/-1;
+  justify-self: center;
+}
+
+.data-status.andamento {
+  background: var(--yellow-product);
+}
+
+.data-status.aprovado {
+  background: var(--green-product);
+}
+
+.data-status.reprovado {
+  background: var(--red-product);
 }
 
 .main-analise-header {
@@ -219,4 +241,3 @@
   font-size: 1.5rem;
   letter-spacing: 0.2rem;
 }
-

@@ -94,18 +94,20 @@ const formattingHTMLDataProduct = (data) => {
   const product = data[0]
   const currentDate = new Date(product.created_at)
   const formattingDate = new Intl.DateTimeFormat("pt-BR").format(currentDate)
+
   return `
-    <span><strong>Nome:</strong> ${product.name_product}</span>
-    <span><strong>Número-Roteiro:</strong> ${product.num_roadmap}</span>
-    <span><strong>Número-OP:</strong> ${product.num_op}</span>
-    <span><strong>Operador:</strong> ${product.operator}</span>
-    <span><strong>Supervisor de Turno:</strong> ${product.turn_supervisor}</span>
-    <span><strong>Reator:</strong> ${product.reactor}</span>
-    <span><strong>Quantidade:</strong> ${product.quant_produce}kg</span>
-    <span><strong>Número-Lote:</strong>${product.num_batch} </span>
-    <span><strong>Turno:</strong>${product.turn}</span>
-    <span><strong>Status:</strong>${product.status}</span>
-    <span><strong>Data:</strong> ${formattingDate}</span>`
+    <li><strong>Nome:</strong> ${product.name_product}</li>
+    <li><strong>Número-Roteiro:</strong> ${product.num_roadmap}</li>
+    <li><strong>Número-OP:</strong> ${product.num_op}</li>
+    <li><strong>Operador:</strong> ${product.operator}</li>
+    <li><strong>Supervisor de Turno:</strong> ${product.turn_supervisor}</li>
+    <li><strong>Reator:</strong> ${product.reactor}</li>
+    <li><strong>Quantidade:</strong> ${product.quant_produce}kg</li>
+    <li><strong>Número-Lote:</strong>${product.num_batch} </li>
+    <li><strong>Turno:</strong>${product.turn}</li>
+    <li><strong>Data:</strong> ${formattingDate}</li>
+    <li class="data-status ${product.status}">${product.status}</li>
+    `
 }
 
 export const renderAnalyse = async (data, token) => {

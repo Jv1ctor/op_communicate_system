@@ -53,10 +53,8 @@
 .produto-table-body tr {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-}
-
-.produto-table-head tr th:first-child {
-  text-align: start;
+  align-items: center;
+  text-align: center;
 }
 
 .produto-table-head {
@@ -64,7 +62,6 @@
 }
 
 .produto-table-head th {
-  text-align: center;
   align-self: center;
   color: white;
   font-size: 1.2rem;
@@ -72,22 +69,17 @@
 }
 
 .produto-table-body {
-  display: grid;
+  display: flex;
+  flex-direction: column-reverse;
   gap: 1rem;
-  font-size: 1.2rem;
 }
 
 .produto-table-body tr {
   text-align: center;
-  padding: 0.3rem 0.5rem;
+  padding: 0.5rem 0;
   border-left: 3px solid var(--secondary-color);
   border-bottom: 3px solid var(--secondary-color);
   box-shadow: -1px 4px 5px 1px rgba(0, 0, 0, 0.1);
-}
-
-.produto-table-body td {
-  padding: 0.5rem;
-  align-self: center;
 }
 
 .produto-table-body .button {
@@ -98,7 +90,7 @@
 }
 
 .produto-table-body td:last-child {
-  justify-self: end;
+  margin-left: 2rem;
 }
 
 .circle {
@@ -106,7 +98,7 @@
   border-radius: 100%;
   width: 24px;
   height: 24px;
-  margin-left: 0.5rem;
+  margin-left: 2.5rem;
 }
 
 .andamento .circle {

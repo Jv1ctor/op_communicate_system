@@ -129,6 +129,7 @@ export const listProduct = async (req: Request, res: Response) => {
         status: true,
         reactor: true,
         created_at: true,
+        updated_at: true,
       },
     })
 
@@ -160,7 +161,6 @@ export const createAnalysis = async (req: Request, res: Response) => {
       })
 
       if (product?.status === "andamento") {
-        console.log(product)
         const analyse = await prisma.analysis.create({
           data: {
             adjustment: analysisData.adjustment,
