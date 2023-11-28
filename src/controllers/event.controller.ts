@@ -2,6 +2,8 @@ import { Request, Response } from "express"
 import prisma from "../database/prisma"
 import EventEmitter from "events"
 import { Analysis, Products } from "@prisma/client"
+import ProductService from "../services/product.service"
+import UserService from "../services/user.service"
 
 const myEmitter = new EventEmitter()
 
@@ -104,38 +106,24 @@ export const createProduct = async (req: Request, res: Response) => {
   }
 }
 
-export const listProduct = async (req: Request, res: Response) => {
+export const listProducts = async (req: Request, res: Response) => {
   try {
-    const reactor = req.headers.reactor as string
-    const product_status = req.headers.product_status as string
-    const productId = req.headers?.product_id as string
+    const user = req.signedCookies.user
+    const reactorId = req.params.id
 
-    const listProduct = await prisma.products.findMany({
-      where: {
-        OR: [{ reactor: reactor }, { product_id: productId }],
-        AND: { status: product_status },
+    const productData = await ProductService.list(reactorId)
+    res.render("pages/produto", {
+      listProduct: {
+        process: productData?.listProductProcess,
+        approved: productData?.listProductApproved,
+        disapproved: productData?.listProductDisapproved,
       },
-      select: {
-        product_id: true,
-        name_product: true,
-        quant_produce: true,
-        num_op: true,
-        turn_supervisor: true,
-        num_roadmap: true,
-        operator: true,
-        num_batch: true,
-        turn: true,
-        status: true,
-        reactor: true,
-        created_at: true,
-      },
+      user,
+      reactor: productData?.reactor,
+      isProductUser: user.type !== "Produção" && "hidden-button",
     })
-
-    return res
-      .status(200)
-      .json({ action: { list_product: true }, product_list: listProduct })
   } catch (err) {
-    res.status(500).json({ error: "internal server error" })
+    res.status(500).render("pages/500", { err })
   }
 }
 
@@ -159,7 +147,6 @@ export const createAnalysis = async (req: Request, res: Response) => {
       })
 
       if (product?.status === "andamento") {
-        console.log(product)
         const analyse = await prisma.analysis.create({
           data: {
             adjustment: analysisData.adjustment,

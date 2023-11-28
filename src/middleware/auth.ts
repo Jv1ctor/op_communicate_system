@@ -7,37 +7,39 @@ dotenv.config()
 
 const Auth = {
   async authenticate(req: Request, res: Response, next: NextFunction) {
-    const authCode = req.headers.authorization
     let success = false
-    if (authCode) {
-      const [authType, token] = authCode.split(" ")
-      if (authType === "Bearer") {
-        try {
-          const decoded = JWT.verify(token, process.env.JWT_KEY as string) as JwtPayload
-          const refreshToken =
-            decoded &&
-            (await prisma.refreshToken.findUnique({
-              where: { id: decoded.sub as string },
-              include: { acess_token: { where: { id: decoded.jti } } },
-            }))
+    const accessToken = req.signedCookies.accessToken
+    const refreshTokenCookie = req.signedCookies.refreshToken
+    if (accessToken && refreshTokenCookie) {
+      try {
+        const decoded = JWT.verify(
+          accessToken,
+          process.env.JWT_KEY as string,
+        ) as JwtPayload
 
-          if (refreshToken) {
-            if (refreshToken.id && refreshToken.acess_token) {
-              res.locals.userId = refreshToken.fk_user_id
-              success = true
-            } else {
-              return res.status(401).json({ error: "invalid access token" })
-            }
+        const refreshToken =
+          decoded &&
+          (await prisma.refreshToken.findUnique({
+            where: { id: decoded.sub as string },
+            include: { access_token: { where: { id: decoded.jti } } },
+          }))
+
+        if (refreshToken) {
+          if (refreshToken.id && refreshToken.access_token) {
+            res.locals.userId = refreshToken.fk_user_id
+            success = true
           }
-        } catch (err) {}
-      }
+        }
+      } catch (err) {}
+    } else {
+      res.redirect("/")
+      return
     }
+
     if (success) {
       next()
     } else {
-      res.status(401).json({
-        error: "You are not authenticated or your session has expired",
-      })
+      res.status(401).redirect("/login")
     }
   },
 
@@ -74,12 +76,12 @@ const Auth = {
     }
   },
 
-  notExistCookie(req: Request, res: Response, next: NextFunction) {
-    const cookie = req.cookies.refreshToken
+  Logged(req: Request, res: Response, next: NextFunction) {
+    const cookie = req.signedCookies.refreshToken
     if (cookie) {
-      res.status(401).json({ error: "you are already logged in" })
-    } else {
       next()
+    } else {
+      res.status(401).redirect("/login")
     }
   },
 

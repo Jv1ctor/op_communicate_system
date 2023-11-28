@@ -1,11 +1,6 @@
 import prisma from "../database/prisma"
 import bcrypt from "bcrypt"
-import { Users, RefreshToken as RefreshTokenType } from "@prisma/client"
 import RefreshToken from "../utils/refreshToken.utils"
-
-export interface UserRegistration extends Users {
-  type_user: "production" | "quality_control"
-}
 
 export type UserLogin = {
   name: string
@@ -14,63 +9,7 @@ export type UserLogin = {
   password: string
 }
 
-const generateHashPassword = async (password: string) => {
-  const saltRounds = 10
-  const salt = await bcrypt.genSalt(saltRounds)
-  const hashPassword = bcrypt.hash(password, salt)
-
-  return hashPassword
-}
-
 const UserService = {
-  async registerUser(data: UserRegistration) {
-    try {
-      const existUser = await prisma.users.findUnique({
-        where: { last_name: data.last_name },
-      })
-
-      if (!existUser) {
-        const hashPassword = await generateHashPassword(data.password)
-        let userTypeCreate = null
-
-        const user = await prisma.users.create({
-          data: {
-            first_name: data.first_name,
-            last_name: data.last_name,
-            password: hashPassword,
-          },
-        })
-
-        if (data.type_user === "production") {
-          userTypeCreate = await prisma.userProd.create({
-            data: { fk_id_user_prod: user.id },
-          })
-        }
-
-        if (data.type_user === "quality_control") {
-          userTypeCreate = await prisma.userCq.create({
-            data: { fk_id_user_cq: user.id },
-          })
-        }
-
-        if (user && userTypeCreate) {
-          const refreshToken = await RefreshToken.create(user.id)
-          return (
-            refreshToken && {
-              user: {
-                first_name: user.first_name,
-                last_name: user.last_name,
-                type_user: data.type_user,
-              },
-            }
-          )
-        }
-      }
-    } catch (err) {
-      throw new Error("resgiter user error")
-    }
-  },
-
   async loginUser(data: UserLogin) {
     try {
       const user = await prisma.users.findFirst({
@@ -99,9 +38,8 @@ const UserService = {
           return {
             refreshToken: refreshToken,
             user: {
-              first_name: user.first_name,
-              last_name: user.last_name,
-              type_user:
+              name: `${user.first_name} ${user.last_name}`,
+              type:
                 (user.user_adm && "Admin") ||
                 (user.user_cq && "Controle Qualidade") ||
                 (user.user_prod && "Produção"),
@@ -114,28 +52,12 @@ const UserService = {
     }
   },
 
-  async refreshTokenUser(cookieRefreshToken: RefreshTokenType) {
+  async logoutUser(refreshTokenId: string) {
     try {
-      const refreshTokenId = cookieRefreshToken.id
-      const existRefreshToken = await prisma.refreshToken.findUnique({
-        where: { id: refreshTokenId },
-      })
-      if (existRefreshToken) {
-        const token = await RefreshToken.generateToken(refreshTokenId)
-        return token
-      }
-    } catch (err) {
-      throw new Error("token error")
-    }
-  },
-
-  async logoutUser(userId: string) {
-    try {
-      const refreshToken = await prisma.refreshToken.findUnique({
-        where: { fk_user_id: userId },
-      })
-      if (refreshToken) {
-        await prisma.refreshToken.delete({ where: { id: refreshToken.id } })
+      if (refreshTokenId) {
+        const refreshToken = await prisma.refreshToken.delete({
+          where: { id: refreshTokenId },
+        })
         return refreshToken
       }
     } catch (err) {

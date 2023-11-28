@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet" />
+
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <title>AVCO - Produtos</title>
+  </head>
+  <body id="produto">
+    <header class="header">
+      <div class="header-container">
+        <img
+          class="header-container-logo"
+          src="/img/LOGO AVCO.png"
+          alt="logo AVCO"
+          width="140"
+          height="140" />
+        <h1 class="header-container-title">Reator {{ reactor }}</h1>
+
+        <div class="header-container-perfil">
+          <div class="perfil-notification">
+            <label class="perfil-notification-icon" for="dropdown">
+              <i class="fa-regular fa-bell icon-perfil"></i>
+              <span class="circle-notification"></span>
+            </label>
+            <input type="checkbox" name="dropdown" id="dropdown" />
+            <div class="menu-dropdown-notification">
+              <ul data-js="list-notification"></ul>
+            </div>
+          </div>
+          <div class="perfil-icon-user">
+            <i class="fa-regular fa-user icon-perfil"></i>
+
+            <div class="menu-options-user">
+              <div>
+               {{#user}}
+                <span title="{{ name }}"
+                  ><strong>{{ name }}</strong></span
+                >
+                <span title="{{ type }}"
+                  ><strong>{{ type }}</strong></span
+                >
+                {{/user}}
+              </div>
+              <a href="/logout">
+                <i class="fa-solid fa-arrow-right-from-bracket button-logout"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="main-container-produto container">
+        <div class="main-produto-header">
+          <a href="/" class="button-voltar"
+            ><i class="fa-solid fa-arrow-left"></i>Voltar</a
+          >
+          <h1 class="main-produto-header-title">Produtos</h1>
+         
+            <div class="button {{isProductUser}}" data-js="open-modal" data-permiss="producer">
+              Adicionar Produto
+              <i class="fa-solid fa-circle-plus button-add-product-icon"></i>
+            </div>
+        
+        </div>
+
+        <div class="main-produto-tables" data-js="tables">
+          <div class="main-produto-table andamento">
+            <div class="main-produto-table-header" data-js="show-andamento">
+              <h2 class="main-produto-table-title">Em andamento</h2>
+              <i
+                class="fa-solid fa-chevron-down arrow active-arrow"
+                data-js="show-andamento"></i>
+            </div>
+
+            <table class="active-table" data-js="table-produto">
+              {{>partials/product/table/tableProductHeader}}
+              {{#listProduct}}
+                {{#process}}
+                  {{>partials/product/table/tableProductBody}}
+                {{/process}}
+              {{/listProduct}}
+              {{^listProduct}}
+                <p>Não tem nada<p>
+              {{/listProduct}}
+            </table>
+          </div>
+
+          <div class="main-produto-table aprovados">
+            <div class="main-produto-table-header" data-js="show-aprovados">
+              <h2 class="main-produto-table-title">aprovados</h2>
+              <i class="fa-solid fa-chevron-down arrow" data-js="show-aprovados"></i>
+            </div>
+
+            <table data-js="table-produto">
+              {{>partials/product/table/tableProductHeader}}
+
+              {{#listProduct}}
+                {{#approved}}
+                  {{>partials/product/table/tableProductBody}}
+                {{/approved}}
+              {{/listProduct}}
+            </table>
+          </div>
+
+          <div class="main-produto-table reprovados">
+            <div class="main-produto-table-header" data-js="show-reprovados">
+              <h2 class="main-produto-table-title">reprovados</h2>
+              <i class="fa-solid fa-chevron-down arrow" data-js="show-reprovados"></i>
+            </div>
+            <table data-js="table-produto">
+              {{>partials/product/table/tableProductHeader}}
+              {{#listProduct}}
+                {{#disapproved}}
+                  {{>partials/product/table/tableProductBody}}
+                {{/disapproved}}
+              {{/listProduct}}
+              {{^listProduct}}
+                <p>Não tem nada<p>
+              {{/listProduct}}
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>Desenvolvido por<a href=""> Jvictor</a></footer>
+
+    {{!
+    <script type="module" src="./js/user/user.js"></script>
+    }}
+    <script type="module" src="/js/product/product.js"></script>
+    {{!
+    <script type="module" src="./js/notificationEvent.js"></script>
+    }}
+  </body>
+</html>

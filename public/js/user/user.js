@@ -9,7 +9,6 @@ const userSetorSpan = document.querySelector('[data-js="user-setor"]')
 const btnLogout = document.querySelector('[data-js="btn-logout"]')
 
 const userPermissOptions = () => {
-  const typeUser = localStorage.getItem("type-user")
   const permissUserProdBtn = buttonModal?.dataset.permiss === "producer"
   const permissUserCQBtn = buttonModal?.dataset.permiss === "controler-quality"
   const permissUserCQBtnFinish =

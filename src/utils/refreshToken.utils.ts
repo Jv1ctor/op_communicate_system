@@ -56,7 +56,7 @@ const RefreshToken = {
           },
         })
 
-        return createAccessToken && token
+        return createAccessToken && { token, expiresIn: decoded.exp }
       }
     }
   },
