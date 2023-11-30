@@ -14,7 +14,8 @@ const Token = {
       return
     }
 
-    const accessToken = await RefreshToken.generateToken(refreshTokenCookie?.id)
+    const accessToken =
+      refreshTokenCookie && (await RefreshToken.generateToken(refreshTokenCookie.id))
     if (accessToken) {
       const cookieAge = dayjs.unix(accessToken.expiresIn).diff()
       res.cookie("accessToken", accessToken.token, {
@@ -24,8 +25,9 @@ const Token = {
         maxAge: cookieAge,
         signed: true,
       })
-      next()
     }
+
+    next()
   },
 }
 

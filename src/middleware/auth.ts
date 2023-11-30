@@ -10,7 +10,14 @@ const Auth = {
     let success = false
     const accessToken = req.signedCookies.accessToken
     const refreshTokenCookie = req.signedCookies.refreshToken
-    if (accessToken && refreshTokenCookie) {
+    const valid = await RefreshToken.isValidRefreshToken(refreshTokenCookie?.id)
+
+    if (!accessToken && valid) {
+      res.redirect("/")
+      return
+    }
+
+    if (accessToken && valid) {
       try {
         const decoded = JWT.verify(
           accessToken,
@@ -31,9 +38,6 @@ const Auth = {
           }
         }
       } catch (err) {}
-    } else {
-      res.redirect("/")
-      return
     }
 
     if (success) {
@@ -76,29 +80,14 @@ const Auth = {
     }
   },
 
-  Logged(req: Request, res: Response, next: NextFunction) {
-    const cookie = req.signedCookies.refreshToken
-    if (cookie) {
-      next()
-    } else {
-      res.status(401).redirect("/login")
-    }
-  },
-
-  async validRefreshToken(req: Request, res: Response, next: NextFunction) {
-    try {
-      const refreshToken = req.cookies.refreshToken
-      if (refreshToken) {
-        const valid = await RefreshToken.isValidRefreshToken(refreshToken.id)
-        if (!valid) {
-          res.clearCookie("refreshToken")
-        }
-      }
-      next()
-    } catch (err) {
-      res.status(401).json({ error: "refresh token expired" })
-    }
-  },
+  // async existRefreshToken(req: Request, res: Response, next: NextFunction) {
+  //   const cookie = req.signedCookies.refreshToken
+  //   if (cookie) {
+  //     next()
+  //   } else {
+  //     res.status(401).redirect("/login")
+  //   }
+  // },
 }
 
 export default Auth

@@ -6,21 +6,9 @@ import Auth from "../middleware/auth"
 import Token from "../middleware/token"
 const router = Router()
 
-router.get(
-  "/",
-  Auth.Logged,
-  Token.create,
-  Auth.authenticate,
-  ReactorController.listReactors,
-)
+router.get("/", Token.create, Auth.authenticate, ReactorController.listReactors)
 
-router.get(
-  "/reator/:id",
-  Auth.Logged,
-  Token.create,
-  Auth.authenticate,
-  EventController.listProducts,
-)
+router.get("/reator/:id", Token.create, Auth.authenticate, EventController.listProducts)
 
 router.get("/login", (req, res) => {
   const refreshToken = req.signedCookies.refreshToken
@@ -30,6 +18,7 @@ router.get("/login", (req, res) => {
   }
   res.render("pages/login")
 })
+
 router.get("/logout", UserController.logout)
 router.post("/login", UserController.login)
 
