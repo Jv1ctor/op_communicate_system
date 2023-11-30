@@ -20,6 +20,12 @@ router.get("/login", (req, res) => {
 })
 
 router.get("/logout", UserController.logout)
+router.get(
+  "/reator/produto/:reactorId.:productId",
+  Token.create,
+  Auth.authenticate,
+  EventController.listAnalysis,
+)
 router.post("/login", UserController.login)
 router.post(
   "/register-product/reator/:id",
@@ -27,6 +33,20 @@ router.post(
   Auth.authenticate,
   Auth.authorization("production"),
   EventController.createProduct,
+)
+router.post(
+  "/create-analyse/:reactorId.:productId",
+  Token.create,
+  Auth.authenticate,
+  Auth.authorization("quality"),
+  EventController.createAnalysis,
+)
+router.post(
+  "/finished-product/:reactorId.:productId",
+  Token.create,
+  Auth.authenticate,
+  Auth.authorization("quality"),
+  EventController.finishProduct,
 )
 
 export default router

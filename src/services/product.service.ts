@@ -2,7 +2,7 @@ import prisma from "../database/prisma"
 import dayjs from "dayjs"
 
 const ProductService = {
-  async list(reactorId: string) {
+  async listAllOfReactor(reactorId: string) {
     try {
       const reactorPromise = prisma.reactors.findUnique({
         where: { id_reactor: reactorId },
@@ -74,6 +74,28 @@ const ProductService = {
           id: reactorId,
           name: formattintNameReactor,
         },
+      }
+    } catch (err) {
+      throw new Error("list product error")
+    }
+  },
+
+  async listProductById(productId: string) {
+    try {
+      const product = await prisma.products.findUnique({
+        where: { product_id: productId },
+      })
+
+      if (product) {
+        const productFomatting = {
+          ...product,
+          formattingDate: dayjs(product.updated_at).format("DD/MM/YYYY"),
+        }
+
+        return {
+          product: productFomatting,
+          reactorId: product.fk_reactor
+        }
       }
     } catch (err) {
       throw new Error("list product error")

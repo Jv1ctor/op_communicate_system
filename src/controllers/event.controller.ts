@@ -4,6 +4,7 @@ import EventEmitter from "events"
 import { Analysis, Products } from "@prisma/client"
 import ProductService from "../services/product.service"
 import UserService from "../services/user.service"
+import AnalyseService from "../services/analyse.service"
 
 const myEmitter = new EventEmitter()
 
@@ -105,7 +106,7 @@ export const listProducts = async (req: Request, res: Response) => {
     const user = req.signedCookies.user
     const reactorId = req.params.id
 
-    const productData = await ProductService.list(reactorId)
+    const productData = await ProductService.listAllOfReactor(reactorId)
     res.render("pages/product", {
       listProduct: {
         process: productData?.listProductProcess,
@@ -125,7 +126,8 @@ export const createAnalysis = async (req: Request, res: Response) => {
   try {
     const analysisData = req.body
     const userId = res.locals.userId
-
+    const productId = req.params.productId
+    const reactorId = req.params.reactorId
     const user = await prisma.users.findFirst({
       where: { id: userId },
       select: { user_cq: true },
@@ -133,18 +135,19 @@ export const createAnalysis = async (req: Request, res: Response) => {
 
     if (user && user.user_cq) {
       const analyseList = await prisma.analysis.findMany({
-        where: { fk_product: analysisData.product_id },
+        where: { fk_product: productId },
       })
+
       const product = await prisma.products.findUnique({
-        where: { product_id: analysisData.product_id },
+        where: { product_id: productId },
         select: { status: true },
       })
 
       if (product?.status === "andamento") {
         const analyse = await prisma.analysis.create({
           data: {
-            adjustment: analysisData.adjustment,
-            fk_product: analysisData.product_id,
+            adjustment: analysisData.adjustments,
+            fk_product: productId,
             fk_user_cq: user.user_cq.fk_id_user_cq,
             count: analyseList.length + 1,
           },
@@ -163,69 +166,62 @@ export const createAnalysis = async (req: Request, res: Response) => {
           },
         })
 
-        const dataNotification: NotificationInterface = {
-          type_notification: "analysis",
-          product_id: analyse.products.product_id,
-          created_at: analyse.created_at,
-          status: analyse.products.status,
-          product_name: analyse.products.name_product,
-          reactor_name: analyse.products.reactor,
-          count: analyse.count,
-        }
+        // const dataNotification: NotificationInterface = {
+        //   type_notification: "analysis",
+        //   product_id: analyse.products.product_id,
+        //   created_at: analyse.created_at,
+        //   status: analyse.products.status,
+        //   product_name: analyse.products.name_product,
+        //   reactor_name: analyse.products.reactor,
+        //   count: analyse.count,
+        // }
 
-        myEmitter.emit("notification", dataNotification)
-        myEmitter.emit("create-analyse", analyse)
+        // myEmitter.emit("notification", dataNotification)
+        // myEmitter.emit("create-analyse", analyse)
         return (
-          analyse &&
-          res.status(201).json({
-            action: { created_analyse: true },
-            message: "successfully created analyse",
-          })
+          analyse && res.status(201).redirect(`/reator/produto/${reactorId}.${productId}`)
         )
       }
 
-      return res.status(403).json({
-        action: { created_analyse: true },
-        error: "finished product",
-      })
+      return res.sendStatus(403)
     }
-    res.status(400).json({
-      action: { created_product: false },
-      error: "data when creating the analyse",
-    })
+    res.sendStatus(400)
   } catch (err) {
-    res.status(500).json({ error: "internal server error" })
+    res.status(500).render("pages/500", { err })
   }
 }
 
 export const listAnalysis = async (req: Request, res: Response) => {
   try {
-    const productId = req.headers.product as string
+    const user = req.signedCookies.user
+    const productId = req.params.productId
+    const reactorId = req.params.reactorId
+    const productData = ProductService.listProductById(productId)
+    const analyseData = AnalyseService.listAllOfProduct(productId, reactorId)
 
-    const listAnalysis = await prisma.analysis.findMany({
-      where: { fk_product: productId },
-      select: {
-        adjustment: true,
-        count: true,
-        created_at: true,
-      },
+    const [product, analysis] = await Promise.all([productData, analyseData])
+
+    res.render("pages/analysis", {
+      analysis: analysis?.list,
+      product: product?.product,
+      user,
+      reactorId: product?.reactorId,
+      isAnalystUser: user.type !== "Controle Qualidade",
     })
-
-    return res
-      .status(200)
-      .json({ action: { list_analysis: true }, analyse_list: listAnalysis })
   } catch (err) {
-    res.status(500).json({ error: "internal server error" })
+    res.status(500).render("pages/500", { err })
   }
 }
 
 export const finishProduct = async (req: Request, res: Response) => {
   try {
-    const { product_id, product_analyst, product_status } = req.body
+    const reactorId = req.params.reactorId
+    const productId = req.params.productId
+    const finishedData = req.body
 
-    if (product_id && product_status) {
+    if (productId && finishedData.status) {
       const product = await prisma.products.findUnique({
-        where: { product_id: product_id },
+        where: { product_id: productId },
         select: {
           status: true,
           analyst_name: true,
@@ -233,10 +229,10 @@ export const finishProduct = async (req: Request, res: Response) => {
       })
       if (product?.status === "andamento") {
         const productFinish = await prisma.products.update({
-          where: { product_id: product_id },
+          where: { product_id: productId },
           data: {
-            status: product_status,
-            analyst_name: product_analyst,
+            status: finishedData.status,
+            analyst_name: finishedData.name_analyst,
             updated_at: new Date(),
           },
           select: {
@@ -256,29 +252,26 @@ export const finishProduct = async (req: Request, res: Response) => {
           },
         })
 
-        const dataNotification: NotificationInterface = {
-          type_notification: "product",
-          created_at: productFinish.updated_at,
-          product_id: productFinish.product_id,
-          product_name: productFinish.name_product,
-          reactor_name: productFinish.reactor,
-          status: productFinish.status,
-        }
+        // const dataNotification: NotificationInterface = {
+        //   type_notification: "product",
+        //   created_at: productFinish.updated_at,
+        //   product_id: productFinish.product_id,
+        //   product_name: productFinish.name_product,
+        //   reactor_name: productFinish.reactor,
+        //   status: productFinish.status,
+        // }
 
-        myEmitter.emit("notification", dataNotification)
-        myEmitter.emit("finish-product", productFinish)
-        return res.status(200).json({
-          action: { finish_product: true },
-          message: "successfully finish product",
-        })
+        // myEmitter.emit("notification", dataNotification)
+        // myEmitter.emit("finish-product", productFinish)
+        return (
+          productFinish &&
+          res.status(200).redirect(`/reator/produto/${reactorId}.${productId}`)
+        )
       }
-      res.status(403).json({
-        action: { finish_product: true },
-        error: "error when finalizing the product",
-      })
+      res.send(403)
     }
   } catch (err) {
-    res.status(500).json({ error: "internal server error" })
+    res.status(500).render("pages/500", { err })
   }
 }
 

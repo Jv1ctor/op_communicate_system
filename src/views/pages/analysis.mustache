@@ -10,7 +10,7 @@
       rel="stylesheet" />
     <link rel="stylesheet" href="/fontawesome/css/all.min.css" />
     <link rel="stylesheet" href="/css/style.css" />
-    <title>AVCO - Produtos</title>
+    <title>AVCO - Análises</title>
   </head>
   <body id="analise">
     <header class="header">
@@ -21,7 +21,7 @@
           alt="logo AVCO"
           width="140"
           height="140" />
-        <h1 class="header-container-title" data-js="product-name"></h1>
+        <h1 class="header-container-title">{{ product.name_product }}</h1>
 
         <div class="header-container-perfil">
           {{>partials/perfil/notification}}
@@ -34,18 +34,35 @@
       <div class="main-container-dados container">
         <div class="main-dados-header">
           <h1 class="main-dados-header-title">Dados do Produto</h1>
-          <div class="main-dados-header-content" data-js="data-product"></div>
+          <ul class="main-dados-header-content" data-js="data-product">
+            {{#product}}
+            <li><strong>Nome:</strong> {{ name_product }}</li>
+            <li><strong>Número-Roteiro:</strong> {{ num_roadmap }}</li>
+            <li><strong>Número-OP:</strong> {{ num_op }}</li>
+            <li><strong>Operador:</strong> {{ operator }}</li>
+            <li><strong>Supervisor de Turno:</strong> {{ turn_supervisor }}</li>
+            <li><strong>Reator:</strong> {{ reactor }}</li>
+            <li><strong>Quantidade:</strong> {{ quant_produce }}kg</li>
+            <li><strong>Número-Lote:</strong> {{ num_batch }}</li>
+            <li><strong>Turno:</strong> {{ turn }}</li>
+            <li><strong>Data:</strong> {{ formattingDate }}</li>
+            <li class="data-status {{ status }}">
+              <strong>Status:</strong>
+              {{ status }}
+            </li>
+            {{/product}}
+          </ul>
         </div>
       </div>
 
       <div class="main-container-analise container">
         <div class="main-analise-header">
-          <a href="./produtos.html" class="button-voltar"
+          <a href="/reator/{{ reactorId }}" class="button-voltar"
             ><i class="fa-solid fa-arrow-left"></i> Voltar</a
           >
           <h1 class="main-analise-header-title">Análises</h1>
           <div
-            class="button hidden-button"
+            class="button {{#isAnalystUser}} hidden-button {{/isAnalystUser}}"
             data-js="open-modal">
             Adicionar Análise
             <i class="fa-solid fa-circle-plus button-add-product-icon"></i>
@@ -54,73 +71,35 @@
 
         <div class="main-container-analise-content">
           <ul class="list-analise" data-js="analyse-list">
+            {{#analysis}}
+            <li class="list-analise-item">
+              <h3>Análise {{ count }}</h3>
+              <p>{{ adjustment }}</p>
+              <span>{{ formattingDate }}</span>
+            </li>
+            {{/analysis}}
+            {{^analysis}}
             <p class="not-analise-title">Sem Análise do Produto</p>
+            {{/analysis}}
           </ul>
         </div>
 
         <div
-          class="button btn-finish-product hidden-button"
+          class="button btn-finish-product {{#isAnalystUser}} hidden-button {{/isAnalystUser}}"
           data-js="open-modal-finish">
           Finalizar Produto
         </div>
       </div>
     </main>
-    <div class="modal-register-analise" data-js="modal">
-      <div class="modal-register-analise-content">
-        <i class="fa-solid fa-xmark button-exit" data-js="button-exit"></i>
-        <form class="form-register-analise" data-js="form-register">
-          <h2 class="register-analise-form-title">Enviar Análise</h2>
 
-          <div class="register-analise-form-container">
-            <div class="form-fields">
-              <label for="analise-text">Ajuste:</label>
-              <textarea
-                name="analise"
-                id="analise-text"
-                cols="10"
-                rows="5"
-                maxlength="100"
-                placeholder="Digite o Ajuste..."></textarea>
-            </div>
-            <button class="button" data-js="button-analysis-submit">Enviar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <div class="modal-register-analise" data-js="modal-finish" id="finish-modal-product">
-      <div class="modal-register-analise-content">
-        <i class="fa-solid fa-xmark button-exit" data-js="button-exit"></i>
-        <form class="form-register-analise" data-js="form-finish">
-          <h2 class="register-analise-form-title">Finalizar Produto:</h2>
-          <h3 data-js="product-reactor-title"></h3>
-
-          <div class="register-analise-form-container">
-            <div class="form-fields">
-              <label for="status">Situação Final:</label>
-              <select name="status" id="status">
-                <option value="aprovado">Aprovado</option>
-                <option value="reprovado">Reprovado</option>
-              </select>
-
-              <label for="product-reactor">Digite o Nome do Produto e Reator:</label>
-              <input
-                type="text"
-                name="product-reactor"
-                id="product-reactor"
-                placeholder="Ex: Produto - Reator" />
-
-              <label for="name-analyst">Digite o Nome do Analista:</label>
-              <input type="text" name="name-analyst" id="name-analyst" />
-            </div>
-            <button class="button">Finalizar</button>
-          </div>
-        </form>
-      </div>
-    </div>
     <footer>Desenvolvido por<a href=""> Jvictor</a></footer>
 
-    {{! <script type="module" src="./js/analisys/analisys.js"></script>
-    <script type="module" src="./js/notificationEvent.js"></script> }}
+    {{>partials/analysis/createAnalyseModal}}
+    {{>partials/analysis/finishedProductModal}}
+
+    <script type="module" src="/js/analisys/analisys.js"></script>
+    {{!
+    <script type="module" src="./js/notificationEvent.js"></script>
+    }}
   </body>
 </html>

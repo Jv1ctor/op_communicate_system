@@ -1,22 +1,20 @@
-
-  <tbody class="produto-table-body" data-js="product-list-{{ status }}">
-    <tr>
-      <td><span class="circle {{ status }}"></span></td>
-      <td>{{ name_product }}</td>
-      <td>{{ quant_produce }}</td>
-      <td>{{ num_op }}</td>
-      <td>{{ num_batch }}</td>
-      <td>{{ turn }}</td>
-      <td>{{ formattingDate }}</td>
-      <td>
-        <a href="" class="button-product">
-          <i
-            class="fa-solid fa-circle-chevron-right"
-            data-js="link-product-btn"
-            data-name="{{ name_product }}"
-            data-id="{{ product_id }}"
-            data-status="{{ status }}"></i>
-        </a>
-      </td>
-    </tr>
-  </tbody>
+<tbody class="produto-table-body" data-js="product-list-{{ status }}">
+  <tr>
+    <td><span class="circle {{ status }}"></span></td>
+    <td>{{ name_product }}</td>
+    <td>{{ quant_produce }}</td>
+    <td>{{ num_op }}</td>
+    <td>{{ num_batch }}</td>
+    <td>{{ turn }}</td>
+    <td>{{ formattingDate }}</td>
+    <td>
+      <a href="/reator/produto/{{ reactor.id }}.{{ product_id }}" class="button-product">
+        <i
+          class="fa-solid fa-circle-chevron-right"
+          data-name="{{ name_product }}"
+          data-id="{{ product_id }}"
+          data-status="{{ status }}"></i>
+      </a>
+    </td>
+  </tr>
+</tbody>

@@ -1,0 +1,26 @@
+<div class="modal-register-analise" data-js="modal">
+  <div class="modal-register-analise-content">
+    <i class="fa-solid fa-xmark button-exit" data-js="button-exit"></i>
+    <form
+      class="form-register-analise"
+      data-js="form-register"
+      method="post"
+      action="/create-analyse/{{ reactorId }}.{{ product.product_id }}">
+      <h2 class="register-analise-form-title">Enviar Análise</h2>
+
+      <div class="register-analise-form-container">
+        <div class="form-fields">
+          <label for="adjustments">Ajuste:</label>
+          <textarea
+            id="adjustments"
+            name="adjustments"
+            cols="10"
+            rows="5"
+            maxlength="100"
+            placeholder="Digite o Ajuste..."></textarea>
+        </div>
+        <button class="button" data-js="button-analysis-submit">Enviar</button>
+      </div>
+    </form>
+  </div>
+</div>
