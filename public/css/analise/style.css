@@ -1,0 +1,16 @@
+@import url("./global.css");
+@import url("./colors.css");
+@import url("./utils.css");
+@import url("./dropdown-header.css");
+/* Page login */
+@import url("./login/login.css");
+
+/* Page reatores */
+@import url("./reatores/reatores.css");
+
+/* Page produto */
+@import url("./produtos/produto.css");
+
+
+/* Page analise */
+@import url("./analise/analise.css")

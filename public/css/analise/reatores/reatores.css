@@ -1,0 +1,74 @@
+header {
+  background: white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+.header-container {
+  display: flex;
+  padding: 0 5rem;
+  padding-bottom: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  text-align: start;
+}
+
+.header-container-title {
+  font-size: 3.5rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.header-container-perfil {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  gap: 1rem;
+  position: relative;
+  left: 40px;
+}
+
+.header-container-perfil span {
+  font-size: 1.112rem;
+  font-weight: 700;
+  max-width: 8ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.main-container-reatores {
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 5rem;
+  padding: 5rem;
+  border-radius: 20px;
+  background-color: var(--secondary-bg);
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.25);
+}
+
+.main-container-reatores-card li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  border-radius: 4px;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  box-shadow: -2px 3px 4px 1px rgba(0, 0, 0, 0.1);
+  padding: 0.34rem;
+  padding-inline: 20px;
+  font-size: 2.5rem;
+  border-bottom: 4px solid var(--secondary-color);
+  border-left: 4px solid var(--secondary-color);
+}
+
+.notification-reactor {
+  visibility: hidden;
+  font-size: 1.5rem;
+  color: #f17c57fa;
+}
+
+.main-container-reatores-card li a .main-container-reatores-card li a:hover {
+  background-color: #dcdcdd;
+  transition: 0.4s ease-in-out;
+}

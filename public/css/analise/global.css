@@ -1,0 +1,49 @@
+html {
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+}
+
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+body {
+  background-color: var(--main-bg);
+}
+
+a,
+span {
+  display: block;
+  text-decoration: none;
+  color: black;
+}
+
+footer {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  font-size: 1.1rem;
+  text-align: center;
+  padding-top: 10rem;
+  padding-bottom: 1rem;
+}
+
+table {
+  border-collapse: collapse;
+}
