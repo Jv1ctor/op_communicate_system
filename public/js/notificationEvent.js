@@ -18,8 +18,14 @@ eventSource.addEventListener("notification", (messageEvent) => {
     notificationMap.set(data.product_id + data.count + data.status, data)
   }
   if (data.status !== "andamento") {
-    console.log(notificationMap.get(data.product_id + data.count + data.status))
-    console.log(notificationMap.delete(data.product_id + data.count + data.status))
+    if (data.analysis) {
+      data.analysis.forEach((item) => {
+        notificationMap.delete(data.product_id + item.count + "andamento")
+        notificationMap.delete(data.product_id + "andamento")
+      })
+    } else {
+      notificationMap.delete(data.product_id + data.count + data.status)
+    }
   }
   renderNotification(notificationMap)
 })

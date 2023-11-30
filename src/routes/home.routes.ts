@@ -21,5 +21,12 @@ router.get("/login", (req, res) => {
 
 router.get("/logout", UserController.logout)
 router.post("/login", UserController.login)
+router.post(
+  "/register-product/reator/:id",
+  Token.create,
+  Auth.authenticate,
+  Auth.authorization("production"),
+  EventController.createProduct,
+)
 
 export default router

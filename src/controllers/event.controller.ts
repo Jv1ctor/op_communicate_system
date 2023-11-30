@@ -8,15 +8,14 @@ import UserService from "../services/user.service"
 const myEmitter = new EventEmitter()
 
 interface ProductDataInterface {
-  name: string
-  qnt: number
-  "num-op": number
-  "turn-supervisor": string
-  "num-roadmap": number
-  "name-operator": string
-  "num-batch": number
+  name_product: string
+  qnt_product: number
+  num_op: number
+  turn_supervisor: string
+  num_roadmap: number
+  name_operator: string
+  num_batch: number
   turn: string
-  reactor: string
 }
 
 interface NotificationInterface {
@@ -32,35 +31,36 @@ interface NotificationInterface {
 export const createProduct = async (req: Request, res: Response) => {
   try {
     const productData: ProductDataInterface = req.body
+    const reactorId = req.params.id
     const userId = res.locals.userId
     const user = await prisma.users.findFirst({
       where: { id: userId },
       select: { user_prod: true },
     })
-    const reactor = await prisma.reactors.findUnique({
-      where: { name_reactor: productData.reactor },
-      select: { id_reactor: true },
+
+    const reactor = await prisma.reactors.findFirst({
+      where: { id_reactor: reactorId },
+      include: {
+        _count: {
+          select: { products: { where: { fk_reactor: reactorId, status: "andamento" } } },
+        },
+      },
     })
 
-    const product = await prisma.products.count({
-      where: { reactor: productData.reactor, status: "andamento" },
-      select: { status: true },
-    })
-
-    if (user && user.user_prod && reactor && product.status === 0) {
+    if (user && user.user_prod && reactor && reactor._count.products === 0) {
       const product = await prisma.products.create({
         data: {
-          name_product: productData.name,
-          quant_produce: Number(productData.qnt),
-          num_op: Number(productData["num-op"]),
-          turn_supervisor: productData["turn-supervisor"],
-          num_roadmap: Number(productData["num-roadmap"]),
-          operator: productData["name-operator"],
-          num_batch: Number(productData["num-batch"]),
+          name_product: productData.name_product,
+          quant_produce: Number(productData.qnt_product),
+          num_op: Number(productData.num_op),
+          turn_supervisor: productData.turn_supervisor,
+          num_roadmap: Number(productData.num_roadmap),
+          operator: productData.name_operator,
+          num_batch: Number(productData.num_batch),
           turn: productData.turn,
-          reactor: productData.reactor,
+          reactor: reactor.name_reactor,
           fk_user_prod: user.user_prod.fk_id_user_prod,
-          fk_reactor: reactor.id_reactor,
+          fk_reactor: reactorId,
         },
         select: {
           product_id: true,
@@ -78,7 +78,6 @@ export const createProduct = async (req: Request, res: Response) => {
           updated_at: true,
         },
       })
-
       const dataNotification: NotificationInterface = {
         type_notification: "product",
         product_id: product.product_id,
@@ -89,20 +88,15 @@ export const createProduct = async (req: Request, res: Response) => {
       }
       myEmitter.emit("notification", dataNotification)
       myEmitter.emit("create-product", product)
-      return (
-        product &&
-        res.status(201).json({
-          action: { created_product: true },
-          message: "successfully created product",
-        })
-      )
+      return product && res.status(201).redirect(`/reator/${reactorId}`)
     }
-    res.status(400).json({
-      action: { created_product: false },
-      error: "data when creating the product",
-    })
+    res.sendStatus(400)
+    // res.status(400).json({
+    //   action: { created_product: false },
+    //   error: "data when creating the product",
+    // })
   } catch (err) {
-    res.status(500).json({ error: "internal server error" })
+    res.status(500).render("pages/500", { err })
   }
 }
 
@@ -112,15 +106,15 @@ export const listProducts = async (req: Request, res: Response) => {
     const reactorId = req.params.id
 
     const productData = await ProductService.list(reactorId)
-    res.render("pages/produto", {
+    res.render("pages/product", {
       listProduct: {
         process: productData?.listProductProcess,
         approved: productData?.listProductApproved,
         disapproved: productData?.listProductDisapproved,
       },
       user,
-      reactor: productData?.reactor,
-      isProductUser: user.type !== "Produção" && "hidden-button",
+      reactor: productData.reactor,
+      isProductUser: user.type !== "Produção",
     })
   } catch (err) {
     res.status(500).render("pages/500", { err })

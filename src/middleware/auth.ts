@@ -43,6 +43,9 @@ const Auth = {
     if (success) {
       next()
     } else {
+      res.clearCookie("refreshToken")
+      res.clearCookie("accessToken")
+      res.clearCookie("user")
       res.status(401).redirect("/login")
     }
   },
@@ -73,7 +76,7 @@ const Auth = {
       if (success) {
         next()
       } else {
-        res.status(401).json({
+        res.status(403).render("pages/403", {
           error: "You are not authorization",
         })
       }

@@ -1,0 +1,89 @@
+<div class="modal-register-produto" data-js="modal">
+  <div class="modal-register-produto-content">
+    <i class="fa-solid fa-xmark button-exit" data-js="button-exit"></i>
+    <form
+      class="form-register-product"
+      data-js="form-register"
+      method="post"
+      action="/register-product/reator/{{ reactor.id }}">
+      <h2 class="register-produto-form-title">Cadastrar Produto</h2>
+      <div class="register-produto-form-container">
+        <div class="form-fields">
+          <label for="name_product">Nome:</label>
+          <input
+            type="text"
+            id="name_product"
+            name="name_product"
+            data-type="string"
+            value="produto" />
+        </div>
+
+        <div class="form-fields">
+          <label for="qnt_product">Quantidade(kg):</label>
+          <input
+            type="text"
+            id="qnt_product"
+            name="qnt_product"
+            data-type="decimal"
+            value="123" />
+        </div>
+
+        <div class="form-fields">
+          <label for="num_op">Número-OP:</label>
+          <input type="text" id="num_op" name="num_op" data-type="number" value="123" />
+        </div>
+
+        <div class="form-fields">
+          <label for="turn_supervisor">Supervisor de Turno:</label>
+          <input
+            type="text"
+            id="turn_supervisor"
+            name="turn_supervisor"
+            data-type="string"
+            value="teste1" />
+        </div>
+
+        <div class="form-fields">
+          <label for="num_roadmap">Número-Roteiro:</label>
+          <input
+            type="text"
+            id="num_roadmap"
+            name="num_roadmap"
+            data-type="number"
+            value="123" />
+        </div>
+
+        <div class="form-fields">
+          <label for="name_operator">Operador:</label>
+          <input
+            type="text"
+            id="name_operator"
+            name="name_operator"
+            data-type="string"
+            value="teste2" />
+        </div>
+
+        <div class="form-fields">
+          <label for="num_batch">Número-Lote:</label>
+          <input
+            type="text"
+            id="num_batch"
+            name="num_batch"
+            data-type="number"
+            value="123" />
+        </div>
+
+        <div class="form-fields">
+          <label for="turn">Turno:</label>
+          <select id="turn" name="turn">
+            <option value="-1">Selecione o Turno</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="button" data-js="button-confirm">Cadastrar</button>
+    </form>
+  </div>
+</div>

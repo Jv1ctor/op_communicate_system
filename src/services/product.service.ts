@@ -62,11 +62,19 @@ const ProductService = {
           listProductProcess,
           listProductApproved,
           listProductDisapproved,
-          reactor: formattintNameReactor,
+          reactor: {
+            id: reactorId,
+            name: formattintNameReactor,
+          },
         }
       }
 
-      return { reactor: formattintNameReactor }
+      return {
+        reactor: {
+          id: reactorId,
+          name: formattintNameReactor,
+        },
+      }
     } catch (err) {
       throw new Error("list product error")
     }

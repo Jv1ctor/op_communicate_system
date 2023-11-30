@@ -1,0 +1,19 @@
+<div class="perfil-icon-user">
+  <i class="fa-regular fa-user icon-perfil"></i>
+
+  <div class="menu-options-user">
+    <div>
+      {{#user}}
+      <span title="{{ name }}"
+        ><strong>{{ name }}</strong></span
+      >
+      <span title="{{ type }}"
+        ><strong>{{ type }}</strong></span
+      >
+      {{/user}}
+    </div>
+    <a href="/logout">
+      <i class="fa-solid fa-arrow-right-from-bracket button-logout"></i>
+    </a>
+  </div>
+</div>

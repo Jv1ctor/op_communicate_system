@@ -24,35 +24,8 @@
         <h1 class="header-container-title">Reatores</h1>
 
         <div class="header-container-perfil">
-          <div class="perfil-notification">
-            <label class="perfil-notification-icon" for="dropdown">
-              <i class="fa-regular fa-bell icon-perfil"></i>
-              <span class="circle-notification"></span>
-            </label>
-            <input type="checkbox" name="dropdown" id="dropdown" />
-            <div class="menu-dropdown-notification">
-              <ul data-js="list-notification"></ul>
-            </div>
-          </div>
-          <div class="perfil-icon-user">
-            <i class="fa-regular fa-user icon-perfil"></i>
-
-            <div class="menu-options-user">
-              <div>
-                {{#user}}
-                <span title="{{ name }}"
-                  ><strong>{{ name }}</strong></span
-                >
-                <span title="{{ type }}"
-                  ><strong>{{ type }}</strong></span
-                >
-                {{/user}}
-              </div>
-              <a href="/logout">
-                <i class="fa-solid fa-arrow-right-from-bracket button-logout"></i>
-              </a>
-            </div>
-          </div>
+          {{>partials/perfil/notification}}
+          {{>partials/perfil/user}}
         </div>
       </div>
     </header>
@@ -73,10 +46,6 @@
     </main>
     <footer>Desenvolvido por<a href=""> Jvictor</a></footer>
 
-    {{!
-    <script type="module" src="/js/user/user.js"></script>
-    }} {{!
-    <script type="module" src="./js/notificationEvent.js"></script>
-    }}
+    <!-- <script type="module" src="./js/notificationEvent.js"></script> -->
   </body>
 </html>
