@@ -49,4 +49,6 @@ router.post(
   EventController.finishProduct,
 )
 
+router.get("/events/sse", EventController.events)
+
 export default router

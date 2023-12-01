@@ -38,12 +38,14 @@
             <i class="fa-solid fa-arrow-left"></i>Voltar
           </a>
           <h1 class="main-produto-header-title">Produtos</h1>
-         
-            <div class="button {{#isProductUser}} hidden-button {{/isProductUser}}" data-js="open-modal" data-permiss="producer">
-              Adicionar Produto
-              <i class="fa-solid fa-circle-plus button-add-product-icon"></i>
-            </div>
-        
+
+          <div
+            class="button {{#isProductUser}} hidden-button {{/isProductUser}}"
+            data-js="open-modal"
+            data-permiss="producer">
+            Adicionar Produto
+            <i class="fa-solid fa-circle-plus button-add-product-icon"></i>
+          </div>
         </div>
 
         <div class="main-produto-tables" data-js="tables">
@@ -58,12 +60,11 @@
             <table class="active-table" data-js="table-produto">
               {{>partials/product/table/tableProductHeader}}
               {{#listProduct}}
+              <tbody class="produto-table-body" data-js="product-list-andamento">
                 {{#process}}
-                  {{>partials/product/table/tableProductBody}}
+                {{>partials/product/table/tableProductBody}}
                 {{/process}}
-              {{/listProduct}}
-              {{^listProduct}}
-                <p>Não tem nada<p>
+              </tbody>
               {{/listProduct}}
             </table>
           </div>
@@ -78,9 +79,11 @@
               {{>partials/product/table/tableProductHeader}}
 
               {{#listProduct}}
+              <tbody class="produto-table-body" data-js="product-list-aprovado">
                 {{#approved}}
-                  {{>partials/product/table/tableProductBody}}
+                {{>partials/product/table/tableProductBody}}
                 {{/approved}}
+              </tbody>
               {{/listProduct}}
             </table>
           </div>
@@ -93,12 +96,11 @@
             <table data-js="table-produto">
               {{>partials/product/table/tableProductHeader}}
               {{#listProduct}}
+              <tbody class="produto-table-body" data-js="product-list-reprovado">
                 {{#disapproved}}
-                  {{>partials/product/table/tableProductBody}}
+                {{>partials/product/table/tableProductBody}}
                 {{/disapproved}}
-              {{/listProduct}}
-              {{^listProduct}}
-                <p>Não tem nada<p>
+              </tbody>
               {{/listProduct}}
             </table>
           </div>
@@ -114,8 +116,6 @@
     {{!
     <script type="module" src="./js/user/user.js"></script>
     }}
-    {{!
-    <script type="module" src="./js/notificationEvent.js"></script>
-    }}
+    <script type="module" src="/js/notificationEvent.js"></script>
   </body>
 </html>

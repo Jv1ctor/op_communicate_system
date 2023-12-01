@@ -47,7 +47,6 @@
             <li><strong>Turno:</strong> {{ turn }}</li>
             <li><strong>Data:</strong> {{ formattingDate }}</li>
             <li class="data-status {{ status }}">
-              <strong>Status:</strong>
               {{ status }}
             </li>
             {{/product}}
@@ -78,9 +77,6 @@
               <span>{{ formattingDate }}</span>
             </li>
             {{/analysis}}
-            {{^analysis}}
-            <p class="not-analise-title">Sem Análise do Produto</p>
-            {{/analysis}}
           </ul>
         </div>
 
@@ -98,8 +94,6 @@
     {{>partials/analysis/finishedProductModal}}
 
     <script type="module" src="/js/analisys/analisys.js"></script>
-    {{!
-    <script type="module" src="./js/notificationEvent.js"></script>
-    }}
+    <script type="module" src="/js/notificationEvent.js"></script>
   </body>
 </html>

@@ -1,73 +1,67 @@
 const notificationList = document.querySelector("[data-js='list-notification']")
 const notifyCircle = document.querySelector(".circle-notification")
 const notificationListChildren = notificationList.children
+const message = document.createElement("p")
 
 const formattingHTMLData = (data) => {
-  const notifications = Array.from(data).sort((item1, item2) => {
-    const timeNotificationOne = new Date(item1[1].created_at)
-    const timeNotificationTwo = new Date(item2[1].created_at)
-
-    return timeNotificationTwo - timeNotificationOne
-  })
-  
-  notifyCircle.setAttribute("data-notification", notifications[0][1].type_notification)
-  if (notifications[0][1].type_notification === "product") {
-    notifyCircle.setAttribute("data-status_product", notifications[0][1].status)
-  }
-
   let template = ""
-
-  const typeNotificationFormat = {
-    product: "Produto",
-    analysis: "Análise",
-  }
-
-  notifications.forEach((item) => {
-    const notificationData = item[1]
-    const currentDate = new Date(notificationData.created_at)
-    const dateFormat = new Intl.DateTimeFormat("pt-BR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(currentDate)
+  data.forEach((item) => {
+    notifyCircle.setAttribute("data-notification", item.type_notification)
+    notifyCircle.setAttribute("data-status_product", item.status)
 
     template += `
-      <li class="
-        notification-${notificationData.type_notification} 
-        ${notificationData.status ? `product-${notificationData.status}` : ""}
-      ">
-        <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
-          <div class="content-notification">
-            <h3 class="title-notification">Atenção ${
-              typeNotificationFormat[notificationData.type_notification]
-            } ${notificationData?.count || ""}:</h3>
-            
-            <p>${notificationData.product_name} - ${notificationData.reactor_name} 
-            ${
-              notificationData.status && notificationData.status !== "andamento"
-                ? notificationData.status
-                : ""
-            }</p>
-          </div>
-          <p>${dateFormat}</p>
-      </li>`
+    <li class="
+      notification-${item.type_notification} 
+      ${item.status ? `product-${item.status}` : ""}
+    ">
+      <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
+        <div class="content-notification">
+          <h3 class="title-notification">Atenção ${item.type_notification} ${
+      item.count || ""
+    }:</h3>
+          
+          <p>
+          ${item.name_product} - ${item.reactor} 
+          </p>
+          ${
+            item.status && item.type_notification === "Produto"
+              ? `<p class="status-notification"> ${item.status}</p>`
+              : ""
+          }
+        </div>
+        <p>${item.formattingDate}</p>
+    </li>`
   })
 
   return template
 }
 
 export const renderNotification = (data) => {
+  console.log(data)
   if (data) {
-    notificationList.innerHTML = ""
-    notificationList.innerHTML += formattingHTMLData(data)
+    message.remove()
+    const formatData = formattingHTMLData(data)
+    if (data[0].status !== "andamento" && data[0].type_notification === "Produto") {
+      notificationList.innerHTML = formatData
+    } else {
+      notificationList.insertAdjacentHTML("afterbegin", formatData)
+    }
   }
 }
 
-export const runNotification = () => {
+const runNotification = () => {
   setInterval(() => {
-    if (notificationListChildren.length > 0) {
+    if (
+      notificationListChildren.length > 0 &&
+      notificationListChildren.item(0) !== message
+    ) {
       notifyCircle.classList.add("show-notification-circle")
     } else {
-      notificationList.innerHTML = "Nenhuma Notificação"
+      notifyCircle.classList.remove("show-notification-circle")
+      message.textContent = "Nenhuma Notificação"
+      notificationList.append(message)
     }
-  }, 200)
+  }, 500)
 }
+
+runNotification()

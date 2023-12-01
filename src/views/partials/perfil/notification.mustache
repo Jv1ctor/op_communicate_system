@@ -1,12 +1,32 @@
 <div class="perfil-notification">
   <label class="perfil-notification-icon" for="dropdown">
     <i class="fa-regular fa-bell icon-perfil"></i>
-    <span class="circle-notification"></span>
+    <span
+      class="circle-notification"
+      data-notification="{{ first_notification.type_notification }}"
+      data-status_product="{{ first_notification.status }}"></span>
   </label>
   <input type="checkbox" name="dropdown" id="dropdown" />
   <div class="menu-dropdown-notification">
     <ul data-js="list-notification">
-      Nenhuma Notificação
+      {{#notification}}
+      <li
+        class="
+          notification-{{ type_notification }} 
+          product-{{ status }}
+        ">
+        <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
+        <div class="content-notification">
+          <h3 class="title-notification">Atenção {{ type_notification }} {{ count }}:</h3>
+
+          <p>{{ name_product }} - {{ reactor }}</p>
+          <p class="status-notification">
+            {{ status }}
+          </p>
+        </div>
+        <p>{{ formattingDate }}</p>
+      </li>
+      {{/notification}}
     </ul>
   </div>
 </div>

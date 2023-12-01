@@ -1,12 +1,15 @@
 import { Request, Response } from "express"
 import prisma from "../database/prisma"
 import EventEmitter from "events"
-import { Analysis, Products } from "@prisma/client"
+import { Analysis, Notification_analysis, Products } from "@prisma/client"
 import ProductService from "../services/product.service"
 import UserService from "../services/user.service"
 import AnalyseService from "../services/analyse.service"
+import NotificationsService from "../services/notifications.service"
 
 const myEmitter = new EventEmitter()
+
+myEmitter.setMaxListeners(10)
 
 interface ProductDataInterface {
   name_product: string
@@ -17,16 +20,6 @@ interface ProductDataInterface {
   name_operator: string
   num_batch: number
   turn: string
-}
-
-interface NotificationInterface {
-  type_notification: "product" | "analysis"
-  product_id: string
-  product_name: string
-  reactor_name: string
-  created_at: Date
-  count?: number
-  status?: string
 }
 
 export const createProduct = async (req: Request, res: Response) => {
@@ -65,6 +58,7 @@ export const createProduct = async (req: Request, res: Response) => {
         },
         select: {
           product_id: true,
+          fk_reactor: true,
           name_product: true,
           quant_produce: true,
           num_op: true,
@@ -79,23 +73,15 @@ export const createProduct = async (req: Request, res: Response) => {
           updated_at: true,
         },
       })
-      const dataNotification: NotificationInterface = {
-        type_notification: "product",
-        product_id: product.product_id,
-        product_name: product.name_product,
-        reactor_name: product.reactor,
-        status: product.status,
-        created_at: product.updated_at,
-      }
-      myEmitter.emit("notification", dataNotification)
+      const notificationsProduct = await NotificationsService.create(
+        "product",
+        product.product_id,
+      )
+      myEmitter.emit("notification", [notificationsProduct])
       myEmitter.emit("create-product", product)
       return product && res.status(201).redirect(`/reator/${reactorId}`)
     }
     res.sendStatus(400)
-    // res.status(400).json({
-    //   action: { created_product: false },
-    //   error: "data when creating the product",
-    // })
   } catch (err) {
     res.status(500).render("pages/500", { err })
   }
@@ -107,12 +93,15 @@ export const listProducts = async (req: Request, res: Response) => {
     const reactorId = req.params.id
 
     const productData = await ProductService.listAllOfReactor(reactorId)
+    const notification = await NotificationsService.listAll()
     res.render("pages/product", {
       listProduct: {
         process: productData?.listProductProcess,
         approved: productData?.listProductApproved,
         disapproved: productData?.listProductDisapproved,
       },
+      notification,
+      first_notification: notification[0],
       user,
       reactor: productData.reactor,
       isProductUser: user.type !== "Produção",
@@ -152,8 +141,10 @@ export const createAnalysis = async (req: Request, res: Response) => {
             count: analyseList.length + 1,
           },
           select: {
+            fk_product: true,
             adjustment: true,
             count: true,
+            analysis_id: true,
             created_at: true,
             products: {
               select: {
@@ -165,19 +156,13 @@ export const createAnalysis = async (req: Request, res: Response) => {
             },
           },
         })
+        const notificationAnalysis = await NotificationsService.create(
+          "analyse",
+          analyse.analysis_id,
+        )
 
-        // const dataNotification: NotificationInterface = {
-        //   type_notification: "analysis",
-        //   product_id: analyse.products.product_id,
-        //   created_at: analyse.created_at,
-        //   status: analyse.products.status,
-        //   product_name: analyse.products.name_product,
-        //   reactor_name: analyse.products.reactor,
-        //   count: analyse.count,
-        // }
-
-        // myEmitter.emit("notification", dataNotification)
-        // myEmitter.emit("create-analyse", analyse)
+        myEmitter.emit("notification", [notificationAnalysis])
+        myEmitter.emit("create-analyse", analyse)
         return (
           analyse && res.status(201).redirect(`/reator/produto/${reactorId}.${productId}`)
         )
@@ -198,13 +183,15 @@ export const listAnalysis = async (req: Request, res: Response) => {
     const reactorId = req.params.reactorId
     const productData = ProductService.listProductById(productId)
     const analyseData = AnalyseService.listAllOfProduct(productId, reactorId)
-
+    const notification = await NotificationsService.listAll()
     const [product, analysis] = await Promise.all([productData, analyseData])
 
     res.render("pages/analysis", {
       analysis: analysis?.list,
       product: product?.product,
       user,
+      notification,
+      first_notification: notification[0],
       reactorId: product?.reactorId,
       isAnalystUser: user.type !== "Controle Qualidade",
     })
@@ -237,6 +224,7 @@ export const finishProduct = async (req: Request, res: Response) => {
           },
           select: {
             product_id: true,
+            fk_reactor: true,
             name_product: true,
             quant_produce: true,
             num_op: true,
@@ -252,82 +240,22 @@ export const finishProduct = async (req: Request, res: Response) => {
           },
         })
 
-        // const dataNotification: NotificationInterface = {
-        //   type_notification: "product",
-        //   created_at: productFinish.updated_at,
-        //   product_id: productFinish.product_id,
-        //   product_name: productFinish.name_product,
-        //   reactor_name: productFinish.reactor,
-        //   status: productFinish.status,
-        // }
+        if (productFinish.status !== "andamento") {
+          await NotificationsService.deleteNotificationAnalyse(productFinish.product_id)
+        }
+        const notificationFinish = await NotificationsService.listAll()
 
-        // myEmitter.emit("notification", dataNotification)
-        // myEmitter.emit("finish-product", productFinish)
+        myEmitter.emit("notification", notificationFinish)
+        myEmitter.emit("finish-product", productFinish)
         return (
           productFinish &&
           res.status(200).redirect(`/reator/produto/${reactorId}.${productId}`)
         )
       }
-      res.send(403)
+      res.sendStatus(403)
     }
   } catch (err) {
     res.status(500).render("pages/500", { err })
-  }
-}
-
-const listProductCallback = async () => {
-  const listProduct = await prisma.products.findMany({
-    select: {
-      name_product: true,
-      reactor: true,
-      updated_at: true,
-      status: true,
-      product_id: true,
-    },
-  })
-
-  if (listProduct.length > 0) {
-    listProduct.forEach((product) => {
-      const dataNotification: NotificationInterface = {
-        type_notification: "product",
-        product_id: product.product_id,
-        product_name: product.name_product,
-        reactor_name: product.reactor,
-        created_at: product.updated_at,
-        status: product.status,
-      }
-
-      myEmitter.emit("notification", dataNotification)
-    })
-  }
-}
-
-const listAnalyseCallback = async () => {
-  const listAnalyse = await prisma.analysis.findMany({
-    select: {
-      created_at: true,
-      adjustment: true,
-      count: true,
-      products: {
-        select: { reactor: true, name_product: true, product_id: true, status: true },
-      },
-    },
-  })
-
-  if (listAnalyse.length > 0) {
-    listAnalyse.forEach((analyse) => {
-      const dataNotification: NotificationInterface = {
-        type_notification: "analysis",
-        product_id: analyse.products.product_id,
-        product_name: analyse.products.name_product,
-        status: analyse.products.status,
-        reactor_name: analyse.products.reactor,
-        created_at: analyse.created_at,
-        count: analyse.count,
-      }
-
-      myEmitter.emit("notification", dataNotification)
-    })
   }
 }
 
@@ -338,7 +266,7 @@ export const events = async (_req: Request, res: Response) => {
     "cache-control": "no-cache",
   })
 
-  myEmitter.on("notification", (data: NotificationInterface) => {
+  myEmitter.on("notification", (data) => {
     res.write("event: notification\n")
     res.write(`data:${JSON.stringify(data)}\n\n`)
   })
@@ -354,7 +282,4 @@ export const events = async (_req: Request, res: Response) => {
     res.write("event: finish-product\n")
     res.write(`data:${JSON.stringify(product)}\n\n`)
   })
-
-  listProductCallback()
-  listAnalyseCallback()
 }

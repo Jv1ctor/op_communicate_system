@@ -167,27 +167,27 @@
   border-radius: 4px;
 }
 
-.notification-product .alert-notification-icon {
+.notification-Produto .alert-notification-icon {
   color: var(--yellow-product);
 }
-.menu-dropdown-notification .notification-product {
+.menu-dropdown-notification .notification-Produto {
   border-color: var(--yellow-product);
 }
 
-[data-notification="product"] {
+[data-notification="Produto"] {
   background: var(--yellow-product);
 }
 .product-andamento .status-notification {
   background: var(--yellow-product);
 }
 
-.notification-analysis .alert-notification-icon {
+.notification-Análise .alert-notification-icon {
   color: var(--orange-product);
 }
-.menu-dropdown-notification .notification-analysis {
+.menu-dropdown-notification .notification-Análise {
   border-color: var(--orange-product);
 }
-[data-notification="analysis"] {
+[data-notification="Análise"] {
   background: var(--orange-product);
 }
 
