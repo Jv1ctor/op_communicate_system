@@ -1,9 +1,13 @@
 import { Request, Response } from "express"
 import prisma from "../database/prisma"
 import EventEmitter from "events"
-import { Analysis, Notification_analysis, Products } from "@prisma/client"
+import {
+  Analysis,
+  Notification_analysis,
+  Notification_product,
+  Products,
+} from "@prisma/client"
 import ProductService from "../services/product.service"
-import UserService from "../services/user.service"
 import AnalyseService from "../services/analyse.service"
 import NotificationsService from "../services/notifications.service"
 
@@ -36,7 +40,9 @@ export const createProduct = async (req: Request, res: Response) => {
       where: { id_reactor: reactorId },
       include: {
         _count: {
-          select: { products: { where: { fk_reactor: reactorId, status: "andamento" } } },
+          select: {
+            products: { where: { fk_reactor: reactorId, status: "andamento" } },
+          },
         },
       },
     })
@@ -75,9 +81,9 @@ export const createProduct = async (req: Request, res: Response) => {
       })
       const notificationsProduct = await NotificationsService.create(
         "product",
-        product.product_id,
+        product.product_id
       )
-      myEmitter.emit("notification", [notificationsProduct])
+      myEmitter.emit("notification", notificationsProduct)
       myEmitter.emit("create-product", product)
       return product && res.status(201).redirect(`/reator/${reactorId}`)
     }
@@ -92,18 +98,21 @@ export const listProducts = async (req: Request, res: Response) => {
     const user = req.signedCookies.user
     const reactorId = req.params.id
 
-    const productData = await ProductService.listAllOfReactor(reactorId)
-    const notification = await NotificationsService.listAll()
+    const productData =  ProductService.listAllOfReactor(reactorId)
+    const notification =  NotificationsService.listAll()
+
+    const [listNotification, products] = await Promise.all([notification, productData])
+    console.log(listNotification[0])
     res.render("pages/product", {
       listProduct: {
-        process: productData?.listProductProcess,
-        approved: productData?.listProductApproved,
-        disapproved: productData?.listProductDisapproved,
+        process: products?.listProductProcess,
+        approved: products?.listProductApproved,
+        disapproved: products?.listProductDisapproved,
       },
-      notification,
-      first_notification: notification[0],
+      notification: listNotification,
+      first_notification: listNotification[0],
       user,
-      reactor: productData.reactor,
+      reactor: products.reactor,
       isProductUser: user.type !== "Produção",
     })
   } catch (err) {
@@ -158,13 +167,14 @@ export const createAnalysis = async (req: Request, res: Response) => {
         })
         const notificationAnalysis = await NotificationsService.create(
           "analyse",
-          analyse.analysis_id,
+          analyse.analysis_id
         )
 
-        myEmitter.emit("notification", [notificationAnalysis])
+        myEmitter.emit("notification", notificationAnalysis)
         myEmitter.emit("create-analyse", analyse)
         return (
-          analyse && res.status(201).redirect(`/reator/produto/${reactorId}.${productId}`)
+          analyse &&
+          res.status(201).redirect(`/reator/produto/${reactorId}.${productId}`)
         )
       }
 
@@ -183,15 +193,15 @@ export const listAnalysis = async (req: Request, res: Response) => {
     const reactorId = req.params.reactorId
     const productData = ProductService.listProductById(productId)
     const analyseData = AnalyseService.listAllOfProduct(productId, reactorId)
-    const notification = await NotificationsService.listAll()
-    const [product, analysis] = await Promise.all([productData, analyseData])
+    const notification = NotificationsService.listAll()
+    const [product, analysis, listNotification] = await Promise.all([productData, analyseData, notification])
 
     res.render("pages/analysis", {
       analysis: analysis?.list,
       product: product?.product,
       user,
-      notification,
-      first_notification: notification[0],
+      notification: listNotification,
+      first_notification: listNotification[0],
       reactorId: product?.reactorId,
       isAnalystUser: user.type !== "Controle Qualidade",
     })
@@ -241,7 +251,9 @@ export const finishProduct = async (req: Request, res: Response) => {
         })
 
         if (productFinish.status !== "andamento") {
-          await NotificationsService.deleteNotificationAnalyse(productFinish.product_id)
+          await NotificationsService.deleteNotificationAnalyse(
+            productFinish.product_id
+          )
         }
         const notificationFinish = await NotificationsService.listAll()
 
@@ -266,20 +278,37 @@ export const events = async (_req: Request, res: Response) => {
     "cache-control": "no-cache",
   })
 
-  myEmitter.on("notification", (data) => {
+  const eventNotification = (
+    data: Notification_analysis | Notification_product
+  ) => {
     res.write("event: notification\n")
     res.write(`data:${JSON.stringify(data)}\n\n`)
-  })
-  myEmitter.on("create-product", (product: Products) => {
-    res.write("event: create-product\n")
-    res.write(`data:${JSON.stringify(product)}\n\n`)
-  })
-  myEmitter.on("create-analyse", (analyse: Analysis) => {
+  }
+
+  const eventAnalyse = (analyse: Analysis) => {
     res.write("event: create-analyse\n")
     res.write(`data:${JSON.stringify(analyse)}\n\n`)
-  })
-  myEmitter.on("finish-product", (product: Products) => {
+  }
+
+  const eventProduct = (product: Products) => {
+    res.write("event: create-product\n")
+    res.write(`data:${JSON.stringify(product)}\n\n`)
+  }
+
+  const eventFinishProduct = (product: Products) => {
     res.write("event: finish-product\n")
     res.write(`data:${JSON.stringify(product)}\n\n`)
+  }
+
+  myEmitter.on("notification", eventNotification)
+  myEmitter.on("create-product", eventProduct)
+  myEmitter.on("create-analyse", eventAnalyse)
+  myEmitter.on("finish-product", eventFinishProduct)
+
+  res.on("close", () => {
+    myEmitter.off("notification", eventNotification)
+    myEmitter.off("create-product", eventProduct)
+    myEmitter.off("create-analyse", eventAnalyse)
+    myEmitter.off("finish-product", eventFinishProduct)
   })
 }

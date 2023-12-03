@@ -1,3 +1,5 @@
+import { runSubmitForm } from "../product/submitForm.js"
+
 const productListProgress = document.querySelector("[data-js='product-list-andamento']")
 const buttonConfirm = document.querySelector("[data-js='button-confirm']")
 
@@ -30,18 +32,20 @@ const formattingHTMLData = (data) => {
   return template
 }
 export const renderProduct = async (data, product_status) => {
-  const productList = document.querySelector(`[data-js='product-list-${product_status}']`)
+  const productList = product_status && document.querySelector(`[data-js='product-list-${product_status}']`)
   // buttonConfirm.classList.remove("btn-incomplete")
   const reactor = document.location.pathname.replace("/reator/", "")
-  productListProgress.innerHTML = ""
   if (data && data.fk_reactor === reactor) {
-    console.log("passow")
+    productListProgress.innerHTML = ""
     const formatData = formattingHTMLData(data)
     productList.insertAdjacentHTML("afterbegin", formatData)
   }
 
-  // if (product_status === "andamento" && productList.children.length > 0) {
-  //   console.log("passow")
-  //   buttonConfirm.classList.add("btn-incomplete")
-  // }
+  if (productListProgress.children.length > 0) {
+    buttonConfirm.classList.add("btn-incomplete")
+  }else{
+    buttonConfirm.classList.remove("btn-incomplete")
+  }
+
+  runSubmitForm()
 }

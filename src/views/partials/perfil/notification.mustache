@@ -15,16 +15,18 @@
           notification-{{ type_notification }} 
           product-{{ status }}
         ">
-        <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
-        <div class="content-notification">
-          <h3 class="title-notification">Atenção {{ type_notification }} {{ count }}:</h3>
-
-          <p>{{ name_product }} - {{ reactor }}</p>
-          <p class="status-notification">
-            {{ status }}
-          </p>
-        </div>
-        <p>{{ formattingDate }}</p>
+        <a href="/reator/produto/{{ fk_reactor }}.{{ product_id }}">
+          <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
+          <div class="content-notification">
+            <h3 class="title-notification">Atenção {{ type_notification }} {{ count }}:</h3>
+  
+            <p>{{ name_product }} - {{ reactor }}</p>
+            <p class="status-notification">
+              {{ status }}
+            </p>
+          </div>
+          <p>{{ formattingDate }}</p>
+        </a>
       </li>
       {{/notification}}
     </ul>

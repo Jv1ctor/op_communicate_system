@@ -18,6 +18,8 @@ const NotificationsService = {
                 reactor: true,
                 name_product: true,
                 updated_at: true,
+                product_id: true,
+                fk_reactor: true,
               },
             },
           },
@@ -40,7 +42,7 @@ const NotificationsService = {
               select: {
                 count: true,
                 created_at: true,
-                products: { select: { name_product: true, reactor: true } },
+                products: { select: { name_product: true, reactor: true , product_id: true, fk_reactor: true } },
               },
             },
           },
@@ -63,7 +65,7 @@ const NotificationsService = {
       const notificationProduct = prisma.notification_product.findMany({
         select: {
           products: {
-            select: { name_product: true, status: true, reactor: true, updated_at: true },
+            select: { name_product: true, status: true, reactor: true, updated_at: true, product_id: true, fk_reactor: true},
           },
         },
       })
@@ -73,7 +75,7 @@ const NotificationsService = {
             select: {
               count: true,
               created_at: true,
-              products: { select: { name_product: true, reactor: true } },
+              products: { select: { name_product: true, reactor: true, product_id: true, fk_reactor: true} },
             },
           },
         },

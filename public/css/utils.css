@@ -28,6 +28,8 @@
 
 .button-logout {
   cursor: pointer;
+  position: relative;
+  z-index: 9999;
   font-size: 2rem;
   color: red;
 }
@@ -117,4 +119,8 @@
 
 .btn-incomplete:hover {
   background: var(--input-placeholder-color);
+}
+
+.valid-input{
+  border-color: red !important;
 }

@@ -6,8 +6,8 @@ const message = document.createElement("p")
 const formattingHTMLData = (data) => {
   let template = ""
   data.forEach((item) => {
-    notifyCircle.setAttribute("data-notification", item.type_notification)
-    notifyCircle.setAttribute("data-status_product", item.status)
+    notifyCircle.setAttribute("data-notification", data[0].type_notification)
+    notifyCircle.setAttribute("data-status_product", data[0].status)
 
     template += `
     <li class="
@@ -37,11 +37,11 @@ const formattingHTMLData = (data) => {
 }
 
 export const renderNotification = (data) => {
-  console.log(data)
-  if (data) {
+  const notifications = Array.isArray(data) ? data : [data] 
+  if (notifications) {
     message.remove()
-    const formatData = formattingHTMLData(data)
-    if (data[0].status !== "andamento" && data[0].type_notification === "Produto") {
+    const formatData = formattingHTMLData(notifications)
+    if (notifications[0].status !== "andamento" && notifications[0].type_notification === "Produto") {
       notificationList.innerHTML = formatData
     } else {
       notificationList.insertAdjacentHTML("afterbegin", formatData)

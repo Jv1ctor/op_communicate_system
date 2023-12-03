@@ -27,9 +27,9 @@ export const login = async (req: Request, res: Response) => {
       const userLogin = await UserService.loginUser(dataLogin)
       if (userLogin) {
         const expiresIn = userLogin.refreshToken.expires_in
-        const expiresCookie = dayjs.unix(expiresIn).diff()
-
         const accessToken = await RefreshToken.generateToken(userLogin.refreshToken.id)
+        const expiresCookie = dayjs.unix(expiresIn).diff()
+        const expiresInAccessTokenCookie = accessToken && dayjs.unix(accessToken.expiresIn).diff()
 
         const optionCookie: CookieOption = {
           httpOnly: true,
@@ -41,9 +41,15 @@ export const login = async (req: Request, res: Response) => {
 
         res
           .cookie("refreshToken", userLogin.refreshToken, optionCookie)
-          .cookie("accessToken", accessToken?.token, optionCookie)
+          .cookie("accessToken", accessToken?.token, {
+            httpOnly: true,
+            sameSite: "strict",
+            secure: true,
+            maxAge: expiresInAccessTokenCookie,
+            signed: true,
+          })
           .cookie("user", userLogin.user, optionCookie)
-        res.redirect(`/`)
+        res.redirect("/")
         return
       }
       res.status(400).render("pages/login", {

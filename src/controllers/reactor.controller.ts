@@ -5,13 +5,16 @@ import NotificationsService from "../services/notifications.service"
 export const listReactors = async (req: Request, res: Response) => {
   try {
     const user = req.signedCookies.user
-    const reactors = await ReactorService.list()
-    const notification = await NotificationsService.listAll()
+    const reactors = ReactorService.list()
+    const notification = NotificationsService.listAll()
+
+    const [ listReactor, listNotification ] = await Promise.all([reactors, notification])
+
     res.render("pages/reactor", {
-      reactor_list: reactors,
+      reactor_list: listReactor,
       user,
-      notification,
-      first_notification: notification[0],
+      notification: listNotification,
+      first_notification: listNotification[0],
     })
   } catch (err) {
     res.status(500).render("pages/500", { err })

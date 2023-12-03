@@ -2,6 +2,7 @@ const analyseList = document.querySelector("[data-js='analyse-list']")
 const titleNotAnalyse = document.querySelector(".not-analise-title")
 const productDataContainer = document.querySelector("[data-js='data-product']")
 const buttonAnalysisSubmit = document.querySelector("[data-js='button-analysis-submit']")
+const dataStatus = document.querySelector(".data-status")
 const message = document.createElement("p")
 
 const formattingHTMLDataAnalyse = (data) => {
@@ -38,4 +39,10 @@ export const renderAnalyse = async (data) => {
   //   buttonAnalysisSubmit.classList.add("btn-incomplete")
   //   buttonModalFinish.classList.add("btn-incomplete")
   // }
+}
+
+export const productStatus = (data) => {
+  dataStatus.textContent = data.status
+  dataStatus.classList.remove("andamento")
+  dataStatus.classList.add(data.status)
 }
