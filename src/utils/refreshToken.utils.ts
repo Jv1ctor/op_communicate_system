@@ -70,17 +70,18 @@ const RefreshToken = {
       if (refreshTokenId) {
         const refreshToken = await prisma.refreshToken.findUnique({
           where: { id: refreshTokenId },
+          include: { access_token: true }
         })
         if (refreshToken) {
           const expiresInRefreshToken = refreshToken.expires_in
           const currentDate = dayjs().unix()
           if (expiresInRefreshToken > currentDate) {
-            return true
+            return refreshToken
           }
           await prisma.refreshToken.delete({ where: { id: refreshToken.id } })
         }
       }
-      return false
+      return null
     } catch (err) {
       throw new Error(`error in find refresh token ${err}`)
     }

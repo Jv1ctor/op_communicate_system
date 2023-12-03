@@ -10,36 +10,28 @@ const Auth = {
     let success = false
     const accessToken = req.signedCookies.accessToken
     const refreshTokenCookie = req.signedCookies.refreshToken
-    const valid = await RefreshToken.isValidRefreshToken(refreshTokenCookie?.id)
 
-    if (!accessToken && valid) {
-      res.redirect("/")
-      return
-    }
-
-    if (accessToken && valid) {
+    if(refreshTokenCookie){
       try {
         const decoded = JWT.verify(
           accessToken,
-          process.env.JWT_KEY as string,
+          process.env.JWT_KEY as string
         ) as JwtPayload
-
-        const refreshToken =
-          decoded &&
-          (await prisma.refreshToken.findUnique({
-            where: { id: decoded.sub as string },
-            include: { access_token: { where: { id: decoded.jti } } },
-          }))
-
+  
+        const refreshToken = await RefreshToken.isValidRefreshToken(decoded.sub)
+  
         if (refreshToken) {
-          if (refreshToken.id && refreshToken.access_token) {
+          if (refreshToken.id && refreshToken.access_token?.id === decoded.jti) {
             res.locals.userId = refreshToken.fk_user_id
             success = true
           }
         }
-      } catch (err) {}
+      } catch (err) {
+        res.redirect("/")
+        return
+      }
     }
-
+    
     if (success) {
       next()
     } else {
