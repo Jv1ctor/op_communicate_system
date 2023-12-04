@@ -1,5 +1,5 @@
 const config = {
-  BASIC_URL: "http://localhost:3000",
+  BASIC_URL: window.location.origin,
 }
 
 // Modal
