@@ -1,6 +1,11 @@
 import prisma from "../database/prisma"
 import dayjs from "dayjs"
+import timezone from "dayjs/plugin/timezone"
+import utc from "dayjs/plugin/utc"
 
+dayjs.extend(utc)
+dayjs.extend(timezone)
+const timezoneUser = dayjs.tz.guess()
 const NotificationsService = {
   async create(type: "product" | "analyse", id: string) {
     try {
@@ -28,7 +33,9 @@ const NotificationsService = {
         return {
           ...notificationProduct.products,
           type_notification: "Produto",
-          formattingDate: dayjs(notificationProduct.products.updated_at).format("HH:mm"),
+          formattingDate: dayjs
+            .tz(notificationProduct.products.updated_at, timezoneUser)
+            .format("HH:mm"),
         }
       }
 
@@ -42,7 +49,14 @@ const NotificationsService = {
               select: {
                 count: true,
                 created_at: true,
-                products: { select: { name_product: true, reactor: true , product_id: true, fk_reactor: true } },
+                products: {
+                  select: {
+                    name_product: true,
+                    reactor: true,
+                    product_id: true,
+                    fk_reactor: true,
+                  },
+                },
               },
             },
           },
@@ -51,7 +65,9 @@ const NotificationsService = {
         return {
           ...notificationAnalysis.analysis,
           ...notificationAnalysis.analysis.products,
-          formattingDate: dayjs(notificationAnalysis.analysis.created_at).format("HH:mm"),
+          formattingDate: dayjs
+            .tz(notificationAnalysis.analysis.created_at, timezoneUser)
+            .format("HH:mm"),
           type_notification: "Análise",
         }
       }
@@ -65,7 +81,14 @@ const NotificationsService = {
       const notificationProduct = prisma.notification_product.findMany({
         select: {
           products: {
-            select: { name_product: true, status: true, reactor: true, updated_at: true, product_id: true, fk_reactor: true},
+            select: {
+              name_product: true,
+              status: true,
+              reactor: true,
+              updated_at: true,
+              product_id: true,
+              fk_reactor: true,
+            },
           },
         },
       })
@@ -75,7 +98,14 @@ const NotificationsService = {
             select: {
               count: true,
               created_at: true,
-              products: { select: { name_product: true, reactor: true, product_id: true, fk_reactor: true} },
+              products: {
+                select: {
+                  name_product: true,
+                  reactor: true,
+                  product_id: true,
+                  fk_reactor: true,
+                },
+              },
             },
           },
         },
@@ -89,7 +119,7 @@ const NotificationsService = {
       const formattingProducts = products.map((item) => ({
         ...item.products,
         type_notification: "Produto",
-        formattingDate: dayjs(item.products.updated_at).format("HH:mm"),
+        formattingDate: dayjs.tz(item.products.updated_at, timezoneUser).format("HH:mm"),
         time: item.products.updated_at,
       }))
       const formattingAnalysis = analysis.map((item) => ({
@@ -97,7 +127,7 @@ const NotificationsService = {
         ...item.analysis,
         isAnalyse: true,
         type_notification: "Análise",
-        formattingDate: dayjs(item.analysis.created_at).format("HH:mm"),
+        formattingDate: dayjs.tz(item.analysis.created_at, timezoneUser).format("HH:mm"),
         time: item.analysis.created_at,
       }))
 

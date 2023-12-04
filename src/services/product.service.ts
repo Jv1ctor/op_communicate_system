@@ -1,5 +1,10 @@
 import prisma from "../database/prisma"
 import dayjs from "dayjs"
+import timezone from "dayjs/plugin/timezone"
+import utc from "dayjs/plugin/utc"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const ProductService = {
   async listAllOfReactor(reactorId: string) {
@@ -89,12 +94,14 @@ const ProductService = {
       if (product) {
         const productFomatting = {
           ...product,
-          formattingDate: dayjs(product.updated_at).format("DD/MM/YYYY"),
+          formattingDate: dayjs
+            .tz(product.updated_at, dayjs.tz.guess())
+            .format("DD/MM/YYYY"),
         }
 
         return {
           product: productFomatting,
-          reactorId: product.fk_reactor
+          reactorId: product.fk_reactor,
         }
       }
     } catch (err) {
