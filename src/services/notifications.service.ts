@@ -95,6 +95,7 @@ const NotificationsService = {
       const formattingAnalysis = analysis.map((item) => ({
         ...item.analysis.products,
         ...item.analysis,
+        isAnalyse: true,
         type_notification: "Análise",
         formattingDate: dayjs(item.analysis.created_at).format("HH:mm"),
         time: item.analysis.created_at,

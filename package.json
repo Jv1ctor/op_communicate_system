@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -e mustache,ts,json src/app.ts",
-    "seed": "ts-node src/database/seeders/seed.ts",
+    "db:create": "npx prisma migrate deploy",
+    "db:seed": "ts-node src/database/seeders/seed.ts",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "João Victor",

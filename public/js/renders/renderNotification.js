@@ -14,14 +14,20 @@ const formattingHTMLData = (data) => {
       notification-${item.type_notification} 
       ${item.status ? `product-${item.status}` : ""}
     ">
-      <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
+      <a href="/reator/produto/${item.fk_reactor}.${item.product_id}">
+        ${
+          item.type_notification === "Análise" 
+            ? '<i class="fa-solid fa-triangle-exclamation alert-notification-icon"></i>' 
+            : '<i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>'
+        }
+
         <div class="content-notification">
-          <h3 class="title-notification">Atenção ${item.type_notification} ${
-      item.count || ""
-    }:</h3>
-          
+          <h3 class="title-notification">
+            Atenção ${item.type_notification} ${item.count || ""}:
+          </h3>
+            
           <p>
-          ${item.name_product} - ${item.reactor} 
+            ${item.name_product} - ${item.reactor} 
           </p>
           ${
             item.status && item.type_notification === "Produto"
@@ -30,6 +36,7 @@ const formattingHTMLData = (data) => {
           }
         </div>
         <p>${item.formattingDate}</p>
+      </a>
     </li>`
   })
 

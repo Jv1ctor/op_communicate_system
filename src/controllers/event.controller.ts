@@ -102,7 +102,6 @@ export const listProducts = async (req: Request, res: Response) => {
     const notification =  NotificationsService.listAll()
 
     const [listNotification, products] = await Promise.all([notification, productData])
-    console.log(listNotification[0])
     res.render("pages/product", {
       listProduct: {
         process: products?.listProductProcess,
@@ -219,11 +218,13 @@ export const finishProduct = async (req: Request, res: Response) => {
     if (productId && finishedData.status) {
       const product = await prisma.products.findUnique({
         where: { product_id: productId },
-        select: {
+        select: {          
           status: true,
           analyst_name: true,
         },
       })
+
+
       if (product?.status === "andamento") {
         const productFinish = await prisma.products.update({
           where: { product_id: productId },

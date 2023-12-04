@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import UserService, { UserLogin } from "../services/user.service"
 import dayjs from "dayjs"
 import RefreshToken from "../utils/refreshToken.utils"
+import { resetNotifications } from "../utils/notifications.utils"
 
 interface CookieOption {
   httpOnly: boolean
@@ -72,6 +73,7 @@ export const logout = async (req: Request, res: Response) => {
     const refreshTokenId = req.signedCookies.refreshToken.id
     const refreshToken = await UserService.logoutUser(refreshTokenId)
     if (refreshToken) {
+      await resetNotifications()
       res.clearCookie("refreshToken")
       res.clearCookie("accessToken")
       res.clearCookie("user")

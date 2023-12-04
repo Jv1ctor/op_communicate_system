@@ -3,6 +3,7 @@ import JWT, { JwtPayload } from "jsonwebtoken"
 import dotenv from "dotenv"
 import prisma from "../database/prisma"
 import RefreshToken from "../utils/refreshToken.utils"
+import { resetNotifications } from "../utils/notifications.utils"
 dotenv.config()
 
 const Auth = {
@@ -35,6 +36,7 @@ const Auth = {
     if (success) {
       next()
     } else {
+      await resetNotifications()
       res.clearCookie("refreshToken")
       res.clearCookie("accessToken")
       res.clearCookie("user")

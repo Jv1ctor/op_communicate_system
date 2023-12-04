@@ -16,7 +16,12 @@
           product-{{ status }}
         ">
         <a href="/reator/produto/{{ fk_reactor }}.{{ product_id }}">
-          <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
+          {{#isAnalyse}}
+            <i class="fa-solid fa-triangle-exclamation alert-notification-icon"></i>
+          {{/isAnalyse}}
+          {{^isAnalyse}}
+            <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
+          {{/isAnalyse}}
           <div class="content-notification">
             <h3 class="title-notification">Atenção {{ type_notification }} {{ count }}:</h3>
   

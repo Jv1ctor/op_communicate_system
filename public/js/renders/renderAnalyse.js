@@ -1,7 +1,8 @@
+import { runSubmitForm  } from "../forms/submitForm.js"
+import { openModalFinish } from "../modal.js"
+import { buttonModalFinish, buttonConfirm} from "../config.js"
+
 const analyseList = document.querySelector("[data-js='analyse-list']")
-const titleNotAnalyse = document.querySelector(".not-analise-title")
-const productDataContainer = document.querySelector("[data-js='data-product']")
-const buttonAnalysisSubmit = document.querySelector("[data-js='button-analysis-submit']")
 const dataStatus = document.querySelector(".data-status")
 const message = document.createElement("p")
 
@@ -29,20 +30,25 @@ export const renderAnalyse = async (data) => {
     const formatData = formattingHTMLDataAnalyse(data)
     analyseList.innerHTML += formatData
   }
+  if (!dataStatus.classList.contains("andamento") || analyseList.children.length <= 0 ) {
+    buttonModalFinish.removeEventListener("click", openModalFinish)
+    buttonModalFinish.classList.add("btn-incomplete")
+  }
+
+  if(!dataStatus.classList.contains("andamento")){
+    buttonConfirm.classList.add("btn-incomplete")
+  }
   if (analyseList.children.length <= 0) {
-    message.innerHTML = "<p class='not-analise-title'>Sem Análise do Produto</p>"
+    message.innerHTML =
+      "<p class='not-analise-title'>Sem Análise do Produto</p>"
     analyseList.append(message)
   }
 
-  // if (product.product_status !== "andamento") {
-  //   buttonModalFinish.removeEventListener("click", openModalFinish)
-  //   buttonAnalysisSubmit.classList.add("btn-incomplete")
-  //   buttonModalFinish.classList.add("btn-incomplete")
-  // }
+
+  runSubmitForm()
 }
 
 export const productStatus = (data) => {
   dataStatus.textContent = data.status
-  dataStatus.classList.remove("andamento")
-  dataStatus.classList.add(data.status)
+  dataStatus.classList.replace("andamento", data.status)
 }
