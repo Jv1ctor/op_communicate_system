@@ -81,7 +81,7 @@ export const createProduct = async (req: Request, res: Response) => {
       })
       const notificationsProduct = await NotificationsService.create(
         "product",
-        product.product_id
+        product.product_id,
       )
       myEmitter.emit("notification", notificationsProduct)
       myEmitter.emit("create-product", product)
@@ -98,8 +98,8 @@ export const listProducts = async (req: Request, res: Response) => {
     const user = req.signedCookies.user
     const reactorId = req.params.id
 
-    const productData =  ProductService.listAllOfReactor(reactorId)
-    const notification =  NotificationsService.listAll()
+    const productData = ProductService.listAllOfReactor(reactorId)
+    const notification = NotificationsService.listAll()
 
     const [listNotification, products] = await Promise.all([notification, productData])
     res.render("pages/product", {
@@ -166,14 +166,13 @@ export const createAnalysis = async (req: Request, res: Response) => {
         })
         const notificationAnalysis = await NotificationsService.create(
           "analyse",
-          analyse.analysis_id
+          analyse.analysis_id,
         )
 
         myEmitter.emit("notification", notificationAnalysis)
         myEmitter.emit("create-analyse", analyse)
         return (
-          analyse &&
-          res.status(201).redirect(`/reator/produto/${reactorId}.${productId}`)
+          analyse && res.status(201).redirect(`/reator/produto/${reactorId}.${productId}`)
         )
       }
 
@@ -193,7 +192,11 @@ export const listAnalysis = async (req: Request, res: Response) => {
     const productData = ProductService.listProductById(productId)
     const analyseData = AnalyseService.listAllOfProduct(productId, reactorId)
     const notification = NotificationsService.listAll()
-    const [product, analysis, listNotification] = await Promise.all([productData, analyseData, notification])
+    const [product, analysis, listNotification] = await Promise.all([
+      productData,
+      analyseData,
+      notification,
+    ])
 
     res.render("pages/analysis", {
       analysis: analysis?.list,
@@ -218,12 +221,11 @@ export const finishProduct = async (req: Request, res: Response) => {
     if (productId && finishedData.status) {
       const product = await prisma.products.findUnique({
         where: { product_id: productId },
-        select: {          
+        select: {
           status: true,
           analyst_name: true,
         },
       })
-
 
       if (product?.status === "andamento") {
         const productFinish = await prisma.products.update({
@@ -252,9 +254,7 @@ export const finishProduct = async (req: Request, res: Response) => {
         })
 
         if (productFinish.status !== "andamento") {
-          await NotificationsService.deleteNotificationAnalyse(
-            productFinish.product_id
-          )
+          await NotificationsService.deleteNotificationAnalyse(productFinish.product_id)
         }
         const notificationFinish = await NotificationsService.listAll()
 
@@ -279,9 +279,7 @@ export const events = async (_req: Request, res: Response) => {
     "cache-control": "no-cache",
   })
 
-  const eventNotification = (
-    data: Notification_analysis | Notification_product
-  ) => {
+  const eventNotification = (data: Notification_analysis | Notification_product) => {
     res.write("event: notification\n")
     res.write(`data:${JSON.stringify(data)}\n\n`)
   }

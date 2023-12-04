@@ -3,7 +3,6 @@ import JWT, { JwtPayload } from "jsonwebtoken"
 import dotenv from "dotenv"
 import prisma from "../database/prisma"
 import RefreshToken from "../utils/refreshToken.utils"
-import { resetNotifications } from "../utils/notifications.utils"
 dotenv.config()
 
 const Auth = {
@@ -12,15 +11,15 @@ const Auth = {
     const accessToken = req.signedCookies.accessToken
     const refreshTokenCookie = req.signedCookies.refreshToken
 
-    if(refreshTokenCookie){
+    if (refreshTokenCookie) {
       try {
         const decoded = JWT.verify(
           accessToken,
-          process.env.JWT_KEY as string
+          process.env.JWT_KEY as string,
         ) as JwtPayload
-  
+
         const refreshToken = await RefreshToken.isValidRefreshToken(decoded.sub)
-  
+
         if (refreshToken) {
           if (refreshToken.id && refreshToken.access_token?.id === decoded.jti) {
             res.locals.userId = refreshToken.fk_user_id
@@ -32,11 +31,10 @@ const Auth = {
         return
       }
     }
-    
+
     if (success) {
       next()
     } else {
-      await resetNotifications()
       res.clearCookie("refreshToken")
       res.clearCookie("accessToken")
       res.clearCookie("user")

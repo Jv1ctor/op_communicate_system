@@ -2,7 +2,6 @@ import { Request, Response } from "express"
 import UserService, { UserLogin } from "../services/user.service"
 import dayjs from "dayjs"
 import RefreshToken from "../utils/refreshToken.utils"
-import { resetNotifications } from "../utils/notifications.utils"
 
 interface CookieOption {
   httpOnly: boolean
@@ -30,7 +29,8 @@ export const login = async (req: Request, res: Response) => {
         const expiresIn = userLogin.refreshToken.expires_in
         const accessToken = await RefreshToken.generateToken(userLogin.refreshToken.id)
         const expiresCookie = dayjs.unix(expiresIn).diff()
-        const expiresInAccessTokenCookie = accessToken && dayjs.unix(accessToken.expiresIn).diff()
+        const expiresInAccessTokenCookie =
+          accessToken && dayjs.unix(accessToken.expiresIn).diff()
 
         const optionCookie: CookieOption = {
           httpOnly: true,
@@ -73,7 +73,6 @@ export const logout = async (req: Request, res: Response) => {
     const refreshTokenId = req.signedCookies.refreshToken.id
     const refreshToken = await UserService.logoutUser(refreshTokenId)
     if (refreshToken) {
-      await resetNotifications()
       res.clearCookie("refreshToken")
       res.clearCookie("accessToken")
       res.clearCookie("user")
