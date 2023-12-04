@@ -8,7 +8,7 @@
     "db:create": "npx prisma migrate deploy",
     "db:migrate": "npx prisma migrate dev",
     "db:seed": "ts-node src/database/seeders/seed.ts",
-    "build": "npm install && tsc && copyfiles -u 1 src/**/*.mustache dist/ && npx prisma db push",
+    "build": "npm install && tsc && copyfiles -u 1 src/**/*.mustache dist/ && npx prisma db push && node dist/database/seeders/seed.js",
     "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
