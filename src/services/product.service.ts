@@ -5,6 +5,7 @@ import utc from "dayjs/plugin/utc"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
+const timezoneBrazil = "America/Sao_Paulo"
 
 const ProductService = {
   async listAllOfReactor(reactorId: string) {
@@ -46,7 +47,9 @@ const ProductService = {
         const listProductFomatting = listProduct
           .map((item) => ({
             ...item,
-            formattingDate: dayjs(item.updated_at).format("DD/MM-HH:mm"),
+            formattingDate: dayjs
+              .tz(item.updated_at, timezoneBrazil)
+              .format("DD/MM-HH:mm"),
           }))
           .sort(
             (item1, item2) =>
@@ -95,7 +98,7 @@ const ProductService = {
         const productFomatting = {
           ...product,
           formattingDate: dayjs
-            .tz(product.updated_at, dayjs.tz.guess())
+            .tz(product.updated_at, timezoneBrazil)
             .format("DD/MM/YYYY"),
         }
 

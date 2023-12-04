@@ -5,7 +5,7 @@ import utc from "dayjs/plugin/utc"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
-const timezoneUser = dayjs.tz.guess()
+const timezoneBrazil = "America/Sao_Paulo"
 const NotificationsService = {
   async create(type: "product" | "analyse", id: string) {
     try {
@@ -34,7 +34,7 @@ const NotificationsService = {
           ...notificationProduct.products,
           type_notification: "Produto",
           formattingDate: dayjs
-            .tz(notificationProduct.products.updated_at, timezoneUser)
+            .tz(notificationProduct.products.updated_at, timezoneBrazil)
             .format("HH:mm"),
         }
       }
@@ -66,7 +66,7 @@ const NotificationsService = {
           ...notificationAnalysis.analysis,
           ...notificationAnalysis.analysis.products,
           formattingDate: dayjs
-            .tz(notificationAnalysis.analysis.created_at, timezoneUser)
+            .tz(notificationAnalysis.analysis.created_at, timezoneBrazil)
             .format("HH:mm"),
           type_notification: "Análise",
         }
@@ -119,7 +119,7 @@ const NotificationsService = {
       const formattingProducts = products.map((item) => ({
         ...item.products,
         type_notification: "Produto",
-        formattingDate: dayjs.tz(item.products.updated_at, timezoneUser).format("HH:mm"),
+        formattingDate: dayjs.tz(item.products.updated_at, timezoneBrazil).format("HH:mm"),
         time: item.products.updated_at,
       }))
       const formattingAnalysis = analysis.map((item) => ({
@@ -127,7 +127,7 @@ const NotificationsService = {
         ...item.analysis,
         isAnalyse: true,
         type_notification: "Análise",
-        formattingDate: dayjs.tz(item.analysis.created_at, timezoneUser).format("HH:mm"),
+        formattingDate: dayjs.tz(item.analysis.created_at, timezoneBrazil).format("HH:mm"),
         time: item.analysis.created_at,
       }))
 
