@@ -8,7 +8,7 @@
     "db:create": "npx prisma migrate deploy",
     "db:migrate": "npx prisma migrate dev",
     "db:seed": "ts-node src/database/seeders/seed.ts",
-    "build": "tsc && copyfiles -u 1 src/**/*.mustache dist/ && npx prisma db push",
+    "build": "npm install && tsc && copyfiles -u 1 src/**/*.mustache dist/ && npx prisma db push",
     "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -37,6 +37,7 @@
     "@types/mustache-express": "^1.2.5",
     "@types/node": "^20.8.4",
     "@types/uuid": "^9.0.5",
-    "prisma": "^5.4.2"
+    "prisma": "^5.4.2",
+    "typescript": "^5.3.2"
   }
 }
