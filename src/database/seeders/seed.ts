@@ -75,9 +75,8 @@ const main = async () => {
     )
   }
 
-  const reactors = await prisma.$transaction([
-    prisma.reactors.deleteMany({ where: { fk_user_adm: admin.id } }),
-    prisma.reactors.createMany({
+  prisma.reactors
+    .createMany({
       data: [
         { name_reactor: "R10", fk_user_adm: admin.id },
         { name_reactor: "R11", fk_user_adm: admin.id },
@@ -87,18 +86,13 @@ const main = async () => {
         { name_reactor: "R20", fk_user_adm: admin.id },
         { name_reactor: "R21", fk_user_adm: admin.id },
       ],
-    }),
-  ])
-
-  if (reactors) {
-    console.log(
-      "\n---------REACTORS---------\n",
-      "DELETADOS:",
-      reactors[0],
-      "CRIADOS:",
-      reactors[1],
-    )
-  }
+    })
+    .then((reactor) => {
+      console.log("\n---------REACTORS---------\n", "CRIADOS:", reactor)
+    })
+    .catch((err) => {
+      console.log("\n---------REACTORS---------\n", "CRIADOS:", 0)
+    })
 }
 
 main()
