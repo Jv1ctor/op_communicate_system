@@ -9,6 +9,7 @@ export const eventSource = new EventSource(`${config.BASIC_URL}/events/sse`)
 eventSource.addEventListener("notification", (messageEvent) => {
   notificationDropdown.checked = true
   const data = JSON.parse(messageEvent.data)
+
   renderNotification(data)
 })
 

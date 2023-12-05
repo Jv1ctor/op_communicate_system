@@ -10,21 +10,24 @@
   <div class="menu-dropdown-notification">
     <ul data-js="list-notification">
       {{#notification}}
+      <a href="/delete/{{ notification_id }}">delete</a>
       <li
         class="
           notification-{{ type_notification }} 
           product-{{ status }}
         ">
-        <a href="/reator/produto/{{ fk_reactor }}.{{ product_id }}">
+        <a href="/reator/produto/{{ reactor_id }}.{{ product_id }}">
           {{#isAnalyse}}
-            <i class="fa-solid fa-triangle-exclamation alert-notification-icon"></i>
+          <i class="fa-solid fa-triangle-exclamation alert-notification-icon"></i>
           {{/isAnalyse}}
           {{^isAnalyse}}
-            <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
+          <i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>
           {{/isAnalyse}}
           <div class="content-notification">
-            <h3 class="title-notification">Atenção {{ type_notification }} {{ count }}:</h3>
-  
+            <h3 class="title-notification">
+              Atenção {{ type_notification }} {{ count }}:
+            </h3>
+
             <p>{{ name_product }} - {{ reactor }}</p>
             <p class="status-notification">
               {{ status }}

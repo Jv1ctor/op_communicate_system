@@ -16,8 +16,8 @@ const formattingHTMLData = (data) => {
     ">
       <a href="/reator/produto/${item.fk_reactor}.${item.product_id}">
         ${
-          item.type_notification === "Análise" 
-            ? '<i class="fa-solid fa-triangle-exclamation alert-notification-icon"></i>' 
+          item.type_notification === "Análise"
+            ? '<i class="fa-solid fa-triangle-exclamation alert-notification-icon"></i>'
             : '<i class="fa-solid fa-circle-exclamation alert-notification-icon"></i>'
         }
 
@@ -44,11 +44,14 @@ const formattingHTMLData = (data) => {
 }
 
 export const renderNotification = (data) => {
-  const notifications = Array.isArray(data) ? data : [data] 
+  const notifications = data
   if (notifications) {
     message.remove()
     const formatData = formattingHTMLData(notifications)
-    if (notifications[0].status !== "andamento" && notifications[0].type_notification === "Produto") {
+    if (
+      notifications[0].status !== "andamento" &&
+      notifications[0].type_notification === "Produto"
+    ) {
       notificationList.innerHTML = formatData
     } else {
       notificationList.insertAdjacentHTML("afterbegin", formatData)

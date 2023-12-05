@@ -6,10 +6,15 @@ export const listReactors = async (req: Request, res: Response) => {
   try {
     const user = req.signedCookies.user
     const reactors = ReactorService.list()
-    const notification = NotificationsService.listAll()
+    const userId = res.locals.userId
+    const notification = NotificationsService.listAll(userId)
     const [listReactor, listNotification] = await Promise.all([reactors, notification])
-
-    res.render("pages/reactor", {
+   res.cookie("last_page", req.originalUrl, { 
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+      signed: true,
+    }).render("pages/reactor", {
       reactor_list: listReactor,
       user,
       notification: listNotification,

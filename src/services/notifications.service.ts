@@ -1,153 +1,138 @@
+import { randomUUID } from "crypto"
 import prisma from "../database/prisma"
 import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
-
 dayjs.extend(utc)
 dayjs.extend(timezone)
 const timezoneBrazil = "America/Sao_Paulo"
+
+export type NotificationType = {
+  notification_id: string
+  product_id: string
+  name_product: string
+  reactor: string
+  updated_at: Date
+  fk_reactor: string
+  status?: string
+  count?: number
+  isAnalyse?: boolean
+  created_at?: Date
+  type_notification: "Produto" | "Análise"
+  formattingDate: Date
+  timestamp: Date
+}
+
+type ProductDataType = {
+  product_id: string
+  name_product: string
+  quant_produce: number
+  reactor: string
+  operator: string
+  num_op: number
+  num_batch: number
+  num_roadmap: number
+  turn_supervisor: string
+  turn: string
+  status: string
+  created_at: Date
+  updated_at: Date
+  fk_reactor: string
+}
+
+type AnalysisDataType = {
+  products: {
+    product_id: string
+    name_product: string
+    reactor: string
+    status: string
+    fk_reactor: string
+  }
+  created_at: Date
+  analysis_id: string
+  adjustment: string
+  count: number
+  fk_product: string
+}
+
+export const notificationsCache = new Map()
+
 const NotificationsService = {
-  async create(type: "product" | "analyse", id: string) {
-    try {
-      if (type === "product") {
-        const notificationProduct = await prisma.notification_product.upsert({
-          where: { id_product: id },
-          create: {
-            id_product: id,
-          },
-          update: {},
-          select: {
-            products: {
-              select: {
-                status: true,
-                reactor: true,
-                name_product: true,
-                updated_at: true,
-                product_id: true,
-                fk_reactor: true,
-              },
-            },
-          },
-        })
-
-        return {
-          ...notificationProduct.products,
-          type_notification: "Produto",
-          formattingDate: dayjs
-            .tz(notificationProduct.products.updated_at, timezoneBrazil)
-            .format("HH:mm"),
-        }
+  async createNotificationProduct(data: ProductDataType, userId: string) {
+    if (data && userId) {
+      const formattingDate = dayjs.tz(data.updated_at, timezoneBrazil).format("HH:mm")
+      const notificationData = {
+        notification_id: randomUUID(),
+        product_id: data.product_id,
+        name_product: data.name_product,
+        reactor: data.reactor,
+        reactor_id: data.fk_reactor,
+        status: data.status,
+        type_notification: "Produto",
+        formattingDate: formattingDate,
+        timestamp: data.updated_at,
       }
 
-      if (type === "analyse") {
-        const notificationAnalysis = await prisma.notification_analysis.upsert({
-          where: { id_analysis: id },
-          create: { id_analysis: id },
-          update: {},
-          select: {
-            analysis: {
-              select: {
-                count: true,
-                created_at: true,
-                products: {
-                  select: {
-                    name_product: true,
-                    reactor: true,
-                    product_id: true,
-                    fk_reactor: true,
-                  },
-                },
-              },
-            },
-          },
-        })
-
-        return {
-          ...notificationAnalysis.analysis,
-          ...notificationAnalysis.analysis.products,
-          formattingDate: dayjs
-            .tz(notificationAnalysis.analysis.created_at, timezoneBrazil)
-            .format("HH:mm"),
-          type_notification: "Análise",
-        }
-      }
-    } catch (error) {
-      throw new Error("error create notification")
+      const Mapkey = `${notificationData.notification_id}.${userId}`
+      notificationsCache.set(Mapkey, notificationData)
+      return notificationData
     }
   },
 
-  async listAll() {
-    try {
-      const notificationProduct = prisma.notification_product.findMany({
-        select: {
-          products: {
-            select: {
-              name_product: true,
-              status: true,
-              reactor: true,
-              updated_at: true,
-              product_id: true,
-              fk_reactor: true,
-            },
-          },
-        },
-      })
-      const notificationAnalysis = prisma.notification_analysis.findMany({
-        select: {
-          analysis: {
-            select: {
-              count: true,
-              created_at: true,
-              products: {
-                select: {
-                  name_product: true,
-                  reactor: true,
-                  product_id: true,
-                  fk_reactor: true,
-                },
-              },
-            },
-          },
-        },
-      })
-
-      const [analysis, products] = await Promise.all([
-        notificationAnalysis,
-        notificationProduct,
-      ])
-
-      const formattingProducts = products.map((item) => ({
-        ...item.products,
-        type_notification: "Produto",
-        formattingDate: dayjs.tz(item.products.updated_at, timezoneBrazil).format("HH:mm"),
-        time: item.products.updated_at,
-      }))
-      const formattingAnalysis = analysis.map((item) => ({
-        ...item.analysis.products,
-        ...item.analysis,
-        isAnalyse: true,
+  async createNotificationAnalysis(data: AnalysisDataType, userId: string) {
+    if (data && userId) {
+      const formattingDate = dayjs.tz(data.created_at, timezoneBrazil).format("HH:mm")
+      const notificationData = {
+        notification_id: randomUUID(),
+        product_id: data.products.product_id,
+        name_product: data.products.name_product,
+        reactor: data.products.reactor,
+        reactor_id: data.products.fk_reactor,
         type_notification: "Análise",
-        formattingDate: dayjs.tz(item.analysis.created_at, timezoneBrazil).format("HH:mm"),
-        time: item.analysis.created_at,
-      }))
+        formattingDate: formattingDate,
+        timestamp: data.created_at,
+        count: data.count,
+        isAnalyse: true,
+      }
 
-      return [...formattingProducts, ...formattingAnalysis].sort(
-        (item1, item2) => dayjs(item2.time).diff() - dayjs(item1.time).diff(),
-      )
-    } catch (error) {
-      throw new Error("error list notification")
+      const Mapkey = `${notificationData.notification_id}.${userId}`
+      notificationsCache.set(Mapkey, notificationData)
+      return notificationData
     }
+  },
+
+  async listAll(userId: string) {
+    const notificationArr: [string, NotificationType][] = [...notificationsCache]
+    const notifications = notificationArr.reduce(
+      (acc: NotificationType[], notification) => {
+        const [key, data] = notification
+        const [_, userIdNotification] = key.split(".")
+
+        if (userIdNotification === userId) {
+          acc.push(data)
+        }
+        return acc
+      },
+      [],
+    )
+    return notifications.sort(
+      (item1, item2) => dayjs(item2.timestamp).diff() - dayjs(item1.timestamp).diff(),
+    )
   },
 
   async deleteNotificationAnalyse(product_id: string) {
-    try {
-      const notificationAnalyse = await prisma.notification_analysis.deleteMany({
-        where: { analysis: { fk_product: product_id } },
-      })
-      return notificationAnalyse
-    } catch (error) {
-      throw new Error("error delete notification")
-    }
+    notificationsCache.forEach((notification) => {
+      if (
+        notification.product_id === product_id &&
+        notification.type_notification === "Análise"
+      ) {
+        notificationsCache.delete(notification.notification_id)
+      }
+    })
+  },
+
+  async deleteNotificationById(notificationId: string, userId: string) {
+    notificationsCache.delete(`${notificationId}.${userId}`)
   },
 }
 
