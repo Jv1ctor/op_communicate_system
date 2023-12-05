@@ -82,6 +82,7 @@ const main = async () => {
         { name_reactor: "R11", fk_user_adm: admin.id },
         { name_reactor: "R12", fk_user_adm: admin.id },
         { name_reactor: "R13", fk_user_adm: admin.id },
+        { name_reactor: "R14", fk_user_adm: admin.id },
         { name_reactor: "R15", fk_user_adm: admin.id },
         { name_reactor: "R20", fk_user_adm: admin.id },
         { name_reactor: "R21", fk_user_adm: admin.id },
