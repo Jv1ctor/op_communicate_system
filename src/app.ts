@@ -4,7 +4,9 @@ import helmet from "helmet"
 import dotenv from "dotenv"
 import path from "path"
 import mustacheExpress from "mustache-express"
-import homeRoutes from "./routes/home.routes"
+import UserRoutes from "./routes/user.routes"
+import NotificationRoutes from "./routes/notifications.routes"
+import mainRoutes from "./routes/main.routes"
 dotenv.config()
 
 const app = express()
@@ -22,7 +24,9 @@ app.use(
 app.use(helmet())
 app.use(express.urlencoded({ extended: true }))
 
-app.use(homeRoutes)
+app.use(UserRoutes)
+app.use(mainRoutes)
+app.use(NotificationRoutes)
 
 app.use((_req: Request, res: Response) => {
   res.status(404).render("pages/404")

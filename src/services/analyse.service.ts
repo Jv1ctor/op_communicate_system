@@ -6,6 +6,14 @@ import utc from "dayjs/plugin/utc"
 dayjs.extend(utc)
 dayjs.extend(timezone)
 const timezoneBrazil = "America/Sao_Paulo"
+
+interface AnalysisDataInterface{
+  adjustments: string
+  userId: string
+  productId: string
+  reactorId: string 
+}
+
 const AnalyseService = {
   async listAllOfProduct(productId: string, reactorId: string) {
     try {
@@ -29,6 +37,58 @@ const AnalyseService = {
     }
   },
 
+
+  async createAnalyse(analysisData: AnalysisDataInterface){
+    try {
+      const user = await prisma.users.findFirst({
+        where: { id: analysisData.userId },
+        select: { user_cq: true },
+      })
+  
+      if (user && user.user_cq) {
+        const analyseList = await prisma.analysis.count({
+          where: { fk_product: analysisData.productId },
+        })
+  
+        const product = await prisma.products.findUnique({
+          where: { product_id: analysisData.productId },
+          select: { status: true },
+        })
+  
+        if (product?.status === "andamento") {
+          const analyse = prisma.analysis.create({
+            data: {
+              adjustment: analysisData.adjustments,
+              fk_product: analysisData.productId,
+              fk_user_cq: user.user_cq.fk_id_user_cq,
+              count: analyseList + 1,
+            },
+            select: {
+              fk_product: true,
+              adjustment: true,
+              count: true,
+              analysis_id: true,
+              created_at: true,
+              products: {
+                select: {
+                  reactor: true,
+                  name_product: true,
+                  product_id: true,
+                  status: true,
+                  fk_reactor: true,
+                },
+              },
+            },
+          })
+      
+          return analyse
+        }
+        return 403
+      }
+    } catch (err) {
+      throw new Error("error create analyse")
+    }
+  }
 }
 
 export default AnalyseService

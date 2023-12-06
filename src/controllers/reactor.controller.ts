@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
 import ReactorService from "../services/reactor.service"
 import NotificationsService from "../services/notifications.service"
-import ProductService from "../services/product.service"
 
 export const listReactors = async (req: Request, res: Response) => {
   try {

@@ -11,6 +11,15 @@ interface CookieOption {
   signed: boolean
 }
 
+export const renderPageLogin = (req: Request, res: Response) => {
+  const refreshToken = req.signedCookies.refreshToken
+  if (refreshToken) {
+    res.redirect("/")
+    return
+  }
+  res.render("pages/login")
+}
+
 export const login = async (req: Request, res: Response) => {
   try {
     const { name, password }: UserLogin = req.body
