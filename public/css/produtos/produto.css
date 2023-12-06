@@ -136,11 +136,11 @@
 .modal-register-produto-content {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 1000px;
   background-color: var(--main-bg);
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  position: static;
+  margin: 0 auto;
   padding: 1rem;
   border-radius: 10px;
 }
@@ -206,7 +206,7 @@
 
 .show-modal {
   display: block;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .form-fields .input-error:focus {
