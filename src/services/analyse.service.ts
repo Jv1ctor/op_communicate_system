@@ -7,11 +7,12 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 const timezoneBrazil = "America/Sao_Paulo"
 
-interface AnalysisDataInterface{
+interface AnalysisDataInterface {
   adjustments: string
+  checked: boolean
   userId: string
   productId: string
-  reactorId: string 
+  reactorId: string
 }
 
 const AnalyseService = {
@@ -19,7 +20,14 @@ const AnalyseService = {
     try {
       const listAnalysis = await prisma.analysis.findMany({
         where: { fk_product: productId, products: { fk_reactor: reactorId } },
-        select: { adjustment: true, count: true, created_at: true },
+        select: {
+          adjustment: true,
+          count: true,
+          checked: true,
+          created_at: true,
+          analysis_id: true,
+        },
+        orderBy: { count: "asc" },
       })
 
       if (listAnalysis) {
@@ -37,24 +45,23 @@ const AnalyseService = {
     }
   },
 
-
-  async createAnalyse(analysisData: AnalysisDataInterface){
+  async createAnalyse(analysisData: AnalysisDataInterface) {
     try {
       const user = await prisma.users.findFirst({
         where: { id: analysisData.userId },
         select: { user_cq: true },
       })
-  
+
       if (user && user.user_cq) {
         const analyseList = await prisma.analysis.count({
           where: { fk_product: analysisData.productId },
         })
-  
+
         const product = await prisma.products.findUnique({
           where: { product_id: analysisData.productId },
           select: { status: true },
         })
-  
+
         if (product?.status === "andamento") {
           const analyse = prisma.analysis.create({
             data: {
@@ -80,7 +87,7 @@ const AnalyseService = {
               },
             },
           })
-      
+
           return analyse
         }
         return 403
@@ -88,7 +95,28 @@ const AnalyseService = {
     } catch (err) {
       throw new Error("error create analyse")
     }
-  }
+  },
+
+  async checkedAnalysis(analysisId: string) {
+    try {
+      const analyse = await prisma.analysis.update({
+        where: { analysis_id: analysisId },
+        data: { checked: true },
+        select: {
+          checked: true,
+          products: { select: { product_id: true, fk_reactor: true } },
+        },
+      })
+
+      return {
+        isChecked: analyse.checked,
+        reactor_id: analyse.products.fk_reactor,
+        product_id: analyse.products.product_id,
+      }
+    } catch (error) {
+      throw new Error("error in checked analyse")
+    }
+  },
 }
 
 export default AnalyseService

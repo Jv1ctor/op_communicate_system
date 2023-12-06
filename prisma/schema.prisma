@@ -13,6 +13,7 @@ model Analysis {
   analysis_id String   @id(map: "analysis_pk") @default(uuid()) @db.VarChar
   adjustment  String
   count       Int      @db.Integer
+  checked     Boolean  @db.Boolean             @default(false)
   created_at  DateTime @db.Timestamp()         @default(now())  
   fk_product  String   @db.VarChar
   fk_user_cq  String   @db.VarChar

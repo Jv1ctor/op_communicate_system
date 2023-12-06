@@ -1,11 +1,8 @@
 import { Request, Response } from "express"
-import prisma from "../database/prisma"
 import AnalyseService from "../services/analyse.service"
 import ProductService from "../services/product.service"
 import NotificationsService from "../services/notifications.service"
 import { myEmitter } from "./event.controller"
-
-
 
 export const createAnalysis = async (req: Request, res: Response) => {
   try {
@@ -13,23 +10,25 @@ export const createAnalysis = async (req: Request, res: Response) => {
     const userId = res.locals.userId
     const productId = req.params.productId
     const reactorId = req.params.reactorId
-    
+
     const analysisData = {
       ...analysisCreateData,
       userId,
       productId,
-      reactorId
+      reactorId,
     }
 
     const analyse = await AnalyseService.createAnalyse(analysisData)
 
-    if(analyse === 403){
+    if (analyse === 403) {
       return res.sendStatus(403)
     }
 
-    if(analyse){
-      const notificationAnalysis =
-        await NotificationsService.createNotificationAnalysis(analyse, userId)
+    if (analyse) {
+      const notificationAnalysis = await NotificationsService.createNotificationAnalysis(
+        analyse,
+        userId,
+      )
 
       myEmitter.emit("notification", notificationAnalysis)
       myEmitter.emit("create-analyse", analyse)
@@ -37,7 +36,7 @@ export const createAnalysis = async (req: Request, res: Response) => {
         analyse && res.status(201).redirect(`/reator/produto/${reactorId}.${productId}`)
       )
     }
-   
+
     res.sendStatus(400)
   } catch (err) {
     res.status(500).render("pages/500", { err })
@@ -73,8 +72,19 @@ export const listAnalysis = async (req: Request, res: Response) => {
         notification: listNotification,
         first_notification: listNotification[0],
         reactorId: product?.reactorId,
-        isAnalystUser: user.type !== "Controle Qualidade",
+        notAnAnalyst: user.type !== "Controle Qualidade",
       })
+  } catch (err) {
+    res.status(500).render("pages/500", { err })
+  }
+}
+
+export const checkedAnalysis = async (req: Request, res: Response) => {
+  try {
+    const analysisId = req.params.analysisId
+    const analyseData = await AnalyseService.checkedAnalysis(analysisId)
+
+    res.redirect(`/reator/produto/${analyseData.reactor_id}.${analyseData.product_id}`)
   } catch (err) {
     res.status(500).render("pages/500", { err })
   }

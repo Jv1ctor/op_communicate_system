@@ -16,5 +16,4 @@ export const reactorList = document.querySelector('[data-js="reactors-list"]')
 // forms
 export const buttonConfirm = document.querySelector("[data-js='button-confirm']")
 
-
 export default config

@@ -62,7 +62,7 @@
           >
           <h1 class="main-analise-header-title">Análises</h1>
           <div
-            class="button {{#isAnalystUser}} hidden-button {{/isAnalystUser}}"
+            class="button {{#notAnAnalyst}} hidden-button {{/notAnAnalyst}}"
             data-js="open-modal">
             Adicionar Análise
             <i class="fa-solid fa-circle-plus button-add-product-icon"></i>
@@ -76,6 +76,20 @@
               <h3>Análise {{ count }}</h3>
               <p>{{ adjustment }}</p>
               <span>{{ formattingDate }}</span>
+              <div class="options_analysis">
+                {{#notAnAnalyst}}
+                <a href="/checked-analysis/{{ analysis_id }}">
+                  <i
+                    class="fa-solid fa-check checked-adjustment {{#checked}}checked-style{{/checked}}"></i>
+                </a>
+                {{/notAnAnalyst}}
+                {{^notAnAnalyst}}
+                <i
+                  class="fa-solid fa-check checked-adjustment {{#checked}}checked-style{{/checked}}"></i>
+                {{/notAnAnalyst}}
+
+                <i class="fa-solid fa-pen-to-square edit-adjustment"></i>
+              </div>
             </li>
             {{/analysis}}
           </ul>

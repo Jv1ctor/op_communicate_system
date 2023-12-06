@@ -7,18 +7,21 @@ import Token from "../middleware/token"
 const router = Router()
 
 router.get("/", Token.create, Auth.authenticate, ReactorController.listReactors)
-router.get(
-  "/reator/:id",
-  Token.create,
-  Auth.authenticate,
-  ProductController.listProducts
-)
+router.get("/reator/:id", Token.create, Auth.authenticate, ProductController.listProducts)
 
 router.get(
   "/reator/produto/:reactorId.:productId",
   Token.create,
   Auth.authenticate,
-  AnalysisController.listAnalysis
+  AnalysisController.listAnalysis,
+)
+
+router.get(
+  "/checked-analysis/:analysisId",
+  Token.create,
+  Auth.authenticate,
+  Auth.authorization("production"),
+  AnalysisController.checkedAnalysis,
 )
 
 router.post(
@@ -26,7 +29,7 @@ router.post(
   Token.create,
   Auth.authenticate,
   Auth.authorization("production"),
-  ProductController.createProduct
+  ProductController.createProduct,
 )
 
 router.post(
@@ -34,7 +37,7 @@ router.post(
   Token.create,
   Auth.authenticate,
   Auth.authorization("quality"),
-  ProductController.finishProduct
+  ProductController.finishProduct,
 )
 
 router.post(
@@ -42,6 +45,6 @@ router.post(
   Token.create,
   Auth.authenticate,
   Auth.authorization("quality"),
-  AnalysisController.createAnalysis
+  AnalysisController.createAnalysis,
 )
 export default router
