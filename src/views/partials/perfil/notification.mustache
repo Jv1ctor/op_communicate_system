@@ -1,22 +1,20 @@
 <div class="perfil-notification">
   <label class="perfil-notification-icon" for="dropdown">
     <i class="fa-regular fa-bell icon-perfil"></i>
-    <span
-      class="circle-notification"
-      data-notification="{{ first_notification.type_notification }}"
-      data-status_product="{{ first_notification.status }}"></span>
+    <span class="circle-notification" data-notification="{{ first_notification.type_notification }}" data-status_product="{{ first_notification.status }}"></span>
   </label>
   <input type="checkbox" name="dropdown" id="dropdown" />
   <div class="menu-dropdown-notification">
     <ul data-js="list-notification">
       {{#notification}}
-      <a href="/delete/{{ notification_id }}">delete</a>
-      <li
-        class="
-          notification-{{ type_notification }} 
-          product-{{ status }}
-        ">
-        <a href="/reator/produto/{{ reactor_id }}.{{ product_id }}">
+      <li class="
+      notification-{{ type_notification }} 
+      product-{{ status }}
+      ">
+        {{#isConcluded}}
+        <a class="delete-notification" href="/delete/{{ notification_id }}"> <i class="fa-solid fa-xmark close-button"></i></a>
+        {{/isConcluded}}
+        <a class="notification-link" href="/reator/produto/{{ reactor_id }}.{{ product_id }}">
           {{#isAnalyse}}
           <i class="fa-solid fa-triangle-exclamation alert-notification-icon"></i>
           {{/isAnalyse}}

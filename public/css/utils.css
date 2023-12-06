@@ -124,3 +124,16 @@
 .valid-input{
   border-color: red !important;
 }
+
+.close-button{
+  font-size: 1.3rem;
+  color: red;
+  position: absolute; 
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+}
+
+.close-button:hover{
+  color: brown;
+}

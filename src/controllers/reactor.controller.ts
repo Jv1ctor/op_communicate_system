@@ -1,12 +1,13 @@
 import { Request, Response } from "express"
 import ReactorService from "../services/reactor.service"
 import NotificationsService from "../services/notifications.service"
+import ProductService from "../services/product.service"
 
 export const listReactors = async (req: Request, res: Response) => {
   try {
     const user = req.signedCookies.user
-    const reactors = ReactorService.list()
     const userId = res.locals.userId
+    const reactors = ReactorService.list()
     const notification = NotificationsService.listAll(userId)
     const [listReactor, listNotification] = await Promise.all([reactors, notification])
    res.cookie("last_page", req.originalUrl, { 

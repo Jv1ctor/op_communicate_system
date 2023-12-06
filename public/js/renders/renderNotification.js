@@ -13,8 +13,16 @@ const formattingHTMLData = (data) => {
     <li class="
       notification-${item.type_notification} 
       ${item.status ? `product-${item.status}` : ""}
-    ">
-      <a href="/reator/produto/${item.fk_reactor}.${item.product_id}">
+    "> 
+      ${
+        item.status !== "andamento" && item.type_notification === "Produto"
+          ? `<a class="delete-notification" href="/delete/${item.notification_id}"> <i class="fa-solid fa-xmark close-button"></i></a>`
+          : " "
+      }
+      
+      <a class="notification-link" href="/reator/produto/${item.reactor_id}.${
+      item.product_id
+    }">
         ${
           item.type_notification === "Análise"
             ? '<i class="fa-solid fa-triangle-exclamation alert-notification-icon"></i>'
@@ -48,13 +56,9 @@ export const renderNotification = (data) => {
   if (notifications) {
     message.remove()
     const formatData = formattingHTMLData(notifications)
-    if (
-      notifications[0].status !== "andamento" &&
-      notifications[0].type_notification === "Produto"
-    ) {
+
+    if (data.length > 0) {
       notificationList.innerHTML = formatData
-    } else {
-      notificationList.insertAdjacentHTML("afterbegin", formatData)
     }
   }
 }

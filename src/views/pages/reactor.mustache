@@ -37,7 +37,10 @@
           <li>
             <a href="/reator/{{ id_reactor }}" data-js="link-reactor-btn">
               Reator {{ name_reactor }}
-              <i class="fa-solid fa-exclamation notification-reactor"></i>
+
+              {{#existProductProgress}}
+                <i class="fa-solid fa-exclamation notification-reactor"></i>
+              {{/existProductProgress}}
             </a>
           </li>
           {{/reactor_list}}
