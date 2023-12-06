@@ -5,12 +5,12 @@ import { productStatus, renderAnalyse } from "./renders/renderAnalyse.js"
 
 const notificationDropdown = document.getElementById("dropdown")
 export const eventSource = new EventSource(`${config.BASIC_URL}/events/sse`)
+const notificationAudio = new Audio("../../audio/achive-sound-132273.mp3")
 
 eventSource.addEventListener("notification", (messageEvent) => {
   notificationDropdown.checked = true
+  notificationAudio.play()
   const data = JSON.parse(messageEvent.data)
-  console.log(data)
-
   renderNotification(data)
 })
 
