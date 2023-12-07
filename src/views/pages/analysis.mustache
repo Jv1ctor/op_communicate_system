@@ -62,7 +62,7 @@
           >
           <h1 class="main-analise-header-title">Análises</h1>
           <div
-            class="button {{#notAnAnalyst}} hidden-button {{/notAnAnalyst}}"
+            class="button {{^isAnalystUser}} hidden-button {{/isAnalystUser}}"
             data-js="open-modal">
             Adicionar Análise
             <i class="fa-solid fa-circle-plus button-add-product-icon"></i>
@@ -72,31 +72,29 @@
         <div class="main-container-analise-content">
           <ul class="list-analise" data-js="analyse-list">
             {{#analysis}}
-            <li class="list-analise-item">
-              <h3>Análise {{ count }}</h3>
-              <p>{{ adjustment }}</p>
-              <span>{{ formattingDate }}</span>
-              <div class="options_analysis">
-                {{#notAnAnalyst}}
-                <a href="/checked-analysis/{{ analysis_id }}">
+            <li class="list-analise-item" id="{{ analysis_id}}">
+              <div class="list-analise-container">
+                <h3>Análise {{ count }}</h3>
+                <p>{{ adjustment }}</p>
+                <span>{{ formattingDate }}</span>
+                <div class="options_analysis">
                   <i
-                    class="fa-solid fa-check checked-adjustment {{#checked}}checked-style{{/checked}}"></i>
-                </a>
-                {{/notAnAnalyst}}
-                {{^notAnAnalyst}}
-                <i
-                  class="fa-solid fa-check checked-adjustment {{#checked}}checked-style{{/checked}}"></i>
-                {{/notAnAnalyst}}
+                    class="fa-solid fa-check checked-adjustment {{#checked}}checked-style{{/checked}}"
+                    data-js="checked-button"></i>
 
-                <i class="fa-solid fa-pen-to-square edit-adjustment"></i>
+                  <i class="fa-solid fa-pen-to-square edit-adjustment"></i>
+                </div>
               </div>
+              {{^isAnalystUser}}
+              {{>partials/analysis/confirmAnalyseBox}}
+              {{/isAnalystUser}}
             </li>
             {{/analysis}}
           </ul>
         </div>
 
         <div
-          class="button btn-finish-product {{#isAnalystUser}} hidden-button {{/isAnalystUser}}"
+          class="button btn-finish-product {{^isAnalystUser}} hidden-button {{/isAnalystUser}}"
           data-js="open-modal-finish">
           Finalizar Produto
         </div>
@@ -108,6 +106,7 @@
     {{>partials/analysis/createAnalyseModal}}
     {{>partials/analysis/finishedProductModal}}
 
+    <script type="module" src="/js/user.js"></script>
     <script type="module" src="/js/analysis/analysis.js"></script>
     <script type="module" src="/js/notificationEvent.js"></script>
   </body>

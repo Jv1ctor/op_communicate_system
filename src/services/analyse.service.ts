@@ -73,6 +73,7 @@ const AnalyseService = {
             select: {
               fk_product: true,
               adjustment: true,
+              checked: true,
               count: true,
               analysis_id: true,
               created_at: true,
@@ -99,19 +100,23 @@ const AnalyseService = {
 
   async checkedAnalysis(analysisId: string) {
     try {
-      const analyse = await prisma.analysis.update({
-        where: { analysis_id: analysisId },
-        data: { checked: true },
-        select: {
-          checked: true,
-          products: { select: { product_id: true, fk_reactor: true } },
-        },
-      })
+      const analyse = await prisma.analysis.findUnique({ where: { analysis_id: analysisId}, select: { products: { select: { status: true }}}})
 
-      return {
-        isChecked: analyse.checked,
-        reactor_id: analyse.products.fk_reactor,
-        product_id: analyse.products.product_id,
+      if (analyse && analyse.products.status === "andamento"){
+        const analyseUpdate = await prisma.analysis.update({
+          where: { analysis_id: analysisId },
+          data: { checked: true },
+          select: {
+            checked: true,
+            products: { select: { product_id: true, fk_reactor: true } },
+          },
+        })
+
+        return {
+          isChecked: analyseUpdate.checked,
+          reactor_id: analyseUpdate.products.fk_reactor,
+          product_id: analyseUpdate.products.product_id,
+        }
       }
     } catch (error) {
       throw new Error("error in checked analyse")

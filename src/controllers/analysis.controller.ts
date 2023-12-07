@@ -72,7 +72,7 @@ export const listAnalysis = async (req: Request, res: Response) => {
         notification: listNotification,
         first_notification: listNotification[0],
         reactorId: product?.reactorId,
-        notAnAnalyst: user.type !== "Controle Qualidade",
+        isAnalystUser: user.type === "Controle Qualidade",
       })
   } catch (err) {
     res.status(500).render("pages/500", { err })
@@ -84,7 +84,12 @@ export const checkedAnalysis = async (req: Request, res: Response) => {
     const analysisId = req.params.analysisId
     const analyseData = await AnalyseService.checkedAnalysis(analysisId)
 
-    res.redirect(`/reator/produto/${analyseData.reactor_id}.${analyseData.product_id}`)
+    if (analyseData) {
+      myEmitter.emit("confirm-analyse", analyseData.isChecked, analysisId)
+      res.redirect(`/reator/produto/${analyseData.reactor_id}.${analyseData.product_id}`)
+      return
+    }
+    res.sendStatus(403)
   } catch (err) {
     res.status(500).render("pages/500", { err })
   }

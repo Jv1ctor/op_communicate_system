@@ -101,17 +101,28 @@ export const events = async (_req: Request, res: Response) => {
     res.write("event: finish-product\n")
     res.write(`data:${JSON.stringify(product)}\n\n`)
   }
+  const eventConfirmAnalyse = (analyseStatus: boolean, analysisId: string) => {
+    const data = {
+      analyseStatus,
+      analysisId
+    }
+    res.write("event: confirm-analyse\n")
+    res.write(`data:${JSON.stringify(data)}\n\n`)
+  }
+
 
   myEmitter.on("notification", eventNotification)
   myEmitter.on("create-product", eventProduct)
   myEmitter.on("create-analyse", eventAnalyse)
   myEmitter.on("finish-product", eventFinishProduct)
+  myEmitter.on("confirm-analyse", eventConfirmAnalyse )
 
   res.on("close", () => {
     myEmitter.off("notification", eventNotification)
     myEmitter.off("create-product", eventProduct)
     myEmitter.off("create-analyse", eventAnalyse)
     myEmitter.off("finish-product", eventFinishProduct)
+    myEmitter.off("confirm-analyse", eventConfirmAnalyse )
   })
 
   // isThereProductProgress(userId)

@@ -94,6 +94,10 @@
 
 .list-analise-item {
   flex-basis: 400px;
+  position: relative;
+}
+
+.list-analise-container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -106,19 +110,20 @@
   position: relative;
 }
 
-.list-analise-item h3 {
+.list-analise-container h3 {
   font-size: 1.5rem;
   text-align: center;
 }
 
-.list-analise-item p {
+.list-analise-container p {
+  flex: 1;
   height: 100%;
   max-width: 40ch;
   word-break: break-all;
   font-size: 1.2rem;
 }
 
-.list-analise-item span {
+.list-analise-container span {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--table-head-color);
@@ -277,4 +282,72 @@
 [data-js="product-reactor-title"] {
   font-size: 1.5rem;
   letter-spacing: 0.2rem;
+}
+
+.confirm-analyse-box {
+  border-radius: 10px;
+  background: #fafafa;
+  color: var(--text-color);
+  border: 3px solid var(--primary-color);
+  padding: 1rem;
+  position: absolute;
+  bottom: -1.7rem;
+  left: -4.5rem;
+  z-index: 999;
+  visibility: hidden;
+}
+
+.confirm-analyse-box::after {
+  display: block;
+  content: "";
+  position: absolute;
+  right: -15px;
+  top: 30%;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid var(--primary-color);
+  transform: rotate(90deg);
+  z-index: 9999;
+}
+
+.confirm-analyse-title {
+  font-size: 1.3rem;
+}
+
+.confirm-analyse-options {
+  display: flex;
+  margin-top: 1rem;
+  padding: 0.5rem 0;
+  justify-content: space-around;
+}
+
+.confirm-analyse-options .options {
+  cursor: pointer;
+  border-radius: 100px;
+  padding: 0.2rem 1rem;
+  font-size: 1.1rem;
+}
+
+.confirm-analyse-options .confirm {
+  color: #fff;
+  background: var(--primary-color);
+}
+
+.confirm-analyse-options .confirm:hover {
+  background-color: var(--secondary-color);
+}
+
+.confirm-analyse-options .not-confirm {
+  color: #fff;
+  background: rgb(252, 78, 47);
+}
+
+.confirm-analyse-options .not-confirm:hover {
+  background: rgb(194, 60, 37);
+}
+
+.show-box-confirm {
+  visibility: visible;
 }
