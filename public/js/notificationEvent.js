@@ -36,7 +36,6 @@ eventSource.addEventListener("finish-product", (messageEvent) => {
 
 eventSource.addEventListener("confirm-analyse", (messageEvent) => {
   const data = JSON.parse(messageEvent.data)
-
   renderConfirmAnalyse(data)
 })
 

@@ -1,6 +1,6 @@
 import { runSubmitForm } from "../forms/submitForm.js"
 import { openModalFinish } from "../modal.js"
-import { buttonModalFinish, buttonConfirm } from "../config.js"
+import { buttonModalFinish, buttonConfirm, buttonModal } from "../config.js"
 
 const analyseList = document.querySelector("[data-js='analyse-list']")
 const dataStatus = document.querySelector(".data-status")
@@ -87,5 +87,17 @@ export const renderConfirmAnalyse = (data) => {
 
       data && checked.classList.add("checked-style")
     }
+  }
+  const analysisButtonConfirm = document.querySelectorAll("[data-js='checked-button']")
+
+  const isAllChecked = [...analysisButtonConfirm].every((item) =>
+    item.classList.contains("checked-style"),
+  )
+  if (!isAllChecked || !dataStatus.classList.contains("andamento")) {
+    buttonModalFinish.removeEventListener("click", openModalFinish)
+    buttonModalFinish.classList.add("btn-incomplete")
+  } else {
+    buttonModalFinish.classList.remove("btn-incomplete")
+    buttonModalFinish.addEventListener("click", openModalFinish)
   }
 }

@@ -6,6 +6,7 @@ const productStatus = document.querySelector(".data-status")
 
 runModal()
 renderAnalyse()
+renderConfirmAnalyse()
 if (
   sessionStorage.getItem("type-user") === "Produção" &&
   productStatus.classList.contains("andamento")
